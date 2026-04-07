@@ -53,7 +53,7 @@ const Home = () => {
                 className="w-32 h-32 md:w-48 md:h-48 object-contain mb-8 animate-pulse"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan</span>
+              <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan & Shito-Ryu</span>
               <h1 className="text-8xl md:text-[12rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
                 <span className="block text-white-warm drop-shadow-2xl">KARATE</span>
                 <span className="block gold-text-gradient drop-shadow-2xl">LEGENDS</span>
@@ -104,47 +104,29 @@ const Home = () => {
       {/* Summary & Stats */}
       <section className="py-40 bg-black-deep relative border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
-            <div className="lg:col-span-7">
-              <h2 className="text-6xl md:text-8xl mb-12 leading-[0.9] uppercase font-display tracking-tighter">
-                {t('summary.title')}
-              </h2>
-              <div className="h-1 w-24 gold-gradient mb-12"></div>
-              <p className="text-xl md:text-2xl text-white/60 leading-relaxed mb-16 font-light">
-                {t('summary.text')}
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-1 px-1 bg-white/5 border border-white/5">
-                {[
-                  { label: t('stats.countries'), value: '3' },
-                  { label: t('stats.belts'), value: '3' },
-                  { label: t('stats.editions'), value: '5' }
-                ].map((stat, i) => (
-                  <div key={i} className="bg-black-deep p-12 flex flex-col items-center text-center group hover:bg-white/[0.02] transition-colors">
-                    <span className="text-7xl md:text-8xl font-display gold-text-gradient mb-4 leading-none">{stat.value}</span>
-                    <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-bold">{stat.label}</span>
-                    {stat.label === t('stats.belts') && (
-                      <span className="text-[9px] text-white/20 mt-4 leading-tight font-medium max-w-[150px]">{t('stats.belts_desc')}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="max-w-4xl">
+            <h2 className="text-6xl md:text-8xl mb-12 leading-[0.9] uppercase font-display tracking-tighter">
+              {t('summary.title')}
+            </h2>
+            <div className="h-1 w-24 gold-gradient mb-12"></div>
+            <p className="text-xl md:text-2xl text-white/60 leading-relaxed mb-16 font-light">
+              {t('summary.text')}
+            </p>
             
-            <div className="lg:col-span-5 relative mt-12 lg:mt-0">
-              <div className="aspect-[3/4] relative group">
-                <div className="absolute -inset-4 border border-gold/20 -z-10 translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-700"></div>
-                <img 
-                  src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=2072&auto=format&fit=crop" 
-                  className="w-full h-full object-cover grayscale brightness-75 border border-white/10"
-                  alt="Karate Spirit"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute bottom-8 left-8 right-8 p-8 glass-morphism border border-white/10">
-                  <p className="text-xs uppercase tracking-widest text-gold font-bold mb-2">The Legacy</p>
-                  <p className="text-sm text-white/60 italic font-serif">"Onde lendas são forjadas e o respeito é conquistado."</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-1 px-1 bg-white/5 border border-white/5">
+              {[
+                { label: t('stats.countries'), value: '2' },
+                { label: t('stats.belts'), value: '2' },
+                { label: t('stats.editions'), value: '4' }
+              ].map((stat, i) => (
+                <div key={i} className="bg-black-deep p-12 flex flex-col items-center text-center group hover:bg-white/[0.02] transition-colors">
+                  <span className="text-7xl md:text-8xl font-display gold-text-gradient mb-4 leading-none">{stat.value}</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-bold">{stat.label}</span>
+                  {stat.label === t('stats.belts') && (
+                    <span className="text-[9px] text-white/20 mt-4 leading-tight font-medium max-w-[150px]">{t('stats.belts_desc')}</span>
+                  )}
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
