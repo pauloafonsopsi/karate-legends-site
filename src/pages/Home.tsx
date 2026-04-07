@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center pt-20 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_" 
@@ -46,15 +46,15 @@ const Home = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="mb-6 flex flex-col items-center">
+            <div className="mb-4 flex flex-col items-center">
               <img 
                 src="/logo.png" 
                 alt="Karate Legends Logo" 
-                className="w-64 md:w-96 object-contain mb-8 animate-pulse"
+                className="w-40 md:w-64 object-contain mb-4"
                 referrerPolicy="no-referrer"
               />
               <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan & Shito-Ryu</span>
-              <h1 className="text-8xl md:text-[12rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
+              <h1 className="text-7xl md:text-[10rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
                 <span className="block text-white-warm drop-shadow-2xl">KARATE</span>
                 <span className="block gold-text-gradient drop-shadow-2xl">LEGENDS</span>
               </h1>
