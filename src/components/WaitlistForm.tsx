@@ -59,7 +59,7 @@ const WaitlistForm = () => {
       }, 5000);
 
       setStatus('success');
-      setFormData({ name: '', email: '', whatsapp: '' });
+      setFormData({ name: '', email: '', whatsapp: '+55 ' });
     } catch {
       setStatus('error');
       setErrorMsg(t('form.error'));
