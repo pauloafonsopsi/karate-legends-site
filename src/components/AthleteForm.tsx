@@ -37,7 +37,6 @@ const AthleteForm = () => {
       setErrorMsg(t('form.required_fields'));
       return;
     }
-    }
 
     setStatus('loading');
     setErrorMsg('');
