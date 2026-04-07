@@ -41,12 +41,40 @@ const AthleteForm = () => {
     setErrorMsg('');
 
     try {
-      const params = new URLSearchParams({
+      // Use hidden iframe form submission to bypass CORS/Workspace restrictions
+      const iframe = document.createElement('iframe');
+      iframe.name = 'athlete-submit-frame';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = GOOGLE_APPS_SCRIPT_URL;
+      form.target = 'athlete-submit-frame';
+
+      const fields = {
         type: 'athlete',
         timestamp: new Date().toISOString(),
         ...formData
+      };
+
+      Object.entries(fields).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
       });
-      await fetch(`${GOOGLE_APPS_SCRIPT_URL}?${params.toString()}`, { mode: 'no-cors' });
+
+      document.body.appendChild(form);
+      form.submit();
+
+      // Clean up after submission
+      setTimeout(() => {
+        document.body.removeChild(form);
+        document.body.removeChild(iframe);
+      }, 5000);
+
       setStatus('success');
       setFormData({ name: '', email: '', whatsapp: '', belt: '', association: '', city: '', country: '', videoLink: '', socialMedia: '' });
     } catch {
