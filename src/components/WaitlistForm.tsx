@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bell, Loader2, CheckCircle } from 'lucide-react';
 
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVm9K0Xd38DIISdgxpn9gPSY3CseH2DDqlF7VbmK3Y8IE_noESdx3fh6jcrd-HGBtk/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5UnZ14tZC-TI2CBgpc-fLQ0XhHDWO7fEs4Nm_vmKSGSpu96RySqCIFb1oAMGfXJ5zOg/exec';
 
 const WaitlistForm = () => {
   const { t } = useTranslation();
