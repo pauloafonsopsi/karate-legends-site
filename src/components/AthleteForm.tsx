@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
 
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxBfgdRGotn2N-w8ZFmr9gjb5TfUHtlZLBmbOI3kjlys982LSQYVTtt5Nskx-5RFjl1/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqs-W_BJC9OqKqeLvyZc_5r2uqV9p1He2NPzWYvBxR_c4FP8Ydes5kRliWPWoT4Rey/exec';
 
 interface FormData {
   name: string;
