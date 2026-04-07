@@ -21,7 +21,7 @@
 
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
+    var data = JSON.parse(e.postData.contents || '{}');
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     
     if (data.type === 'athlete') {
