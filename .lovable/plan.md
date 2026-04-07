@@ -1,67 +1,46 @@
 
 
-## Plano: Montar o site Karate Legends no Lovable
+## Plano: Tornar o site Karate Legends funcional
 
-### Resumo
-Recriar o site Karate Legends com todas as 6 páginas, navegação, footer, sistema de internacionalização (PT/EN/ES), e o design system escuro com dourado.
+### O que será feito
 
-### Dependências a instalar
-- `i18next`, `react-i18next`, `i18next-browser-languagedetector` — internacionalização
-- `motion` (Framer Motion v11+) — animações na Home
-- `lucide-react` — ícones (já disponível no projeto)
+1. **Página de Atletas — Formulário de inscrição completo**
+   - Criar formulário no site com campos: nome, email, WhatsApp, faixa, associação, cidade/país, upload de vídeo (link do YouTube/Drive)
+   - Os dados serão enviados para uma planilha do Google Sheets automaticamente
+   - Método: Google Apps Script como "API gratuita" — você cria um script no Google Sheets que recebe os dados. Sem custo, sem API key complexa
 
-### Estrutura de arquivos
+2. **Página PPV — Formulário de captura de interessados**
+   - Substituir os botões "Buy Now" por um formulário de "Lista de Espera" com campos: nome, email, WhatsApp
+   - Mensagem clara: "Em breve! Cadastre-se para ser avisado quando os ingressos estiverem disponíveis"
+   - Dados salvos na mesma planilha (aba separada) via Google Apps Script
 
-```text
-src/
-├── lib/
-│   ├── i18n.ts              (config i18next)
-│   └── utils.ts             (existente)
-├── messages/
-│   ├── pt.json
-│   ├── en.json
-│   └── es.json
-├── components/
-│   └── layout/
-│       ├── Navbar.tsx
-│       └── Footer.tsx
-├── pages/
-│   ├── Home.tsx
-│   ├── Events.tsx
-│   ├── EventDetail.tsx
-│   ├── Athletes.tsx
-│   ├── Blog.tsx
-│   └── PPV.tsx
-├── App.tsx                   (reescrever rotas)
-├── index.css                 (reescrever design system)
-└── main.tsx                  (adicionar i18n)
-public/
-└── logo.png                  (aguardando upload)
-```
+3. **Footer — Redes sociais**
+   - Instagram: `www.instagram.com/karatelegendsleague`
+   - Remover Facebook, Twitter e YouTube (ou deixar ocultos até ter perfis)
 
-### Etapas
+### Como funciona a integração com Google Sheets
 
-1. **Instalar dependências**: `i18next`, `react-i18next`, `i18next-browser-languagedetector`, `motion`
+Você precisará fazer **um passo manual** no Google:
 
-2. **Reescrever `src/index.css`**: Substituir o design system atual pelo tema escuro com cores gold, fontes Bebas Neue + DM Sans, e utilitários CSS customizados (gold-gradient, btn-gold, card-premium, glass-morphism)
+1. Criar uma planilha no Google Sheets com 2 abas: "Atletas" e "Interessados PPV"
+2. Ir em Extensões → Apps Script, colar um código que eu vou gerar para você
+3. Publicar como "Web App" (acesso: qualquer pessoa)
+4. Me enviar a URL gerada — eu coloco no código do site
 
-3. **Criar arquivos de tradução**: `src/messages/pt.json`, `en.json`, `es.json` com todas as chaves
+Depois disso, toda submissão do site vai direto para sua planilha.
 
-4. **Criar `src/lib/i18n.ts`**: Configuração do i18next com detecção de idioma e fallback para PT
+### Etapas técnicas
 
-5. **Criar componentes de layout**: Navbar (com scroll effect, mobile menu, language switcher) e Footer
+| # | Tarefa | Arquivos |
+|---|--------|----------|
+| 1 | Criar componente de formulário de atletas com validação | `src/components/AthleteForm.tsx` |
+| 2 | Reescrever página Athletes com formulário integrado | `src/pages/Athletes.tsx` |
+| 3 | Reescrever página PPV com formulário de lista de espera | `src/pages/PPV.tsx` |
+| 4 | Atualizar Footer com link real do Instagram e remover redes inexistentes | `src/components/layout/Footer.tsx` |
+| 5 | Gerar o código do Google Apps Script para você colar na planilha | Arquivo auxiliar para você copiar |
+| 6 | Adicionar chaves de tradução faltantes nos 3 idiomas | `src/messages/*.json` |
 
-6. **Criar as 6 páginas**: Home (hero + countdown + stats), Events, EventDetail, Athletes, Blog, PPV — portando o código dos arquivos enviados com ajustes de import paths
+### Sobre upload de vídeos
 
-7. **Reescrever `src/App.tsx`**: Remover providers antigos desnecessários, adicionar I18nextProvider, configurar rotas (`/`, `/eventos`, `/eventos/:slug`, `/atletas`, `/blog`, `/ppv`)
-
-8. **Atualizar `src/main.tsx`**: Importar i18n para inicialização
-
-### Adaptações necessárias
-- O CSS original usa Tailwind v4 (`@import "tailwindcss"`, `@theme`). Nosso projeto usa Tailwind v3 com `tailwind.config.ts` — adaptarei as cores e fontes customizadas para o formato v3 (`extend` no config + variáveis CSS)
-- Import paths serão ajustados de `@/*` (root) para `@/*` (src)
-- O `utils.ts` do projeto original é diferente — manterei o existente com `cn()`
-
-### Nota sobre logo
-O site referencia `/logo.png` em vários componentes. Preciso que você envie este arquivo para que ele apareça corretamente. Caso não tenha, posso usar um placeholder textual.
+Como o Google Sheets não aceita upload direto de arquivos grandes, o formulário pedirá um **link** (YouTube, Google Drive ou similar) em vez de upload direto. Isso é mais prático para atletas e evita custos de armazenamento.
 
