@@ -8,19 +8,23 @@ interface FormData {
   name: string;
   email: string;
   whatsapp: string;
+  style: string;
   belt: string;
   association: string;
   city: string;
   country: string;
   videoLink: string;
+  certificateLink: string;
+  idLink: string;
   socialMedia: string;
 }
 
 const AthleteForm = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
-    name: '', email: '', whatsapp: '+55 ', belt: '',
-    association: '', city: '', country: '', videoLink: '', socialMedia: ''
+    name: '', email: '', whatsapp: '+55 ', style: '', belt: '',
+    association: '', city: '', country: '', videoLink: '',
+    certificateLink: '', idLink: '', socialMedia: ''
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -42,7 +46,6 @@ const AthleteForm = () => {
     setErrorMsg('');
 
     try {
-      // Use hidden iframe form submission to bypass CORS/Workspace restrictions
       const iframe = document.createElement('iframe');
       iframe.name = 'athlete-submit-frame';
       iframe.style.display = 'none';
@@ -71,19 +74,20 @@ const AthleteForm = () => {
       document.body.appendChild(form);
       form.submit();
 
-      // Clean up after submission
       setTimeout(() => {
         document.body.removeChild(form);
         document.body.removeChild(iframe);
       }, 5000);
 
       setStatus('success');
-      setFormData({ name: '', email: '', whatsapp: '+55 ', belt: '', association: '', city: '', country: '', videoLink: '', socialMedia: '' });
+      setFormData({ name: '', email: '', whatsapp: '+55 ', style: '', belt: '', association: '', city: '', country: '', videoLink: '', certificateLink: '', idLink: '', socialMedia: '' });
     } catch {
       setStatus('error');
       setErrorMsg(t('form.error'));
     }
   };
+
+  const inputClass = "w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors";
 
   if (status === 'success') {
     return (
@@ -104,14 +108,12 @@ const AthleteForm = () => {
         <div>
           <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.name')} *</label>
           <input name="name" value={formData.name} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder={t('form.name_placeholder')} />
+            className={inputClass} placeholder={t('form.name_placeholder')} />
         </div>
         <div>
           <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.email')} *</label>
           <input name="email" type="email" value={formData.email} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder={t('form.email_placeholder')} />
+            className={inputClass} placeholder={t('form.email_placeholder')} />
         </div>
       </div>
 
@@ -119,13 +121,24 @@ const AthleteForm = () => {
         <div>
           <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.whatsapp')} *</label>
           <input name="whatsapp" value={formData.whatsapp} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder="+55 11 99999-9999" />
+            className={inputClass} placeholder="+55 11 99999-9999" />
         </div>
+        <div>
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.style')} *</label>
+          <select name="style" value={formData.style} onChange={handleChange} required
+            className={inputClass}>
+            <option value="" className="bg-black">{t('form.select')}</option>
+            <option value="Shotokan" className="bg-black">Shotokan</option>
+            <option value="Shito-Ryu" className="bg-black">Shito-Ryu</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.belt')} *</label>
           <select name="belt" value={formData.belt} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:border-gold/50 focus:outline-none transition-colors">
+            className={inputClass}>
             <option value="" className="bg-black">{t('form.select')}</option>
             <option value="1st Dan" className="bg-black">1º Dan</option>
             <option value="2nd Dan" className="bg-black">2º Dan</option>
@@ -134,44 +147,51 @@ const AthleteForm = () => {
             <option value="5th Dan+" className="bg-black">5º Dan+</option>
           </select>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.association')} *</label>
           <input name="association" value={formData.association} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder={t('form.association_placeholder')} />
-        </div>
-        <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.social_media')} *</label>
-          <input name="socialMedia" value={formData.socialMedia} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder="@seu_perfil" />
+            className={inputClass} placeholder={t('form.association_placeholder')} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.city')} *</label>
-          <input name="city" value={formData.city} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder={t('form.city_placeholder')} />
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.social_media')} *</label>
+          <input name="socialMedia" value={formData.socialMedia} onChange={handleChange} required
+            className={inputClass} placeholder="@seu_perfil" />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.country')} *</label>
-          <input name="country" value={formData.country} onChange={handleChange} required
-            className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-            placeholder={t('form.country_placeholder')} />
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.city')} *</label>
+          <input name="city" value={formData.city} onChange={handleChange} required
+            className={inputClass} placeholder={t('form.city_placeholder')} />
         </div>
+      </div>
+
+      <div>
+        <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.country')} *</label>
+        <input name="country" value={formData.country} onChange={handleChange} required
+          className={inputClass} placeholder={t('form.country_placeholder')} />
       </div>
 
       <div>
         <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.video_link')} *</label>
         <input name="videoLink" value={formData.videoLink} onChange={handleChange} required
-          className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
-          placeholder={t('form.video_placeholder')} />
+          className={inputClass} placeholder={t('form.video_placeholder')} />
         <p className="text-white/30 text-xs mt-2">{t('form.video_hint')}</p>
+      </div>
+
+      <div>
+        <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.certificate_link')} *</label>
+        <input name="certificateLink" value={formData.certificateLink} onChange={handleChange} required
+          className={inputClass} placeholder={t('form.certificate_placeholder')} />
+        <p className="text-white/30 text-xs mt-2">{t('form.certificate_hint')}</p>
+      </div>
+
+      <div>
+        <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.id_link')} *</label>
+        <input name="idLink" value={formData.idLink} onChange={handleChange} required
+          className={inputClass} placeholder={t('form.id_placeholder')} />
+        <p className="text-white/30 text-xs mt-2">{t('form.id_hint')}</p>
       </div>
 
       {errorMsg && <p className="text-red-400 text-sm">{errorMsg}</p>}
