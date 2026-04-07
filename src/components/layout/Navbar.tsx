@@ -37,10 +37,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <Link to="/" className="flex items-center group">
           <img 
-            src="/logo.png" 
-            alt="Karate Legends Logo" 
-            className="w-12 h-12 object-contain mr-3 group-hover:scale-110 transition-transform duration-300"
-            referrerPolicy="no-referrer"
+            src="/symbol.png" 
+            alt="Karate Legends" 
+            className="w-10 h-10 object-contain mr-3 group-hover:scale-110 transition-transform duration-300"
           />
           <span className="font-display text-xl tracking-tighter gold-text-gradient">KARATE LEGENDS</span>
         </Link>
