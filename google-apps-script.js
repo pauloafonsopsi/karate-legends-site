@@ -19,6 +19,54 @@
 // 11. Clique em "Implantar" e copie a URL gerada
 // 12. Envie a URL para mim e eu coloco no código do site!
 
+function doGet(e) {
+  try {
+    var params = e.parameter || {};
+    
+    // Se não tem parâmetro 'type', retorna status
+    if (!params.type) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'ok', message: 'Karate Legends API is running' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    if (params.type === 'athlete') {
+      var sheet = ss.getSheetByName('Atletas');
+      sheet.appendRow([
+        params.timestamp || new Date().toISOString(),
+        params.name || '',
+        params.email || '',
+        params.whatsapp || '',
+        params.belt || '',
+        params.association || '',
+        params.city || '',
+        params.country || '',
+        params.videoLink || '',
+        params.socialMedia || ''
+      ]);
+    } else if (params.type === 'ppv_interest') {
+      var sheet = ss.getSheetByName('Interessados PPV');
+      sheet.appendRow([
+        params.timestamp || new Date().toISOString(),
+        params.name || '',
+        params.email || '',
+        params.whatsapp || ''
+      ]);
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'error', message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents || '{}');
@@ -57,10 +105,4 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ result: 'error', message: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
-}
-
-function doGet() {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok', message: 'Karate Legends API is running' }))
-    .setMimeType(ContentService.MimeType.JSON);
 }
