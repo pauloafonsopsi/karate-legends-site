@@ -55,7 +55,8 @@ const AthleteForm = () => {
       const fields = {
         type: 'athlete',
         timestamp: new Date().toISOString(),
-        ...formData
+        ...formData,
+        whatsapp: "'" + formData.whatsapp
       };
 
       Object.entries(fields).forEach(([key, value]) => {

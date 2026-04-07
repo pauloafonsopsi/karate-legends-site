@@ -38,7 +38,8 @@ const WaitlistForm = () => {
       const fields = {
         type: 'ppv_interest',
         timestamp: new Date().toISOString(),
-        ...formData
+        ...formData,
+        whatsapp: "'" + formData.whatsapp
       };
 
       Object.entries(fields).forEach(([key, value]) => {
