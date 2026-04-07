@@ -19,7 +19,7 @@ interface FormData {
 const AthleteForm = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
-    name: '', email: '', whatsapp: '', belt: '',
+    name: '', email: '', whatsapp: '+55 ', belt: '',
     association: '', city: '', country: '', videoLink: '', socialMedia: ''
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');

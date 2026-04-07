@@ -6,7 +6,7 @@ const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4_bAT7
 
 const WaitlistForm = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '+55 ' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
