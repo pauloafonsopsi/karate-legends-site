@@ -50,7 +50,7 @@ const Home = () => {
               <img 
                 src="/logo.png" 
                 alt="Karate Legends Logo" 
-                className="w-32 h-32 md:w-48 md:h-48 object-contain mb-8 animate-pulse"
+                className="w-64 md:w-96 object-contain mb-8 animate-pulse"
                 referrerPolicy="no-referrer"
               />
               <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan & Shito-Ryu</span>
