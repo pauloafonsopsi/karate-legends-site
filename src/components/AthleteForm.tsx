@@ -19,7 +19,7 @@ interface FormData {
 const AthleteForm = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<FormData>({
-    name: '', email: '', whatsapp: '', belt: '',
+    name: '', email: '', whatsapp: '+55 ', belt: '',
     association: '', city: '', country: '', videoLink: '', socialMedia: ''
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -32,7 +32,8 @@ const AthleteForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.whatsapp || !formData.belt || !formData.videoLink) {
+    const allFields = Object.values(formData);
+    if (allFields.some(v => !v.trim())) {
       setErrorMsg(t('form.required_fields'));
       return;
     }
@@ -77,7 +78,7 @@ const AthleteForm = () => {
       }, 5000);
 
       setStatus('success');
-      setFormData({ name: '', email: '', whatsapp: '', belt: '', association: '', city: '', country: '', videoLink: '', socialMedia: '' });
+      setFormData({ name: '', email: '', whatsapp: '+55 ', belt: '', association: '', city: '', country: '', videoLink: '', socialMedia: '' });
     } catch {
       setStatus('error');
       setErrorMsg(t('form.error'));
@@ -137,14 +138,14 @@ const AthleteForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.association')}</label>
-          <input name="association" value={formData.association} onChange={handleChange}
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.association')} *</label>
+          <input name="association" value={formData.association} onChange={handleChange} required
             className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
             placeholder={t('form.association_placeholder')} />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.social_media')}</label>
-          <input name="socialMedia" value={formData.socialMedia} onChange={handleChange}
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.social_media')} *</label>
+          <input name="socialMedia" value={formData.socialMedia} onChange={handleChange} required
             className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
             placeholder="@seu_perfil" />
         </div>
@@ -152,14 +153,14 @@ const AthleteForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.city')}</label>
-          <input name="city" value={formData.city} onChange={handleChange}
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.city')} *</label>
+          <input name="city" value={formData.city} onChange={handleChange} required
             className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
             placeholder={t('form.city_placeholder')} />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.country')}</label>
-          <input name="country" value={formData.country} onChange={handleChange}
+          <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.country')} *</label>
+          <input name="country" value={formData.country} onChange={handleChange} required
             className="w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-gold/50 focus:outline-none transition-colors"
             placeholder={t('form.country_placeholder')} />
         </div>
