@@ -12,10 +12,9 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center mb-6 group">
               <img 
-                src="/logo.png" 
-                alt="Karate Legends Logo" 
+                src="/symbol.png" 
+                alt="Karate Legends" 
                 className="w-10 h-10 object-contain mr-3 grayscale group-hover:grayscale-0 transition-all duration-300"
-                referrerPolicy="no-referrer"
               />
               <span className="font-display text-3xl tracking-tighter gold-text-gradient">KARATE LEGENDS</span>
             </Link>
