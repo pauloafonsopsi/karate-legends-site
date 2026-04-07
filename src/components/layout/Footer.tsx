@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Instagram, Facebook, Youtube, Twitter } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 
 const Footer = () => {
   const { t } = useTranslation();
   
   return (
-    <footer className="bg-black-accent border-t border-white/5 pt-20 pb-10">
+    <footer className="bg-[#0A0A0A] border-t border-white/5 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
@@ -23,15 +23,14 @@ const Footer = () => {
               {t('hero.subtitle')}
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-white/40 hover:text-gold transition-colors"><Instagram size={20} /></a>
-              <a href="#" className="text-white/40 hover:text-gold transition-colors"><Facebook size={20} /></a>
-              <a href="#" className="text-white/40 hover:text-gold transition-colors"><Youtube size={20} /></a>
-              <a href="#" className="text-white/40 hover:text-gold transition-colors"><Twitter size={20} /></a>
+              <a href="https://www.instagram.com/karatelegendsleague" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-gold transition-colors">
+                <Instagram size={20} />
+              </a>
             </div>
           </div>
           
           <div>
-            <h4 className="text-gold font-display text-lg mb-6 tracking-widest">Navigation</h4>
+            <h4 className="text-gold font-display text-lg mb-6 tracking-widest">{t('nav.home')}</h4>
             <ul className="space-y-4">
               <li><Link to="/" className="text-white/60 hover:text-white transition-colors">{t('nav.home')}</Link></li>
               <li><Link to="/eventos" className="text-white/60 hover:text-white transition-colors">{t('nav.events')}</Link></li>
