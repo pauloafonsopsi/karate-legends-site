@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
 
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGa5XLzsIX3js1d0Wpt0why8oHQHii97jRgNoLGxPtayvGDPHYUi07MfbbaLLY6tk/exec';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVm9K0Xd38DIISdgxpn9gPSY3CseH2DDqlF7VbmK3Y8IE_noESdx3fh6jcrd-HGBtk/exec';
 
 interface FormData {
   name: string;
@@ -37,21 +37,16 @@ const AthleteForm = () => {
       return;
     }
 
-    if (!GOOGLE_APPS_SCRIPT_URL) {
-      setErrorMsg(t('form.not_configured'));
-      setStatus('error');
-      return;
-    }
-
     setStatus('loading');
     setErrorMsg('');
 
     try {
-      await fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify({ type: 'athlete', ...formData, timestamp: new Date().toISOString() })
+      const params = new URLSearchParams({
+        type: 'athlete',
+        timestamp: new Date().toISOString(),
+        ...formData
       });
+      await fetch(`${GOOGLE_APPS_SCRIPT_URL}?${params.toString()}`, { mode: 'no-cors' });
       setStatus('success');
       setFormData({ name: '', email: '', whatsapp: '', belt: '', association: '', city: '', country: '', videoLink: '', socialMedia: '' });
     } catch {
