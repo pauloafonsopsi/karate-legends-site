@@ -14,7 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      inscricoes_atletas: {
+        Row: {
+          associacao: string | null
+          cidade: string | null
+          criado_em: string
+          email: string
+          estilo: string
+          graduacao: string
+          id: string
+          link_certificado: string | null
+          link_documento: string | null
+          link_video: string | null
+          nome: string
+          pais: string | null
+          redes_sociais: string | null
+          whatsapp: string
+        }
+        Insert: {
+          associacao?: string | null
+          cidade?: string | null
+          criado_em?: string
+          email: string
+          estilo: string
+          graduacao: string
+          id?: string
+          link_certificado?: string | null
+          link_documento?: string | null
+          link_video?: string | null
+          nome: string
+          pais?: string | null
+          redes_sociais?: string | null
+          whatsapp: string
+        }
+        Update: {
+          associacao?: string | null
+          cidade?: string | null
+          criado_em?: string
+          email?: string
+          estilo?: string
+          graduacao?: string
+          id?: string
+          link_certificado?: string | null
+          link_documento?: string | null
+          link_video?: string | null
+          nome?: string
+          pais?: string | null
+          redes_sociais?: string | null
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      lista_espera_ppv: {
+        Row: {
+          criado_em: string
+          email: string
+          id: string
+          nome: string
+          whatsapp: string
+        }
+        Insert: {
+          criado_em?: string
+          email: string
+          id?: string
+          nome: string
+          whatsapp: string
+        }
+        Update: {
+          criado_em?: string
+          email?: string
+          id?: string
+          nome?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
