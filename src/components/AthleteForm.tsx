@@ -169,6 +169,7 @@ const AthleteForm = () => {
           <select name="belt" value={formData.belt} onChange={handleChange} required
             className={inputClass}>
             <option value="" className="bg-black">{t('form.select')}</option>
+            <option value="Brown Belt" className="bg-black">{t('form.brown_belt')}</option>
             <option value="1st Dan" className="bg-black">1º Dan</option>
             <option value="2nd Dan" className="bg-black">2º Dan</option>
             <option value="3rd Dan" className="bg-black">3º Dan</option>
