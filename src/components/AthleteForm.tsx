@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import DriveTutorial from './DriveTutorial';
 
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcXIdnB-dWAPhHlarjerfuZBnKEXbmADzAnUTKMqQ2mE7eaD2_9wp0tXeq3pQxAKJs/exec';
 
@@ -46,38 +48,65 @@ const AthleteForm = () => {
     setErrorMsg('');
 
     try {
-      const iframe = document.createElement('iframe');
-      iframe.name = 'athlete-submit-frame';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-
-      const form = document.createElement('form');
-      form.method = 'GET';
-      form.action = GOOGLE_APPS_SCRIPT_URL;
-      form.target = 'athlete-submit-frame';
-
-      const fields = {
-        type: 'athlete',
-        timestamp: new Date().toISOString(),
-        ...formData,
-        whatsapp: "'" + formData.whatsapp
-      };
-
-      Object.entries(fields).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
+      // Save to Supabase (primary)
+      const { error: dbError } = await supabase.from('inscricoes_atletas').insert({
+        nome: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        estilo: formData.style,
+        graduacao: formData.belt,
+        associacao: formData.association,
+        cidade: formData.city,
+        pais: formData.country,
+        link_video: formData.videoLink,
+        link_certificado: formData.certificateLink,
+        link_documento: formData.idLink,
+        redes_sociais: formData.socialMedia,
       });
 
-      document.body.appendChild(form);
-      form.submit();
+      if (dbError) {
+        console.error('Supabase error:', dbError);
+        throw new Error(dbError.message);
+      }
 
-      setTimeout(() => {
-        document.body.removeChild(form);
-        document.body.removeChild(iframe);
-      }, 5000);
+      // Backup to Google Sheets
+      try {
+        const iframe = document.createElement('iframe');
+        iframe.name = 'athlete-submit-frame';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = GOOGLE_APPS_SCRIPT_URL;
+        form.target = 'athlete-submit-frame';
+
+        const fields = {
+          type: 'athlete',
+          timestamp: new Date().toISOString(),
+          ...formData,
+          whatsapp: "'" + formData.whatsapp
+        };
+
+        Object.entries(fields).forEach(([key, value]) => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = value;
+          form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+
+        setTimeout(() => {
+          document.body.removeChild(form);
+          document.body.removeChild(iframe);
+        }, 5000);
+      } catch {
+        // Backup failure is non-critical
+        console.warn('Google Sheets backup failed');
+      }
 
       setStatus('success');
       setFormData({ name: '', email: '', whatsapp: '+55 ', style: '', belt: '', association: '', city: '', country: '', videoLink: '', certificateLink: '', idLink: '', socialMedia: '' });
@@ -172,6 +201,9 @@ const AthleteForm = () => {
         <input name="country" value={formData.country} onChange={handleChange} required
           className={inputClass} placeholder={t('form.country_placeholder')} />
       </div>
+
+      {/* Tutorial de Google Drive */}
+      <DriveTutorial />
 
       <div>
         <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">{t('form.video_link')} *</label>
