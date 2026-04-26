@@ -1,5 +1,5 @@
 {
-  "nav": {"home": "Home", "events": "Events", "athletes": "Athletes", "blog": "Blog", "ppv": "PPV"},
+  "nav": {"home": "Home", "events": "Events", "athletes": "Athletes", "blog": "Blog", "ppv": "PPV", "open_menu": "Open menu", "close_menu": "Close menu", "language": "Language", "instagram": "Instagram"},
   "hero": {
     "title": "KARATE LEGENDS",
     "subtitle": "Where legends are forged. The world stage for the best black belts.",
@@ -22,6 +22,7 @@
   "events": {
     "title": "Upcoming Events",
     "past_title": "Past Events",
+    "past_results": "Results",
     "status_open": "Registration Open",
     "status_closed": "Closed",
     "status_soon": "Coming Soon",
@@ -54,6 +55,7 @@
     "waitlist_subtitle": "PPV registration opens soon. Sign up to be notified when the purchase link becomes available.",
     "notify_me": "Notify Me",
     "devices_title": "Available on all devices",
+    "features_title": "Broadcast features",
     "streaming_note": "Streaming is delivered through a dedicated platform. After purchase, you receive an email with the access link to the edition's exclusive area.",
     "features": {
       "live": "High Definition Live Stream",

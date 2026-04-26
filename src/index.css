@@ -6,13 +6,12 @@
 
 @layer base {
   body {
-    background-color: #050505;
-    color: #F5F0E6;
+    @apply bg-black-deep text-white-warm;
     font-family: "DM Sans", "Inter", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
     font-family: "Bebas Neue", sans-serif;
     letter-spacing: 0.05em;
@@ -22,20 +21,18 @@
 
 /* Custom Utilities */
 .gold-gradient {
-  background: linear-gradient(135deg, #8B7332 0%, #C9A84C 50%, #E2C36B 100%);
+  @apply bg-gradient-to-br from-gold-dark via-gold to-gold-light;
 }
 
+/* .gold-text-gradient: kept as a solid gold alias for backwards compatibility. */
 .gold-text-gradient {
-  background-image: linear-gradient(135deg, #8B7332 0%, #C9A84C 50%, #E2C36B 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  @apply text-gold;
 }
 
 .btn-gold {
   @apply px-8 py-3 font-bold uppercase tracking-widest transition-all duration-300;
-  color: #050505;
-  background: linear-gradient(135deg, #8B7332 0%, #C9A84C 50%, #E2C36B 100%);
+  @apply bg-gradient-to-br from-gold-dark via-gold to-gold-light text-black-deep;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-deep;
 }
 .btn-gold:hover {
   @apply scale-105 brightness-110;
@@ -43,34 +40,35 @@
 .btn-gold:active {
   @apply scale-95;
 }
+.btn-gold:disabled {
+  @apply opacity-60 cursor-not-allowed scale-100 brightness-100;
+}
 
 .btn-outline-gold {
   @apply px-8 py-3 font-bold uppercase tracking-widest transition-all duration-300;
-  border: 1px solid #C9A84C;
-  color: #C9A84C;
+  @apply border border-gold text-gold;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-deep;
 }
 .btn-outline-gold:hover {
-  background-color: #C9A84C;
-  color: #050505;
+  @apply bg-gold text-black-deep;
 }
 .btn-outline-gold:active {
   @apply scale-95;
 }
 
 .card-premium {
-  @apply p-6 transition-all duration-500;
-  background-color: #0A0A0A;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply p-6 transition-all duration-500 bg-black-card;
+  border: 1px solid rgb(245 240 230 / 0.1);
 }
 .card-premium:hover {
-  border-color: rgba(201, 168, 76, 0.5);
-  box-shadow: 0 0 30px rgba(201, 168, 76, 0.1);
+  border-color: rgb(201 168 76 / 0.5);
+  box-shadow: 0 0 30px rgb(201 168 76 / 0.1);
 }
 
 .glass-morphism {
-  background: rgba(10, 10, 10, 0.8);
+  background: rgb(10 10 10 / 0.8);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  border-bottom: 1px solid rgb(201 168 76 / 0.2);
 }
 
 .geometric-border {
@@ -84,6 +82,6 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, transparent 5%, #C9A84C 5%, #C9A84C 10%, transparent 10%, transparent 90%, #C9A84C 90%, #C9A84C 95%, transparent 95%);
+  background: linear-gradient(45deg, transparent 5%, theme(colors.gold.DEFAULT) 5%, theme(colors.gold.DEFAULT) 10%, transparent 10%, transparent 90%, theme(colors.gold.DEFAULT) 90%, theme(colors.gold.DEFAULT) 95%, transparent 95%);
   z-index: -1;
 }

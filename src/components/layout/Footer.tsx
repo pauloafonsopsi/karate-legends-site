@@ -6,7 +6,7 @@ const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-white/5 pt-20 pb-10">
+    <footer className="bg-black-card border-t border-white/5 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
@@ -21,9 +21,15 @@ const Footer = () => {
             <p className="text-white/60 max-w-md mb-8">
               {t('hero.subtitle')}
             </p>
-            <div className="flex space-x-6">
-              <a href="https://www.instagram.com/karatelegendsleague" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-gold transition-colors">
-                <Instagram size={20} />
+            <div className="flex space-x-2 -ml-3">
+              <a
+                href="https://www.instagram.com/karatelegendsleague"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('nav.instagram')}
+                className="inline-flex items-center justify-center w-11 h-11 text-white/40 hover:text-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-card"
+              >
+                <Instagram size={20} aria-hidden="true" />
               </a>
             </div>
           </div>

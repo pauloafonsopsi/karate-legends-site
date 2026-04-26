@@ -44,20 +44,22 @@ const Blog = () => {
             <article key={i} className="group">
               <Link to={`/blog/${post.slug}`}>
                 <div className="aspect-[16/9] mb-6 overflow-hidden border border-white/10">
-                  <img 
-                    src={post.img} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                  <img
+                    src={post.img}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                     alt={post.title}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                 </div>
                 <div className="flex items-center gap-4 mb-4">
-                  <span className="text-[10px] font-bold text-gold uppercase tracking-[0.2em]">{post.category}</span>
-                  <span className="w-1 h-1 bg-white/20 rounded-full"></span>
-                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">{post.date}</span>
+                  <span className="text-xs font-bold text-gold uppercase tracking-[0.2em]">{post.category}</span>
+                  <span className="w-1 h-1 bg-white/20 rounded-full" aria-hidden="true"></span>
+                  <span className="text-xs font-bold text-white/60 uppercase tracking-[0.2em]">{post.date}</span>
                 </div>
-                <h3 className="text-2xl mb-4 group-hover:text-gold transition-colors leading-tight">{post.title}</h3>
-                <p className="text-white/60 text-sm leading-relaxed mb-6">{post.excerpt}</p>
+                <h2 className="text-2xl mb-4 group-hover:text-gold transition-colors leading-tight">{post.title}</h2>
+                <p className="text-white/70 text-sm leading-relaxed mb-6">{post.excerpt}</p>
                 <span className="text-xs uppercase font-bold tracking-widest border-b border-gold/30 pb-1 group-hover:border-gold transition-colors">Read Article</span>
               </Link>
             </article>

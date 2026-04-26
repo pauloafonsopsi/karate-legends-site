@@ -1,5 +1,5 @@
 {
-  "nav": {"home": "Home", "events": "Eventos", "athletes": "Atletas", "blog": "Blog", "ppv": "PPV"},
+  "nav": {"home": "Home", "events": "Eventos", "athletes": "Atletas", "blog": "Blog", "ppv": "PPV", "open_menu": "Abrir menu", "close_menu": "Fechar menu", "language": "Idioma", "instagram": "Instagram"},
   "hero": {
     "title": "KARATE LEGENDS",
     "subtitle": "Onde lendas são forjadas. O palco mundial para os melhores faixas pretas.",
@@ -22,6 +22,7 @@
   "events": {
     "title": "Próximos Eventos",
     "past_title": "Eventos Passados",
+    "past_results": "Resultados",
     "status_open": "Inscrições Abertas",
     "status_closed": "Encerrado",
     "status_soon": "Em Breve",
@@ -54,6 +55,7 @@
     "waitlist_subtitle": "As inscrições para o PPV abrem em breve. Cadastre-se para ser notificado quando o link de compra estiver disponível.",
     "notify_me": "Quero ser Avisado",
     "devices_title": "Disponível em todos os dispositivos",
+    "features_title": "Recursos da transmissão",
     "streaming_note": "A transmissão é feita por plataforma dedicada. Após a compra, você recebe um e-mail com o link de acesso à área exclusiva da edição.",
     "features": {
       "live": "Transmissão ao Vivo em Alta Definição",

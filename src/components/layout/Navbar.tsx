@@ -58,13 +58,15 @@ const Navbar = () => {
             </Link>
           ))}
           
-          <div className="flex items-center space-x-2 ml-4 border-l border-white/20 pl-4">
+          <div className="flex items-center space-x-2 ml-4 border-l border-white/20 pl-4" role="group" aria-label={t('nav.language')}>
             {['pt', 'en', 'es'].map((lang) => (
               <button
                 key={lang}
                 onClick={() => changeLanguage(lang)}
+                aria-label={`${t('nav.language')}: ${lang.toUpperCase()}`}
+                aria-pressed={i18n.language.startsWith(lang)}
                 className={cn(
-                  "text-xs uppercase font-bold px-1 transition-colors",
+                  "text-xs uppercase font-bold px-2 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-deep",
                   i18n.language.startsWith(lang) ? "text-gold" : "text-white/40 hover:text-white"
                 )}
               >
@@ -75,14 +77,20 @@ const Navbar = () => {
         </div>
 
         <div className="md:hidden flex items-center space-x-4">
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gold">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? t('nav.close_menu') : t('nav.open_menu')}
+            aria-expanded={isOpen}
+            aria-controls="mobile-nav"
+            className="text-gold p-2 -mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-deep"
+          >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 glass-morphism border-t border-white/10">
+        <div id="mobile-nav" className="md:hidden absolute top-full left-0 right-0 glass-morphism border-t border-white/10">
           <div className="flex flex-col p-6 space-y-4">
             {navLinks.map((link) => (
               <Link

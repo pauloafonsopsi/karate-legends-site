@@ -35,10 +35,10 @@ const Home = () => {
                 className="w-40 md:w-64 object-contain mb-4"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-xs uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan & Shito-Ryu</span>
+              <span className="text-sm uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan &amp; Shito-Ryu</span>
               <h1 className="text-7xl md:text-[10rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
                 <span className="block text-white-warm drop-shadow-2xl">KARATE</span>
-                <span className="block gold-text-gradient drop-shadow-2xl">LEGENDS</span>
+                <span className="block text-gold drop-shadow-2xl">LEGENDS</span>
               </h1>
             </div>
 
@@ -56,14 +56,14 @@ const Home = () => {
               </Link>
             </div>
 
-            {/* Próxima Edição — placeholder elegante */}
+            {/* Próxima Edição: placeholder elegante */}
             <div className="inline-flex flex-col items-center">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-bold flex items-center gap-4">
-                <span className="h-[1px] w-8 bg-white/20"></span>
+              <p className="text-xs uppercase tracking-[0.4em] text-white/50 mb-6 font-bold flex items-center gap-4">
+                <span className="h-[1px] w-8 bg-white/20" aria-hidden="true"></span>
                 {t('hero.countdown_label')}
-                <span className="h-[1px] w-8 bg-white/20"></span>
+                <span className="h-[1px] w-8 bg-white/20" aria-hidden="true"></span>
               </p>
-              <span className="text-5xl md:text-7xl font-display gold-text-gradient tracking-tight uppercase">
+              <span className="text-5xl md:text-7xl font-display text-gold tracking-tight uppercase">
                 {t('hero.countdown_value')}
               </span>
             </div>
@@ -90,10 +90,10 @@ const Home = () => {
                 { label: t('stats.editions'), value: '4' }
               ].map((stat, i) => (
                 <div key={i} className="bg-black-deep p-12 flex flex-col items-center text-center group hover:bg-white/[0.02] transition-colors">
-                  <span className="text-7xl md:text-8xl font-display gold-text-gradient mb-4 leading-none">{stat.value}</span>
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/40 font-bold">{stat.label}</span>
+                  <span className="text-7xl md:text-8xl font-display text-gold mb-4 leading-none">{stat.value}</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-white/60 font-bold">{stat.label}</span>
                   {stat.label === t('stats.belts') && (
-                    <span className="text-[9px] text-white/20 mt-4 leading-tight font-medium max-w-[150px]">{t('stats.belts_desc')}</span>
+                    <span className="text-xs text-white/40 mt-4 leading-tight font-medium max-w-[180px]">{t('stats.belts_desc')}</span>
                   )}
                 </div>
               ))}
@@ -127,6 +127,8 @@ const Home = () => {
                     src={event.img}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
                     alt={event.title}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                 </div>

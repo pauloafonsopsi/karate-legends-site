@@ -14,7 +14,7 @@ const EVENTS: Record<string, EventData> = {
   'curitiba': {
     title: 'LEGENDS: CURITIBA',
     date: 'EM BREVE',
-    location: 'Curitiba — Brasil',
+    location: 'Curitiba, Brasil',
     description: 'A próxima edição do Karate Legends acontece em Curitiba. Detalhes de local, data e programação serão divulgados em breve. Cadastre-se na lista de espera do PPV para ser notificado em primeira mão.',
     rules: [
       'Regras Shotokan Legends',
@@ -73,6 +73,8 @@ const EventDetail = () => {
             src="https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
             className="w-full h-full object-cover grayscale brightness-50"
             alt={event.title}
+            loading="lazy"
+            decoding="async"
             referrerPolicy="no-referrer"
           />
         </div>
