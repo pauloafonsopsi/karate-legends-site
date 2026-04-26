@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { Play } from 'lucide-react';
@@ -6,31 +5,14 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const { t } = useTranslation();
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const targetDate = new Date('2026-07-11T20:00:00').getTime();
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance < 0) { clearInterval(timer); return; }
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000)
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_" 
+          <img
+            src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
             className="w-full h-full object-cover opacity-80"
             alt="Karate Legends Hero"
             referrerPolicy="no-referrer"
@@ -47,9 +29,9 @@ const Home = () => {
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <div className="mb-4 flex flex-col items-center">
-              <img 
-                src="/logo.png" 
-                alt="Karate Legends Logo" 
+              <img
+                src="/logo.png"
+                alt="Karate Legends Logo"
                 className="w-40 md:w-64 object-contain mb-4"
                 referrerPolicy="no-referrer"
               />
@@ -59,7 +41,7 @@ const Home = () => {
                 <span className="block gold-text-gradient drop-shadow-2xl">LEGENDS</span>
               </h1>
             </div>
-            
+
             <p className="text-xl md:text-2xl text-creme/80 max-w-2xl mx-auto mb-12 font-light tracking-wide leading-relaxed">
               {t('hero.subtitle')}
             </p>
@@ -74,28 +56,16 @@ const Home = () => {
               </Link>
             </div>
 
-            {/* Countdown */}
+            {/* Próxima Edição — placeholder elegante */}
             <div className="inline-flex flex-col items-center">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-8 font-bold flex items-center gap-4">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-6 font-bold flex items-center gap-4">
                 <span className="h-[1px] w-8 bg-white/20"></span>
                 {t('hero.countdown_label')}
                 <span className="h-[1px] w-8 bg-white/20"></span>
               </p>
-              <div className="flex gap-12 md:gap-20">
-                {[
-                  { label: 'Days', value: timeLeft.days },
-                  { label: 'Hours', value: timeLeft.hours },
-                  { label: 'Mins', value: timeLeft.minutes },
-                  { label: 'Secs', value: timeLeft.seconds }
-                ].map((unit, i) => (
-                  <div key={i} className="flex flex-col items-center">
-                    <span className="text-5xl md:text-7xl font-display text-white-warm mb-2 tabular-nums">
-                      {unit.value.toString().padStart(2, '0')}
-                    </span>
-                    <span className="text-[9px] uppercase tracking-widest text-gold font-bold">{unit.label}</span>
-                  </div>
-                ))}
-              </div>
+              <span className="text-5xl md:text-7xl font-display gold-text-gradient tracking-tight uppercase">
+                {t('hero.countdown_value')}
+              </span>
             </div>
           </motion.div>
         </div>
@@ -112,7 +82,7 @@ const Home = () => {
             <p className="text-xl md:text-2xl text-white/60 leading-relaxed mb-16 font-light">
               {t('summary.text')}
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-1 px-1 bg-white/5 border border-white/5">
               {[
                 { label: t('stats.countries'), value: '2' },
@@ -144,18 +114,18 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { 
-                title: t('events.curitiba_title'), 
-                date: t('events.curitiba_date'), 
+              {
+                title: t('events.curitiba_title'),
+                date: t('events.curitiba_date'),
                 location: t('events.curitiba_loc'),
                 img: "https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
               }
             ].map((event, i) => (
               <div key={i} className="card-premium group">
                 <div className="relative h-48 mb-6 overflow-hidden">
-                  <img 
-                    src={event.img} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" 
+                  <img
+                    src={event.img}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
                     alt={event.title}
                     referrerPolicy="no-referrer"
                   />

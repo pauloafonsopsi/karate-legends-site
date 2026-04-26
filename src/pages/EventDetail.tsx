@@ -1,36 +1,57 @@
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Calendar, MapPin, Shield, Clock, ArrowLeft } from 'lucide-react';
+import { Calendar, MapPin, Shield, ArrowLeft } from 'lucide-react';
+
+interface EventData {
+  title: string;
+  date: string;
+  location: string;
+  description: string;
+  rules: string[];
+}
+
+const EVENTS: Record<string, EventData> = {
+  'curitiba': {
+    title: 'LEGENDS: CURITIBA',
+    date: 'EM BREVE',
+    location: 'Curitiba — Brasil',
+    description: 'A próxima edição do Karate Legends acontece em Curitiba. Detalhes de local, data e programação serão divulgados em breve. Cadastre-se na lista de espera do PPV para ser notificado em primeira mão.',
+    rules: [
+      'Regras Shotokan Legends',
+      'Contato pleno no corpo, controlado na cabeça',
+      'Duração: 3 minutos',
+      'Golden score em caso de empate'
+    ]
+  }
+};
 
 const EventDetail = () => {
   const { slug } = useParams();
   const { t } = useTranslation();
 
-  const event = {
-    title: "LEGENDS: CURITIBA",
-    date: "11 DE JULHO, 2025",
-    location: "Hard Rock Café Arena, Curitiba - PR",
-    description: "A edição de Curitiba traz o melhor do karatê Shotokan para a arena do Hard Rock Café. Prepare-se para lutas épicas e a definição de novos talentos.",
-    schedule: [
-      { time: "18:00", activity: "Abertura dos Portões" },
-      { time: "19:00", activity: "Início do Card Preliminar" },
-      { time: "21:00", activity: "Card Principal" },
-      { time: "22:30", activity: "Luta Principal" }
-    ],
-    rules: [
-      "Regras Shotokan Legends",
-      "Contato pleno no corpo, controlado na cabeça",
-      "Duração: 3 minutos",
-      "Golden score em caso de empate"
-    ]
-  };
+  const event = slug && EVENTS[slug] ? EVENTS[slug] : null;
+
+  if (!event) {
+    return (
+      <div className="pt-32 pb-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h1 className="text-4xl md:text-6xl mb-6">Evento não encontrado</h1>
+          <p className="text-white/60 mb-12">Os detalhes deste evento ainda não estão disponíveis.</p>
+          <Link to="/eventos" className="btn-outline-gold inline-flex items-center gap-2">
+            <ArrowLeft size={16} />
+            Voltar aos Eventos
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-6">
         <Link to="/eventos" className="flex items-center gap-2 text-gold text-sm font-bold uppercase tracking-widest mb-12 hover:translate-x-[-4px] transition-transform">
           <ArrowLeft size={16} />
-          Back to Events
+          {t('events.title')}
         </Link>
 
         <header className="mb-16">
@@ -48,10 +69,10 @@ const EventDetail = () => {
         </header>
 
         <div className="aspect-video bg-black-card border border-white/10 mb-16 overflow-hidden">
-          <img 
-            src="https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop" 
+          <img
+            src="https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
             className="w-full h-full object-cover grayscale brightness-50"
-            alt="Venue"
+            alt={event.title}
             referrerPolicy="no-referrer"
           />
         </div>
@@ -59,23 +80,8 @@ const EventDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
           <div className="md:col-span-2">
             <section className="mb-16">
-              <h2 className="text-3xl mb-6 text-gold">Overview</h2>
+              <h2 className="text-3xl mb-6 text-gold">Sobre a Edição</h2>
               <p className="text-white/70 leading-relaxed text-lg">{event.description}</p>
-            </section>
-
-            <section className="mb-16">
-              <h2 className="text-3xl mb-6 text-gold">Schedule</h2>
-              <div className="space-y-4">
-                {event.schedule.map((item, i) => (
-                  <div key={i} className="flex items-center gap-6 p-4 bg-black-accent border border-white/5">
-                    <div className="flex items-center gap-2 text-gold font-bold">
-                      <Clock size={16} />
-                      {item.time}
-                    </div>
-                    <div className="text-white-warm uppercase tracking-widest text-sm">{item.activity}</div>
-                  </div>
-                ))}
-              </div>
             </section>
           </div>
 
@@ -84,14 +90,16 @@ const EventDetail = () => {
               <div className="p-8 bg-black-card border border-gold/20">
                 <h3 className="text-xl mb-6 flex items-center gap-2">
                   <Shield size={20} className="text-gold" />
-                  Regulations
+                  Regulamento
                 </h3>
                 <ul className="space-y-4">
                   {event.rules.map((rule, i) => (
                     <li key={i} className="text-xs text-white/60 leading-relaxed list-disc ml-4">{rule}</li>
                   ))}
                 </ul>
-                <button className="btn-gold w-full mt-10 text-xs">Register Now</button>
+                <Link to="/ppv" className="btn-gold w-full mt-10 text-xs flex items-center justify-center">
+                  {t('ppv.notify_me')}
+                </Link>
               </div>
             </section>
           </div>

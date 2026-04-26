@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Tv, Smartphone, Tablet } from 'lucide-react';
+import { Tv, Smartphone, Tablet, Radio, Repeat, Lock } from 'lucide-react';
 import WaitlistForm from '@/components/WaitlistForm';
 
 const PPV = () => {
@@ -14,29 +14,28 @@ const PPV = () => {
         </header>
 
         {/* Waitlist Form */}
-        <div className="mb-20">
+        <div className="mb-24">
           <WaitlistForm />
         </div>
 
-        {/* Pricing preview (coming soon) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 opacity-50 pointer-events-none">
+        {/* Recursos da transmissão */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
           {[
-            { name: t('ppv.main_fight'), price: t('ppv.main_fight_price'), popular: false },
-            { name: t('ppv.premium_pass'), price: t('ppv.premium_pass_price'), popular: true }
-          ].map((plan, i) => (
-            <div key={i} className={`card-premium relative flex flex-col ${plan.popular ? 'border-gold' : ''}`}>
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gold text-[#050505] text-[10px] font-bold px-4 py-1 uppercase tracking-[0.2em]">
-                  {t('ppv.coming_soon_label')}
-                </div>
-              )}
-              <h3 className="text-3xl mb-2">{plan.name}</h3>
-              <span className="text-4xl font-display text-gold">{plan.price}</span>
-              <p className="text-white/40 text-sm mt-4">{t('ppv.coming_soon_msg')}</p>
-            </div>
-          ))}
+            { icon: Radio, label: t('ppv.features.live') },
+            { icon: Repeat, label: t('ppv.features.replay') },
+            { icon: Lock, label: t('ppv.features.exclusive') }
+          ].map((feature, i) => {
+            const Icon = feature.icon;
+            return (
+              <div key={i} className="card-premium flex flex-col items-center text-center py-12">
+                <Icon size={32} className="text-gold mb-6" />
+                <p className="text-sm text-white/70 leading-relaxed max-w-[200px]">{feature.label}</p>
+              </div>
+            );
+          })}
         </div>
 
+        {/* Dispositivos */}
         <div className="bg-[#0A0A0A] p-12 border border-white/5 text-center">
           <h3 className="text-2xl mb-8 uppercase tracking-widest">{t('ppv.devices_title')}</h3>
           <div className="flex justify-center gap-12 text-white/40">

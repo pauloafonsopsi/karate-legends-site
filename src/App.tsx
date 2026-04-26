@@ -9,6 +9,9 @@ import EventDetail from './pages/EventDetail';
 import Athletes from './pages/Athletes';
 import Blog from './pages/Blog';
 import PPV from './pages/PPV';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Refund from './pages/Refund';
 
 const App = () => (
   <I18nextProvider i18n={i18n}>
@@ -23,6 +26,9 @@ const App = () => (
             <Route path="/atletas" element={<Athletes />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ppv" element={<PPV />} />
+            <Route path="/privacidade" element={<Privacy />} />
+            <Route path="/termos" element={<Terms />} />
+            <Route path="/reembolso" element={<Refund />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
