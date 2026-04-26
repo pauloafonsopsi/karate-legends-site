@@ -238,8 +238,6 @@ const AthleteForm = () => {
         {status === 'loading' ? <Loader2 size={18} className="animate-spin" aria-hidden="true" /> : <Send size={18} aria-hidden="true" />}
         {status === 'loading' ? t('form.sending') : t('athletes.apply_now')}
       </button>
-
-      <p className="text-white/50 text-xs text-center">{t('athletes.fee_notice')}</p>
     </form>
   );
 };
