@@ -1,5 +1,15 @@
 {
-  "nav": {"home": "Home", "events": "Eventos", "athletes": "Atletas", "blog": "Blog", "ppv": "PPV", "open_menu": "Abrir menu", "close_menu": "Fechar menu", "language": "Idioma", "instagram": "Instagram"},
+  "nav": {
+    "home": "Home",
+    "events": "Eventos",
+    "athletes": "Atletas",
+    "blog": "Blog",
+    "ppv": "PPV",
+    "open_menu": "Abrir menu",
+    "close_menu": "Fechar menu",
+    "language": "Idioma",
+    "instagram": "Instagram"
+  },
   "hero": {
     "title": "KARATE LEGENDS",
     "subtitle": "Onde lendas são forjadas. O palco mundial para os melhores faixas pretas.",
@@ -41,7 +51,7 @@
     "req_4": "Certificado de Graduação Válido (foto legível)",
     "req_5": "Documento de Identificação Oficial com Foto",
     "apply_now": "Realizar Pagamento",
-    "fee_notice": "Taxa de análise: R$ 99,00",
+    "fee_notice": "",
     "how_it_works": "Como Funciona",
     "process_desc": "Sua inscrição é avaliada individualmente pelo consultor técnico Legends, que analisa vídeo, certificado e documento enviados. Se selecionado como apto, você recebe a confirmação por e-mail. A aprovação não garante participação no próximo evento, mas torna o atleta elegível para futuras convocações — Luta Casada ou Grand Prix.",
     "event_types_title": "Tipos de Evento",
@@ -97,7 +107,19 @@
     "success_title": "Inscrição Recebida",
     "success_athlete": "Sua inscrição foi registrada e será analisada pelo consultor técnico Legends. Você receberá em seu e-mail o link para pagamento da taxa de análise (R$ 99,00) e, em seguida, o resultado da avaliação. A aprovação não garante participação no próximo evento, mas torna o atleta elegível para futuras convocações.",
     "success_ppv": "Você será notificado assim que o link de compra estiver disponível.",
-    "send_another": "Enviar Outra Inscrição"
+    "send_another": "Enviar Outra Inscrição",
+    "owns_dojo_label": "Sou dono do meu próprio dojo",
+    "sensei_name": "Nome do Sensei Responsável",
+    "sensei_name_placeholder": "Nome completo do sensei",
+    "sensei_phone": "Telefone do Sensei",
+    "sensei_phone_placeholder": "+55 11 99999-9999",
+    "accept_terms_pre": "Li e aceito os ",
+    "accept_terms_link": "Termos e Condições",
+    "accept_terms_post": " da inscrição",
+    "accept_privacy_pre": "Li e aceito a ",
+    "accept_privacy_link": "Política de Dados",
+    "accept_privacy_post": "",
+    "must_accept": "Você deve aceitar os Termos e a Política de Dados para continuar."
   },
   "faq": {
     "q1": "Quais são os requisitos mínimos para participar?",
@@ -105,9 +127,9 @@
     "q2": "O que deve conter no vídeo de aplicação?",
     "a2": "O vídeo deve mostrar seus melhores momentos em Kumite (luta) e uma execução técnica do kata Bassai Dai. Buscamos técnica, explosão e espírito marcial.",
     "q3": "Como funciona a taxa de análise?",
-    "a3": "A taxa de R$ 99,00 cobre o trabalho do consultor técnico Legends — avaliação do vídeo, do certificado de graduação e do documento de identificação enviados. O pagamento é feito após o envio do formulário, por link enviado ao seu e-mail (cartão, PIX ou boleto). A aprovação na análise não garante participação no próximo evento, mas torna o atleta elegível para futuras convocações.",
+    "a3": "A taxa cobre o trabalho do consultor técnico Legends — avaliação do vídeo, do certificado de graduação e do documento de identificação enviados. O pagamento é feito após o envio do formulário, por link enviado ao seu e-mail. A aprovação na análise não garante participação no próximo evento, mas torna o atleta elegível para futuras convocações.",
     "q4": "Serei avisado se for selecionado?",
-    "a4": "Se selecionado como apto a participar, você receberá a confirmação por e-mail. A aprovação não garante participação no próximo evento, mas torna o atleta elegível para futuras convocações."
+    "a4": "Você receberá retorno por e-mail apenas em caso de aprovação, em até 10 dias corridos após a inscrição. Caso não receba resposta neste prazo, considere que a inscrição não foi aprovada."
   },
   "drive_tutorial": {
     "title": "Como enviar arquivos pelo Google Drive",

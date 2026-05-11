@@ -1,5 +1,15 @@
 {
-  "nav": {"home": "Inicio", "events": "Eventos", "athletes": "Atletas", "blog": "Blog", "ppv": "PPV", "open_menu": "Abrir menú", "close_menu": "Cerrar menú", "language": "Idioma", "instagram": "Instagram"},
+  "nav": {
+    "home": "Inicio",
+    "events": "Eventos",
+    "athletes": "Atletas",
+    "blog": "Blog",
+    "ppv": "PPV",
+    "open_menu": "Abrir menú",
+    "close_menu": "Cerrar menú",
+    "language": "Idioma",
+    "instagram": "Instagram"
+  },
   "hero": {
     "title": "KARATE LEGENDS",
     "subtitle": "Donde se forjan las leyendas. El escenario mundial para los mejores cinturones negros.",
@@ -41,7 +51,7 @@
     "req_4": "Certificado de Graduación Válido (foto legible)",
     "req_5": "Documento de Identidad Oficial con Foto",
     "apply_now": "Realizar Pago",
-    "fee_notice": "Tasa de análisis: R$ 99,00",
+    "fee_notice": "",
     "how_it_works": "Cómo Funciona",
     "process_desc": "Tu inscripción es evaluada individualmente por el consultor técnico Legends, que analiza el video, el certificado y el documento enviados. Si eres seleccionado como apto, recibes la confirmación por correo electrónico. La aprobación no garantiza participación en el próximo evento, pero hace al atleta elegible para futuras convocatorias — Combates o Grand Prix.",
     "event_types_title": "Tipos de Evento",
@@ -97,7 +107,19 @@
     "success_title": "Inscripción Recibida",
     "success_athlete": "Tu inscripción ha sido registrada y será analizada por el consultor técnico Legends. Recibirás en tu correo electrónico el enlace para el pago de la tasa de análisis (R$ 99,00) y, posteriormente, el resultado de la evaluación. La aprobación no garantiza participación en el próximo evento, pero hace al atleta elegible para futuras convocatorias.",
     "success_ppv": "Serás notificado tan pronto como el enlace de compra esté disponible.",
-    "send_another": "Enviar Otra Solicitud"
+    "send_another": "Enviar Otra Solicitud",
+    "owns_dojo_label": "Soy dueño de mi propio dojo",
+    "sensei_name": "Nombre del Sensei Responsable",
+    "sensei_name_placeholder": "Nombre completo del sensei",
+    "sensei_phone": "Teléfono del Sensei",
+    "sensei_phone_placeholder": "+34 600 000 000",
+    "accept_terms_pre": "He leído y acepto los ",
+    "accept_terms_link": "Términos y Condiciones",
+    "accept_terms_post": " de inscripción",
+    "accept_privacy_pre": "He leído y acepto la ",
+    "accept_privacy_link": "Política de Datos",
+    "accept_privacy_post": "",
+    "must_accept": "Debes aceptar los Términos y la Política de Datos para continuar."
   },
   "faq": {
     "q1": "¿Cuáles son los requisitos mínimos para participar?",
@@ -105,9 +127,9 @@
     "q2": "¿Qué debe contener el video de aplicación?",
     "a2": "El video debe mostrar tus mejores momentos en Kumite (lucha) y una ejecución técnica del kata Bassai Dai. Buscamos técnica, explosividad y espíritu marcial.",
     "q3": "¿Cómo funciona la tasa de análisis?",
-    "a3": "La tasa de R$ 99,00 cubre el trabajo del consultor técnico Legends — evaluación del video, del certificado de graduación y del documento de identidad enviados. El pago se realiza después del envío del formulario, por enlace enviado a tu correo electrónico (tarjeta, PIX o boleto). La aprobación en el análisis no garantiza participación en el próximo evento, pero hace al atleta elegible para futuras convocatorias.",
+    "a3": "La tasa cubre el trabajo del consultor técnico Legends — evaluación del video, del certificado de graduación y del documento de identidad enviados. El pago se realiza después del envío del formulario, por enlace enviado a tu correo. La aprobación no garantiza participación en el próximo evento, pero hace al atleta elegible para futuras convocatorias.",
     "q4": "¿Seré notificado si soy seleccionado?",
-    "a4": "Si eres seleccionado como apto para participar, recibirás la confirmación por correo electrónico. La aprobación no garantiza participación en el próximo evento, pero hace al atleta elegible para futuras convocatorias."
+    "a4": "Recibirás respuesta por correo solo en caso de aprobación, en hasta 10 días corridos después de la inscripción. Si no recibes respuesta en este plazo, considera que la inscripción no fue aprobada."
   },
   "drive_tutorial": {
     "title": "Cómo enviar archivos por Google Drive",

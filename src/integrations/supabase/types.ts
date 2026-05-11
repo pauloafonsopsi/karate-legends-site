@@ -16,9 +16,12 @@ export type Database = {
     Tables: {
       inscricoes_atletas: {
         Row: {
+          aceite_privacidade: boolean
+          aceite_termos: boolean
           associacao: string | null
           cidade: string | null
           criado_em: string
+          dono_dojo: boolean
           email: string
           estilo: string
           graduacao: string
@@ -27,14 +30,23 @@ export type Database = {
           link_documento: string | null
           link_video: string | null
           nome: string
+          observacoes: string | null
+          pagamento_confirmado: boolean
           pais: string | null
           redes_sociais: string | null
+          respondido_em: string | null
+          sensei_nome: string | null
+          sensei_telefone: string | null
+          status: string
           whatsapp: string
         }
         Insert: {
+          aceite_privacidade?: boolean
+          aceite_termos?: boolean
           associacao?: string | null
           cidade?: string | null
           criado_em?: string
+          dono_dojo?: boolean
           email: string
           estilo: string
           graduacao: string
@@ -43,14 +55,23 @@ export type Database = {
           link_documento?: string | null
           link_video?: string | null
           nome: string
+          observacoes?: string | null
+          pagamento_confirmado?: boolean
           pais?: string | null
           redes_sociais?: string | null
+          respondido_em?: string | null
+          sensei_nome?: string | null
+          sensei_telefone?: string | null
+          status?: string
           whatsapp: string
         }
         Update: {
+          aceite_privacidade?: boolean
+          aceite_termos?: boolean
           associacao?: string | null
           cidade?: string | null
           criado_em?: string
+          dono_dojo?: boolean
           email?: string
           estilo?: string
           graduacao?: string
@@ -59,8 +80,14 @@ export type Database = {
           link_documento?: string | null
           link_video?: string | null
           nome?: string
+          observacoes?: string | null
+          pagamento_confirmado?: boolean
           pais?: string | null
           redes_sociais?: string | null
+          respondido_em?: string | null
+          sensei_nome?: string | null
+          sensei_telefone?: string | null
+          status?: string
           whatsapp?: string
         }
         Relationships: []
@@ -89,15 +116,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          criado_em: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          criado_em?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          criado_em?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -224,6 +278,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

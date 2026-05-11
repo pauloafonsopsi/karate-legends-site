@@ -19,28 +19,53 @@ interface FormData {
   certificateLink: string;
   idLink: string;
   socialMedia: string;
+  ownsDojo: boolean;
+  senseiName: string;
+  senseiPhone: string;
+  acceptTerms: boolean;
+  acceptPrivacy: boolean;
 }
 
 const AthleteForm = () => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<FormData>({
+  const initialData: FormData = {
     name: '', email: '', whatsapp: '+55 ', style: '', belt: '',
     association: '', city: '', country: '', videoLink: '',
-    certificateLink: '', idLink: '', socialMedia: ''
-  });
+    certificateLink: '', idLink: '', socialMedia: '',
+    ownsDojo: true, senseiName: '', senseiPhone: '',
+    acceptTerms: false, acceptPrivacy: false,
+  };
+  const [formData, setFormData] = useState<FormData>(initialData);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const target = e.target as HTMLInputElement;
+    if (target.type === 'checkbox') {
+      setFormData(prev => ({ ...prev, [target.name]: target.checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [target.name]: target.value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const allFields = Object.values(formData);
-    if (allFields.some(v => !v.trim())) {
+    const requiredText = [
+      formData.name, formData.email, formData.whatsapp, formData.style,
+      formData.belt, formData.association, formData.city, formData.country,
+      formData.videoLink, formData.certificateLink, formData.idLink, formData.socialMedia,
+    ];
+    if (requiredText.some(v => !v.trim())) {
       setErrorMsg(t('form.required_fields'));
+      return;
+    }
+    if (!formData.ownsDojo && (!formData.senseiName.trim() || !formData.senseiPhone.trim())) {
+      setErrorMsg(t('form.required_fields'));
+      return;
+    }
+    if (!formData.acceptTerms || !formData.acceptPrivacy) {
+      setErrorMsg(t('form.must_accept'));
       return;
     }
 
@@ -62,6 +87,11 @@ const AthleteForm = () => {
         link_certificado: formData.certificateLink,
         link_documento: formData.idLink,
         redes_sociais: formData.socialMedia,
+        dono_dojo: formData.ownsDojo,
+        sensei_nome: formData.ownsDojo ? null : formData.senseiName,
+        sensei_telefone: formData.ownsDojo ? null : formData.senseiPhone,
+        aceite_termos: formData.acceptTerms,
+        aceite_privacidade: formData.acceptPrivacy,
       });
 
       if (dbError) {
@@ -81,11 +111,24 @@ const AthleteForm = () => {
         form.action = GOOGLE_APPS_SCRIPT_URL;
         form.target = 'athlete-submit-frame';
 
-        const fields = {
+        const fields: Record<string, string> = {
           type: 'athlete',
           timestamp: new Date().toISOString(),
-          ...formData,
-          whatsapp: "'" + formData.whatsapp
+          name: formData.name,
+          email: formData.email,
+          whatsapp: "'" + formData.whatsapp,
+          style: formData.style,
+          belt: formData.belt,
+          association: formData.association,
+          city: formData.city,
+          country: formData.country,
+          videoLink: formData.videoLink,
+          certificateLink: formData.certificateLink,
+          idLink: formData.idLink,
+          socialMedia: formData.socialMedia,
+          ownsDojo: formData.ownsDojo ? 'sim' : 'nao',
+          senseiName: formData.ownsDojo ? '' : formData.senseiName,
+          senseiPhone: formData.ownsDojo ? '' : "'" + formData.senseiPhone,
         };
 
         Object.entries(fields).forEach(([key, value]) => {
@@ -109,7 +152,7 @@ const AthleteForm = () => {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', whatsapp: '+55 ', style: '', belt: '', association: '', city: '', country: '', videoLink: '', certificateLink: '', idLink: '', socialMedia: '' });
+      setFormData(initialData);
     } catch {
       setStatus('error');
       setErrorMsg(t('form.error'));
@@ -183,8 +226,30 @@ const AthleteForm = () => {
           <label htmlFor="athlete-association" className={labelClass}>{t('form.association')} *</label>
           <input id="athlete-association" name="association" value={formData.association} onChange={handleChange} required autoComplete="organization"
             className={inputClass} placeholder={t('form.association_placeholder')} />
+          <label className="flex items-center gap-2 mt-3 text-sm text-white/70 cursor-pointer">
+            <input type="checkbox" name="ownsDojo" checked={formData.ownsDojo} onChange={handleChange}
+              className="w-4 h-4 accent-gold" />
+            <span>{t('form.owns_dojo_label')}</span>
+          </label>
         </div>
       </div>
+
+      {!formData.ownsDojo && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="athlete-sensei-name" className={labelClass}>{t('form.sensei_name')} *</label>
+            <input id="athlete-sensei-name" name="senseiName" value={formData.senseiName} onChange={handleChange}
+              required={!formData.ownsDojo}
+              className={inputClass} placeholder={t('form.sensei_name_placeholder')} />
+          </div>
+          <div>
+            <label htmlFor="athlete-sensei-phone" className={labelClass}>{t('form.sensei_phone')} *</label>
+            <input id="athlete-sensei-phone" name="senseiPhone" type="tel" value={formData.senseiPhone} onChange={handleChange}
+              required={!formData.ownsDojo}
+              className={inputClass} placeholder={t('form.sensei_phone_placeholder')} />
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -230,6 +295,31 @@ const AthleteForm = () => {
           aria-describedby="athlete-id-hint"
           className={inputClass} placeholder={t('form.id_placeholder')} />
         <p id="athlete-id-hint" className="text-white/50 text-xs mt-2">{t('form.id_hint')}</p>
+      </div>
+
+      <div className="space-y-3 pt-2 border-t border-white/10">
+        <label className="flex items-start gap-3 text-sm text-white/80 cursor-pointer">
+          <input type="checkbox" name="acceptTerms" checked={formData.acceptTerms} onChange={handleChange}
+            className="w-4 h-4 mt-0.5 accent-gold flex-shrink-0" required />
+          <span>
+            {t('form.accept_terms_pre')}
+            <a href="/termos-atleta" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+              {t('form.accept_terms_link')}
+            </a>
+            {t('form.accept_terms_post')}
+          </span>
+        </label>
+        <label className="flex items-start gap-3 text-sm text-white/80 cursor-pointer">
+          <input type="checkbox" name="acceptPrivacy" checked={formData.acceptPrivacy} onChange={handleChange}
+            className="w-4 h-4 mt-0.5 accent-gold flex-shrink-0" required />
+          <span>
+            {t('form.accept_privacy_pre')}
+            <a href="/politica-dados" target="_blank" rel="noopener noreferrer" className="text-gold underline hover:text-gold/80">
+              {t('form.accept_privacy_link')}
+            </a>
+            {t('form.accept_privacy_post')}
+          </span>
+        </label>
       </div>
 
       {errorMsg && <p role="alert" className="text-red-400 text-sm">{errorMsg}</p>}

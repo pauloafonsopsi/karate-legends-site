@@ -1,5 +1,15 @@
 {
-  "nav": {"home": "Home", "events": "Events", "athletes": "Athletes", "blog": "Blog", "ppv": "PPV", "open_menu": "Open menu", "close_menu": "Close menu", "language": "Language", "instagram": "Instagram"},
+  "nav": {
+    "home": "Home",
+    "events": "Events",
+    "athletes": "Athletes",
+    "blog": "Blog",
+    "ppv": "PPV",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "language": "Language",
+    "instagram": "Instagram"
+  },
   "hero": {
     "title": "KARATE LEGENDS",
     "subtitle": "Where legends are forged. The world stage for the best black belts.",
@@ -41,7 +51,7 @@
     "req_4": "Valid Graduation Certificate (legible photo)",
     "req_5": "Official Photo ID Document",
     "apply_now": "Make Payment",
-    "fee_notice": "Analysis fee: R$ 99.00",
+    "fee_notice": "",
     "how_it_works": "How it Works",
     "process_desc": "Each application is individually reviewed by the Legends technical consultant, who analyzes the submitted video, graduation certificate, and ID. If selected as eligible, you receive confirmation by email. Approval does not guarantee participation in the next event, but makes the athlete eligible for future calls — Matchups or Grand Prix.",
     "event_types_title": "Event Types",
@@ -97,7 +107,19 @@
     "success_title": "Application Received",
     "success_athlete": "Your application has been registered and will be reviewed by the Legends technical consultant. You will receive by email the payment link for the analysis fee (R$ 99.00) and, afterwards, the result of the evaluation. Approval does not guarantee participation in the next event, but makes the athlete eligible for future calls.",
     "success_ppv": "You will be notified as soon as the purchase link becomes available.",
-    "send_another": "Submit Another Application"
+    "send_another": "Submit Another Application",
+    "owns_dojo_label": "I own my own dojo",
+    "sensei_name": "Responsible Sensei Name",
+    "sensei_name_placeholder": "Full name of the sensei",
+    "sensei_phone": "Sensei Phone",
+    "sensei_phone_placeholder": "+1 555 555 5555",
+    "accept_terms_pre": "I have read and accept the ",
+    "accept_terms_link": "Terms and Conditions",
+    "accept_terms_post": " of registration",
+    "accept_privacy_pre": "I have read and accept the ",
+    "accept_privacy_link": "Data Policy",
+    "accept_privacy_post": "",
+    "must_accept": "You must accept the Terms and the Data Policy to continue."
   },
   "faq": {
     "q1": "What are the minimum requirements to participate?",
@@ -105,9 +127,9 @@
     "q2": "What should the application video contain?",
     "a2": "The video should show your best moments in Kumite (fighting) and a technical execution of the Bassai Dai kata. We look for technique, explosiveness, and martial spirit.",
     "q3": "How does the analysis fee work?",
-    "a3": "The R$ 99.00 fee covers the work of the Legends technical consultant — review of the submitted video, graduation certificate, and ID document. Payment is made after the form submission, via a link sent to your email (card, PIX, or boleto). Approval in the analysis does not guarantee participation in the next event, but makes the athlete eligible for future calls.",
+    "a3": "The fee covers the work of the Legends technical consultant — review of the video, graduation certificate and ID document submitted. Payment is made after the form is sent, via a link emailed to you. Approval does not guarantee participation in the next event, but makes the athlete eligible for future calls.",
     "q4": "Will I be notified if selected?",
-    "a4": "If selected as eligible to participate, you will receive confirmation via email. Approval does not guarantee participation in the next event, but makes the athlete eligible for future calls."
+    "a4": "You will only receive an email response if approved, within 10 calendar days of submission. If no response is received within this period, consider the application not approved."
   },
   "drive_tutorial": {
     "title": "How to share files via Google Drive",

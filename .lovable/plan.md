@@ -1,35 +1,73 @@
-# Plano: Ajustes no Formulário de Atletas e Página de Seleção
+## Plano: Termos, Dono do Dojo, FAQ e Painel Admin
 
-## Mudanças solicitadas
+### 1. Banco de dados (migração)
+Adicionar colunas em `inscricoes_atletas`:
+- `dono_dojo` (boolean, default false)
+- `sensei_nome` (text, nullable)
+- `sensei_telefone` (text, nullable)
+- `aceite_termos` (boolean, default false)
+- `aceite_privacidade` (boolean, default false)
+- `status` (text, default 'pendente') — valores: pendente, pago, aprovado, rejeitado
+- `pagamento_confirmado` (boolean, default false)
+- `observacoes` (text, nullable)
+- `respondido_em` (timestamptz, nullable)
 
-### 1. Tutorial do Google Drive com mais destaque
+Criar enum `app_role` ('admin', 'user') e tabela `user_roles` com função `has_role()` (security definer).
 
-- Transformar o `DriveTutorial` de um accordion discreto para um **botão gold chamativo** que abre um **Dialog/Modal** com o tutorial completo
-- O botão ficará visível acima dos campos de link, com ícone e texto claro
+Adicionar policies em `inscricoes_atletas`:
+- SELECT, UPDATE: apenas admins (`has_role(auth.uid(), 'admin')`)
 
-### 2. Preço da análise: R$ 99,00
+Adicionar policies em `lista_espera_ppv`:
+- SELECT: apenas admins
 
-- Atualizar `athletes.fee_notice` nos 3 arquivos de tradução (pt, en, es) de R$ 29,90 para R$ 99,00
-- Atualizar também o FAQ (q3/a3) que menciona o valor
+### 2. Autenticação
+- Página `/admin/login` com email + senha
+- Configurar auto-confirm de email (admin único)
+- Primeiro admin precisa ser atribuído manualmente após signup (instrução para o usuário)
 
-### 3. Graduação: Faixa Marrom ou Preta
+### 3. Página `/admin` (protegida)
+- Lista de inscrições de atletas em tabela com colunas: Nome, Email, WhatsApp, Estilo, Graduação, Status, Pagamento, Data
+- Botões de ação por linha: Ver detalhes (modal com todos os campos + links clicáveis para vídeo/certificado/documento), Editar status, Marcar pagamento, Adicionar observação
+- Botão "Exportar CSV"
+- Filtros por status e busca por nome/email
+- Aba secundária para `lista_espera_ppv` (também exportável)
 
-- Atualizar o select de graduação (`belt`) para incluir opção "Faixa Marrom" / "Brown Belt"
-- Atualizar `athletes.req_1` nos 3 idiomas para refletir "Faixa Marrom ou Preta"
+### 4. Formulário de atletas (`AthleteForm.tsx`)
+- Adicionar checkbox "Sou dono do meu dojo" próximo ao campo Associação/Dojo
+- Se desmarcado, mostrar campos: "Nome do sensei responsável" + "Telefone do sensei"
+- Adicionar 2 checkboxes obrigatórios no fim:
+  - "Li e aceito os Termos e Condições" (link para `/termos-atleta`)
+  - "Li e aceito a Política de Dados" (link para `/politica-dados`)
+- Bloquear submit se não aceitos
+- Persistir todos os novos campos no Supabase
 
-### 4. Mensagem de sucesso e processo seletivo
+### 5. Documentos legais
+Criar duas novas páginas:
+- `/termos-atleta` — Termos específicos da inscrição contendo:
+  - Pagamento da taxa de R$ 99,00 é voluntário e não reembolsável
+  - Karate Legends não se responsabiliza pela veracidade das informações enviadas
+  - Em caso de irregularidade nos documentos, não há obrigação de notificação ao atleta
+  - Resposta apenas em casos positivos, em até 10 dias corridos
+  - Ausência de resposta em 10 dias = não aprovação (resposta negativa tácita)
+  - Aprovação não garante participação no próximo evento
+- `/politica-dados` — Tratamento de dados (LGPD):
+  - Dados coletados, finalidade, base legal, retenção, direitos do titular
 
-- Atualizar `form.success_athlete` e `athletes.process_desc` nos 3 idiomas:
-  - Ao aplicar, o atleta recebe acesso à **plataforma de treinamentos exclusivos do padrão Legends com R$ 900 de desconto. Desconto deve estar aparente no preço como: de "X" por "Y".**
-  - Se selecionado como apto, receberá confirmação por email (não significa que lutará no próximo evento)
+Adicionar links no rodapé.
 
-### 5. Textos de requisitos e FAQ
+### 6. FAQ
+Em `athletes.a3` (Como funciona a taxa) — remover menção a R$ 99,00, substituir por texto genérico sobre o trabalho do consultor técnico.
 
-- Atualizar requisitos e FAQ para consistência com as novas regras (marrom/preta, R$ 99, benefício da plataforma, confirmação apenas se for aprovado)
-
-## Arquivos modificados
-
-- `src/components/DriveTutorial.tsx` — refatorar para botão + modal
-- `src/components/AthleteForm.tsx` — adicionar opção faixa marrom no select
-- `src/pages/Athletes.tsx` — sem mudanças estruturais
-- `src/messages/pt.json`, `en.json`, `es.json` — atualizar traduções (preço, graduação, processo, benefício)
+### Arquivos modificados
+- Nova migração SQL
+- `src/components/AthleteForm.tsx`
+- `src/components/AdminDashboard.tsx` (novo)
+- `src/components/AdminLogin.tsx` (novo)
+- `src/components/ProtectedAdminRoute.tsx` (novo)
+- `src/pages/Admin.tsx` (nova)
+- `src/pages/AdminLogin.tsx` (nova)
+- `src/pages/TermosAtleta.tsx` (nova)
+- `src/pages/PoliticaDados.tsx` (nova)
+- `src/App.tsx` — novas rotas
+- `src/components/layout/Footer.tsx` — links
+- `src/messages/pt.json`, `en.json`, `es.json` — novas chaves + FAQ atualizado
