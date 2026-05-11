@@ -35,7 +35,7 @@ const Home = () => {
                 className="w-40 md:w-64 object-contain mb-4"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-sm uppercase tracking-[0.5em] text-gold font-bold mb-4 block">The World Stage for Shotokan &amp; Shito-Ryu</span>
+              <span className="text-sm uppercase tracking-[0.5em] text-gold font-bold mb-4 block">{t('hero.tagline')}</span>
               <h1 className="text-7xl md:text-[10rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
                 <span className="block text-white-warm drop-shadow-2xl">KARATE</span>
                 <span className="block text-gold drop-shadow-2xl">LEGENDS</span>
