@@ -12,6 +12,10 @@ import PPV from './pages/PPV';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Refund from './pages/Refund';
+import TermosAtleta from './pages/TermosAtleta';
+import PoliticaDados from './pages/PoliticaDados';
+import Admin from './pages/Admin';
+import AdminLogin from './pages/AdminLogin';
 
 const App = () => (
   <I18nextProvider i18n={i18n}>
@@ -29,6 +33,10 @@ const App = () => (
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/termos" element={<Terms />} />
             <Route path="/reembolso" element={<Refund />} />
+            <Route path="/termos-atleta" element={<TermosAtleta />} />
+            <Route path="/politica-dados" element={<PoliticaDados />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
