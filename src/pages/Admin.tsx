@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { toast } from 'sonner';
 import {
-  Loader2, Download, LogOut, ExternalLink, Save, Search, Copy,
+  Loader2, Download, LogOut, ExternalLink, Save, Search, Copy, FileText,
   Users, Clock, CheckCircle2, XCircle, DollarSign, Bell, LayoutDashboard, UserSquare2, Trash2, Inbox,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -23,6 +23,7 @@ type Inscricao = {
   link_video: string | null;
   link_certificado: string | null;
   link_documento: string | null;
+  link_documento_verso: string | null;
   redes_sociais: string | null;
   dono_dojo: boolean;
   sensei_nome: string | null;
@@ -449,12 +450,15 @@ const Admin = () => {
                 </Section>
 
                 <Section title="Mídias enviadas">
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {editing.link_video && <LinkRow label="Vídeo" url={editing.link_video} />}
-                    {editing.link_certificado && <LinkRow label="Certificado" url={editing.link_certificado} />}
-                    {editing.link_documento && <LinkRow label="Documento" url={editing.link_documento} />}
-                    {!editing.link_video && !editing.link_certificado && !editing.link_documento && (
-                      <p className="text-xs text-white/40">Nenhum link enviado.</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <StoragePreview label="Certificado" path={editing.link_certificado} />
+                      <StoragePreview label="Doc · Frente" path={editing.link_documento} />
+                      <StoragePreview label="Doc · Verso" path={editing.link_documento_verso} />
+                    </div>
+                    {!editing.link_video && !editing.link_certificado && !editing.link_documento && !editing.link_documento_verso && (
+                      <p className="text-xs text-white/40">Nenhum arquivo enviado.</p>
                     )}
                   </div>
                 </Section>
@@ -547,6 +551,57 @@ const LinkRow = ({ label, url }: { label: string; url: string }) => (
     <span className="text-white/70">{url}</span>
   </a>
 );
+
+const StoragePreview = ({ label, path }: { label: string; path: string | null }) => {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const isPdf = !!path && path.toLowerCase().endsWith('.pdf');
+
+  useEffect(() => {
+    setUrl(null);
+    if (!path || isPdf) return;
+    let cancelled = false;
+    setLoading(true);
+    supabase.storage.from('atletas-docs').createSignedUrl(path, 3600).then(({ data }) => {
+      if (!cancelled) { setUrl(data?.signedUrl ?? null); setLoading(false); }
+    });
+    return () => { cancelled = true; };
+  }, [path, isPdf]);
+
+  const open = async () => {
+    if (!path) return;
+    const { data } = await supabase.storage.from('atletas-docs').createSignedUrl(path, 3600);
+    if (data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  if (!path) {
+    return (
+      <div className="border border-white/5 bg-white/[0.02] aspect-[4/3] flex flex-col items-center justify-center text-xs text-white/30 gap-1">
+        <span className="uppercase tracking-widest">{label}</span>
+        <span>—</span>
+      </div>
+    );
+  }
+  return (
+    <button onClick={open} type="button"
+      className="group relative border border-white/10 hover:border-gold/40 bg-black/40 aspect-[4/3] overflow-hidden text-left transition-colors">
+      {isPdf ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/60">
+          <FileText size={28} className="text-gold" />
+          <span className="text-xs">PDF</span>
+        </div>
+      ) : loading || !url ? (
+        <div className="absolute inset-0 flex items-center justify-center"><Loader2 size={16} className="animate-spin text-white/40" /></div>
+      ) : (
+        <img src={url} alt={label} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+      )}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-2 flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-widest text-white/80">{label}</span>
+        <ExternalLink size={12} className="text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+    </button>
+  );
+};
 
 const StatCard = ({ icon: Icon, label, value, accent }: { icon: typeof Users; label: string; value: number; accent: string }) => (
   <div className="border border-white/10 bg-white/[0.02] p-4 hover:border-gold/20 transition-colors">

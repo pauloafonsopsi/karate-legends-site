@@ -28,6 +28,7 @@ export type Database = {
           id: string
           link_certificado: string | null
           link_documento: string | null
+          link_documento_verso: string | null
           link_video: string | null
           nome: string
           observacoes: string | null
@@ -53,6 +54,7 @@ export type Database = {
           id?: string
           link_certificado?: string | null
           link_documento?: string | null
+          link_documento_verso?: string | null
           link_video?: string | null
           nome: string
           observacoes?: string | null
@@ -78,6 +80,7 @@ export type Database = {
           id?: string
           link_certificado?: string | null
           link_documento?: string | null
+          link_documento_verso?: string | null
           link_video?: string | null
           nome?: string
           observacoes?: string | null
