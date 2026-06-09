@@ -146,5 +146,49 @@
     "step5_title": "Copia el enlace",
     "step5_desc": "Haz clic en \"Copiar enlace\" y pégalo en el campo correspondiente del formulario.",
     "open_drive": "Abrir Google Drive →"
+  },
+  "legal": {
+    "last_updated": "Última actualización: 11/05/2026",
+    "terms_title": "Términos y Condiciones de Inscripción de Atletas",
+    "privacy_title": "Política de Datos",
+    "terms": {
+      "acceptance_title": "1. Aceptación",
+      "acceptance_text": "Al enviar la inscripción como atleta en Karate Legends y marcar la casilla de aceptación, el candidato declara haber leído, comprendido y aceptado íntegramente estos Términos y Condiciones, de forma libre, consciente y voluntaria.",
+      "voluntary_title": "2. Naturaleza Voluntaria del Envío y del Pago",
+      "voluntary_text": "La inscripción y el pago de la tasa de análisis se realizan por iniciativa exclusiva del candidato, de forma voluntaria y espontánea. El candidato reconoce que envía su información, documentos y medios por libre voluntad, sin ninguna inducción, coerción o promesa de aprobación por parte de la organización.",
+      "accuracy_title": "3. Veracidad de la Información",
+      "accuracy_text": "El candidato es el único y exclusivo responsable de la veracidad, autenticidad y legalidad de todos los datos, enlaces, documentos, videos y demás información enviados. La organización de Karate Legends no tiene el deber, ni dispone de medios, de verificar la autenticidad de cada documento y, por tanto, no se responsabiliza, civil o penalmente, por cualquier información falsa, adulterada, incompleta o irregular proporcionada por el candidato.",
+      "accuracy_text2": "En caso de identificarse cualquier irregularidad — antes, durante o después del evento —, la organización se reserva el derecho de descalificar al atleta en cualquier momento, sin derecho a reembolso y sin obligación de comunicar previamente el motivo.",
+      "no_notify_title": "4. Ausencia de Obligación de Notificación",
+      "no_notify_text": "La organización no tiene obligación de comunicar al candidato eventuales inconsistencias, fallas o irregularidades observadas en el material enviado. El proceso de análisis es interno, técnico y discrecional. La respuesta se da exclusivamente en caso de aprobación.",
+      "deadline_title": "5. Plazo de Respuesta y Negativa Tácita",
+      "deadline_text": "El candidato recibirá respuesta por correo electrónico solo en caso de aprobación, en un plazo de hasta 10 (diez) días corridos contados desde el envío de la inscripción. Si no recibe ninguna comunicación dentro de este plazo, se considera la inscripción no aprobada, siendo este silencio interpretado como negativa tácita, sin derecho a recurso, justificación o reembolso.",
+      "fee_title": "6. Tasa de Análisis",
+      "fee_text": "La tasa cubre exclusivamente el trabajo del consultor técnico Legends — análisis del video, del certificado de graduación y del documento de identificación enviados. El pago es no reembolsable, independientemente del resultado de la evaluación, y no constituye garantía de aprobación o de participación en cualquier evento.",
+      "approval_title": "7. Aprobación y Convocatoria",
+      "approval_text": "La aprobación en el análisis técnica hace al atleta elegible para futuras convocatorias (Combates o Grand Prix), pero no garantiza participación en el próximo evento o en cualquier edición específica. Las convocatorias son definidas por la organización conforme a criterios técnicos, deportivos y de producción.",
+      "image_title": "8. Uso de Imagen y Contenido",
+      "image_text": "Al enviar videos y fotos, el candidato autoriza, en carácter gratuito y no exclusivo, el uso de su nombre, imagen, voz y materiales enviados por la organización para fines de evaluación técnica interna, divulgación institucional del evento, redes sociales y materiales promocionales relacionados con Karate Legends.",
+      "liability_title": "9. Limitación de Responsabilidad",
+      "liability_text": "La organización no se responsabiliza por: (i) daños derivados del uso indebido de enlaces públicos de Google Drive u otros servicios de terceros por parte del candidato; (ii) accesos indebidos a documentos compartidos públicamente por el propio candidato; (iii) retrasos, fallas o indisponibilidad de plataformas de pago; (iv) perjuicios indirectos, lucros cesantes o expectativas frustradas derivadas de la no aprobación.",
+      "venue_title": "10. Fuero",
+      "venue_text": "Estos Términos se rigen por la legislación brasileña. Se elige el fuero de la comarca de la sede de la organización para dirimir cualquier controversia, con renuncia a cualquier otro, por más privilegiado que sea."
+    },
+    "privacy": {
+      "collected_title": "1. Qué datos recolectamos",
+      "collected_text": "Recolectamos: nombre completo, correo electrónico, WhatsApp, ciudad, país, estilo, graduación, asociación/dojo, datos del sensei responsable (cuando aplique), redes sociales y enlaces públicos para video, certificado de graduación y documento de identificación enviados por el propio candidato.",
+      "purpose_title": "2. Finalidad del tratamiento",
+      "purpose_text": "Los datos se usan exclusivamente para: (i) análisis técnico de la inscripción por el consultor Legends; (ii) comunicación del resultado en caso de aprobación; (iii) gestión administrativa de pagos y convocatorias; (iv) divulgación institucional del evento, en conformidad con la autorización de uso de imagen dada por el candidato.",
+      "legal_title": "3. Base legal (LGPD)",
+      "legal_text": "El tratamiento se basa en el consentimiento expreso del titular al marcar la casilla de aceptación en el formulario y en la ejecución de procedimientos preliminares relativos a contrato (art. 7º, I y V de la Ley 13.709/2018).",
+      "sharing_title": "4. Compartir",
+      "sharing_text": "Los datos no se venden. Pueden ser compartidos con: (i) proveedores de infraestructura (Lovable Cloud / Supabase) para almacenamiento; (ii) procesadores de pago; (iii) autoridades públicas, cuando lo exija la ley.",
+      "retention_title": "5. Retención",
+      "retention_text": "Los datos se mantienen mientras el candidato pueda ser convocado para ediciones futuras. El titular puede solicitar la eliminación en cualquier momento, salvaguardadas las obligaciones legales de guarda.",
+      "rights_title": "6. Derechos del titular",
+      "rights_text": "El titular puede solicitar, en cualquier momento: acceso, corrección, anonimización, portabilidad, eliminación de los datos y revocación del consentimiento. Las solicitudes deben enviarse por Instagram oficial @karatelegendsleague.",
+      "security_title": "7. Seguridad",
+      "security_text": "Adoptamos medidas técnicas y administrativas razonables para proteger los datos. El candidato es responsable de compartir enlaces de Google Drive conscientes de que él mismo definió el acceso público — la organización no se responsabiliza por accesos indebidos a enlaces hechos públicos por el propio candidato."
+    }
   }
 }

@@ -146,5 +146,49 @@
     "step5_title": "Copy the link",
     "step5_desc": "Click \"Copy link\" and paste it in the corresponding form field.",
     "open_drive": "Open Google Drive →"
+  },
+  "legal": {
+    "last_updated": "Last updated: 05/11/2026",
+    "terms_title": "Athlete Registration Terms and Conditions",
+    "privacy_title": "Data Policy",
+    "terms": {
+      "acceptance_title": "1. Acceptance",
+      "acceptance_text": "By submitting an application as an athlete on Karate Legends and checking the acceptance box, the applicant declares having read, understood and fully agreed to these Terms and Conditions, freely, consciously and voluntarily.",
+      "voluntary_title": "2. Voluntary Nature of Submission and Payment",
+      "voluntary_text": "Registration and payment of the analysis fee are made at the sole initiative of the applicant, voluntarily and spontaneously. The applicant acknowledges that they submit their information, documents and media of their own free will, without any inducement, coercion or promise of approval by the organization.",
+      "accuracy_title": "3. Accuracy of Information",
+      "accuracy_text": "The applicant is the sole and exclusive responsible for the truthfulness, authenticity and legality of all data, links, documents, videos and other information submitted. Karate Legends organization has no duty, nor means, to verify the authenticity of each document and therefore assumes no civil or criminal liability for any false, tampered, incomplete or irregular information provided by the applicant.",
+      "accuracy_text2": "If any irregularity is identified — before, during or after the event — the organization reserves the right to disqualify the athlete at any time, without right to refund and without obligation to previously communicate the reason.",
+      "no_notify_title": "4. No Obligation to Notify",
+      "no_notify_text": "The organization has no obligation to communicate to the applicant any inconsistencies, failures or irregularities observed in the submitted material. The analysis process is internal, technical and discretionary. Feedback is given exclusively in case of approval.",
+      "deadline_title": "5. Response Deadline and Tacit Rejection",
+      "deadline_text": "The applicant will receive email feedback only in case of approval, within up to 10 (ten) calendar days from the submission date. If no communication is received within this period, the application is considered not approved, and this silence is interpreted as tacit rejection, without right to appeal, justification or refund.",
+      "fee_title": "6. Analysis Fee",
+      "fee_text": "The fee exclusively covers the work of the Legends technical consultant — analysis of the video, graduation certificate and identification document submitted. Payment is non-refundable, regardless of the evaluation result, and does not constitute a guarantee of approval or participation in any event.",
+      "approval_title": "7. Approval and Call-up",
+      "approval_text": "Approval in the technical analysis makes the athlete eligible for future call-ups (Matchups or Grand Prix), but does not guarantee participation in the next event or any specific edition. Call-ups are defined by the organization according to technical, sports and production criteria.",
+      "image_title": "8. Image and Content Usage",
+      "image_text": "By submitting videos and photos, the applicant authorizes, on a free and non-exclusive basis, the use of their name, image, voice and submitted materials by the organization for internal technical evaluation, institutional event promotion, social media and promotional materials related to Karate Legends.",
+      "liability_title": "9. Limitation of Liability",
+      "liability_text": "The organization is not liable for: (i) damages arising from improper use of public Google Drive links or other third-party services by the applicant; (ii) unauthorized access to documents publicly shared by the applicant; (iii) delays, failures or unavailability of payment platforms; (iv) indirect damages, lost profits or frustrated expectations arising from non-approval.",
+      "venue_title": "10. Jurisdiction",
+      "venue_text": "These Terms are governed by Brazilian law. The court of the jurisdiction of the organization's headquarters is elected to settle any disputes, with waiver of any other, no matter how privileged it may be."
+    },
+    "privacy": {
+      "collected_title": "1. What data we collect",
+      "collected_text": "We collect: full name, email, WhatsApp, city, country, style, graduation, association/dojo, responsible sensei data (when applicable), social media and public links for video, graduation certificate and identification document submitted by the applicant.",
+      "purpose_title": "2. Purpose of processing",
+      "purpose_text": "Data is used exclusively for: (i) technical analysis of the registration by the Legends consultant; (ii) communication of results in case of approval; (iii) administrative management of payments and call-ups; (iv) institutional event promotion, in accordance with the image usage authorization given by the applicant.",
+      "legal_title": "3. Legal basis",
+      "legal_text": "Processing is based on the express consent of the data subject when checking the acceptance box on the form and on the execution of preliminary procedures related to a contract (art. 7, I and V of Law 13.709/2018).",
+      "sharing_title": "4. Sharing",
+      "sharing_text": "Data is not sold. It may be shared with: (i) infrastructure providers (Lovable Cloud / Supabase) for storage; (ii) payment processors; (iii) public authorities, when required by law.",
+      "retention_title": "5. Retention",
+      "retention_text": "Data is kept while the applicant may be called up for future editions. The data subject may request deletion at any time, subject to legal storage obligations.",
+      "rights_title": "6. Data subject rights",
+      "rights_text": "The data subject may request at any time: access, correction, anonymization, portability, deletion of data and revocation of consent. Requests must be sent via the official Instagram @karatelegendsleague.",
+      "security_title": "7. Security",
+      "security_text": "We adopt reasonable technical and administrative measures to protect the data. The applicant is responsible for sharing Google Drive links aware that they themselves set public access — the organization is not liable for unauthorized access to links made public by the applicant."
+    }
   }
 }
