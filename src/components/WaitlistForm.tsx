@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Bell, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4_bAT7GBjskA_kLb0TeY5UUGDhp_ZHpyUmFeIHHIabAti8h4uFWsnoUk9IHsx5If_Ng/exec';
-
 const WaitlistForm = () => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: '', email: '', whatsapp: '+55 ' });
@@ -36,44 +34,6 @@ const WaitlistForm = () => {
       if (dbError) {
         console.error('Supabase error:', dbError);
         throw new Error(dbError.message);
-      }
-
-      // Backup to Google Sheets
-      try {
-        const iframe = document.createElement('iframe');
-        iframe.name = 'ppv-submit-frame';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = GOOGLE_APPS_SCRIPT_URL;
-        form.target = 'ppv-submit-frame';
-
-        const fields = {
-          type: 'ppv_interest',
-          timestamp: new Date().toISOString(),
-          ...formData,
-          whatsapp: "'" + formData.whatsapp
-        };
-
-        Object.entries(fields).forEach(([key, value]) => {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = value;
-          form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-
-        setTimeout(() => {
-          document.body.removeChild(form);
-          document.body.removeChild(iframe);
-        }, 5000);
-      } catch {
-        console.warn('Google Sheets backup failed');
       }
 
       setStatus('success');
