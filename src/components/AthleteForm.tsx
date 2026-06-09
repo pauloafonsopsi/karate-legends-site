@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { Send, Loader2, CheckCircle, Upload, FileCheck2, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import DriveTutorial from './DriveTutorial';
+import { compressImage, formatBytes } from '@/lib/imageCompress';
 
 interface FormData {
   name: string;
@@ -14,8 +14,6 @@ interface FormData {
   city: string;
   country: string;
   videoLink: string;
-  certificateLink: string;
-  idLink: string;
   socialMedia: string;
   ownsDojo: boolean;
   senseiName: string;
@@ -24,17 +22,25 @@ interface FormData {
   acceptPrivacy: boolean;
 }
 
+type UploadSlot = 'certificate' | 'idFront' | 'idBack';
+type SlotFile = { file: File; processed?: Blob; ext?: string; processing?: boolean };
+const MAX_INPUT_BYTES = 15 * 1024 * 1024;
+const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'application/pdf'];
+
 const AthleteForm = () => {
   const { t } = useTranslation();
   const initialData: FormData = {
     name: '', email: '', whatsapp: '+55 ', style: '', belt: '',
-    association: '', city: '', country: '', videoLink: '',
-    certificateLink: '', idLink: '', socialMedia: '',
+    association: '', city: '', country: '', videoLink: '', socialMedia: '',
     ownsDojo: true, senseiName: '', senseiPhone: '',
     acceptTerms: false, acceptPrivacy: false,
   };
   const [formData, setFormData] = useState<FormData>(initialData);
+  const [files, setFiles] = useState<Record<UploadSlot, SlotFile | null>>({
+    certificate: null, idFront: null, idBack: null,
+  });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [stage, setStage] = useState<'' | 'processing' | 'uploading'>('');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -46,15 +52,36 @@ const AthleteForm = () => {
     }
   };
 
+  const handleFile = async (slot: UploadSlot, file: File | null) => {
+    setErrorMsg('');
+    if (!file) { setFiles(p => ({ ...p, [slot]: null })); return; }
+    if (file.size > MAX_INPUT_BYTES) { setErrorMsg(t('form.upload_too_large')); return; }
+    if (!ACCEPTED.includes(file.type) && !file.type.startsWith('image/')) {
+      setErrorMsg(t('form.upload_invalid_type')); return;
+    }
+    setFiles(p => ({ ...p, [slot]: { file, processing: true } }));
+    try {
+      const { blob, ext } = await compressImage(file);
+      setFiles(p => ({ ...p, [slot]: { file, processed: blob, ext, processing: false } }));
+    } catch (err) {
+      setFiles(p => ({ ...p, [slot]: null }));
+      setErrorMsg(err instanceof Error ? err.message : t('form.upload_invalid_type'));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const requiredText = [
       formData.name, formData.email, formData.whatsapp, formData.style,
       formData.belt, formData.association, formData.city, formData.country,
-      formData.videoLink, formData.certificateLink, formData.idLink, formData.socialMedia,
+      formData.videoLink, formData.socialMedia,
     ];
     if (requiredText.some(v => !v.trim())) {
+      setErrorMsg(t('form.required_fields'));
+      return;
+    }
+    if (!files.certificate?.processed || !files.idFront?.processed || !files.idBack?.processed) {
       setErrorMsg(t('form.required_fields'));
       return;
     }
@@ -71,7 +98,25 @@ const AthleteForm = () => {
     setErrorMsg('');
 
     try {
-      // Save to Supabase (primary)
+      // 1) Upload files to private storage bucket
+      setStage('uploading');
+      const folder = crypto.randomUUID();
+      const uploadOne = async (slot: UploadSlot, name: string) => {
+        const f = files[slot]!;
+        const path = `${folder}/${name}.${f.ext}`;
+        const { error } = await supabase.storage
+          .from('atletas-docs')
+          .upload(path, f.processed!, { contentType: f.processed!.type, upsert: false });
+        if (error) throw new Error(`Upload ${name}: ${error.message}`);
+        return path;
+      };
+      const [certPath, idFrontPath, idBackPath] = await Promise.all([
+        uploadOne('certificate', 'certificado'),
+        uploadOne('idFront', 'identidade-frente'),
+        uploadOne('idBack', 'identidade-verso'),
+      ]);
+
+      // 2) Insert row referencing the storage paths
       const { error: dbError } = await supabase.from('inscricoes_atletas').insert({
         nome: formData.name,
         email: formData.email,
@@ -82,8 +127,9 @@ const AthleteForm = () => {
         cidade: formData.city,
         pais: formData.country,
         link_video: formData.videoLink,
-        link_certificado: formData.certificateLink,
-        link_documento: formData.idLink,
+        link_certificado: certPath,
+        link_documento: idFrontPath,
+        link_documento_verso: idBackPath,
         redes_sociais: formData.socialMedia,
         dono_dojo: formData.ownsDojo,
         sensei_nome: formData.ownsDojo ? null : formData.senseiName,
@@ -98,9 +144,12 @@ const AthleteForm = () => {
       }
 
       setStatus('success');
+      setStage('');
       setFormData(initialData);
+      setFiles({ certificate: null, idFront: null, idBack: null });
     } catch {
       setStatus('error');
+      setStage('');
       setErrorMsg(t('form.error'));
     }
   };
@@ -216,9 +265,6 @@ const AthleteForm = () => {
           className={inputClass} placeholder={t('form.country_placeholder')} />
       </div>
 
-      {/* Tutorial de Google Drive */}
-      <DriveTutorial />
-
       <div>
         <label htmlFor="athlete-video" className={labelClass}>{t('form.video_link')} *</label>
         <input id="athlete-video" name="videoLink" type="url" value={formData.videoLink} onChange={handleChange} required
@@ -227,21 +273,31 @@ const AthleteForm = () => {
         <p id="athlete-video-hint" className="text-white/50 text-xs mt-2">{t('form.video_hint')}</p>
       </div>
 
-      <div>
-        <label htmlFor="athlete-certificate" className={labelClass}>{t('form.certificate_link')} *</label>
-        <input id="athlete-certificate" name="certificateLink" type="url" value={formData.certificateLink} onChange={handleChange} required
-          aria-describedby="athlete-certificate-hint"
-          className={inputClass} placeholder={t('form.certificate_placeholder')} />
-        <p id="athlete-certificate-hint" className="text-white/50 text-xs mt-2">{t('form.certificate_hint')}</p>
-      </div>
+      <FileField
+        id="athlete-certificate"
+        label={`${t('form.certificate_link')} *`}
+        hint={t('form.certificate_hint')}
+        slot={files.certificate}
+        onChange={(f) => handleFile('certificate', f)}
+        t={t}
+      />
 
-      <div>
-        <label htmlFor="athlete-id" className={labelClass}>{t('form.id_link')} *</label>
-        <input id="athlete-id" name="idLink" type="url" value={formData.idLink} onChange={handleChange} required
-          aria-describedby="athlete-id-hint"
-          className={inputClass} placeholder={t('form.id_placeholder')} />
-        <p id="athlete-id-hint" className="text-white/50 text-xs mt-2">{t('form.id_hint')}</p>
-      </div>
+      <FileField
+        id="athlete-id-front"
+        label={`${t('form.id_front_label')} *`}
+        hint={t('form.id_hint')}
+        slot={files.idFront}
+        onChange={(f) => handleFile('idFront', f)}
+        t={t}
+      />
+
+      <FileField
+        id="athlete-id-back"
+        label={`${t('form.id_back_label')} *`}
+        slot={files.idBack}
+        onChange={(f) => handleFile('idBack', f)}
+        t={t}
+      />
 
       <div className="space-y-3 pt-2 border-t border-white/10">
         <label className="flex items-start gap-3 text-sm text-white/80 cursor-pointer">
@@ -272,9 +328,60 @@ const AthleteForm = () => {
 
       <button type="submit" disabled={status === 'loading'} className="btn-gold w-full flex items-center justify-center gap-3">
         {status === 'loading' ? <Loader2 size={18} className="animate-spin" aria-hidden="true" /> : <Send size={18} aria-hidden="true" />}
-        {status === 'loading' ? t('form.sending') : t('athletes.apply_now')}
+        {status === 'loading'
+          ? (stage === 'uploading' ? t('form.uploading') : t('form.sending'))
+          : t('athletes.apply_now')}
       </button>
     </form>
+  );
+};
+
+type TFn = (k: string) => string;
+const FileField = ({ id, label, hint, slot, onChange, t }: {
+  id: string; label: string; hint?: string; slot: SlotFile | null;
+  onChange: (f: File | null) => void; t: TFn;
+}) => {
+  const ref = useRef<HTMLInputElement>(null);
+  const has = !!slot;
+  return (
+    <div>
+      <label htmlFor={id} className="block text-xs uppercase tracking-widest text-white/50 mb-2">{label}</label>
+      <input ref={ref} id={id} type="file" accept="image/*,application/pdf" className="sr-only"
+        onChange={(e) => onChange(e.target.files?.[0] ?? null)} />
+      {!has ? (
+        <button type="button" onClick={() => ref.current?.click()}
+          className="w-full flex items-center justify-center gap-3 border border-dashed border-white/20 hover:border-gold/40 hover:bg-white/[0.02] px-4 py-6 text-sm text-white/70 transition-colors">
+          <Upload size={18} className="text-gold" />
+          <span>{t('form.upload_choose')}</span>
+        </button>
+      ) : (
+        <div className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-4 py-3 text-sm">
+          {slot!.processing ? (
+            <Loader2 size={16} className="text-gold animate-spin flex-shrink-0" />
+          ) : (
+            <FileCheck2 size={16} className="text-green-400 flex-shrink-0" />
+          )}
+          <div className="min-w-0 flex-1">
+            <p className="text-white/90 truncate">{slot!.file.name}</p>
+            <p className="text-xs text-white/40">
+              {slot!.processing
+                ? t('form.processing')
+                : `${formatBytes(slot!.file.size)} → ${formatBytes(slot!.processed!.size)}`}
+            </p>
+          </div>
+          <button type="button" onClick={() => ref.current?.click()}
+            className="text-xs text-gold hover:underline whitespace-nowrap">
+            {t('form.upload_change')}
+          </button>
+          <button type="button" onClick={() => onChange(null)}
+            className="text-white/40 hover:text-red-400" aria-label="Remover">
+            <X size={14} />
+          </button>
+        </div>
+      )}
+      <p className="text-white/50 text-xs mt-2">{hint ?? t('form.upload_hint')}</p>
+      {hint && <p className="text-white/40 text-[11px] mt-1">{t('form.upload_hint')}</p>}
+    </div>
   );
 };
 
