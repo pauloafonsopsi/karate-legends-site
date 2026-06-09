@@ -16,6 +16,7 @@ import TermosAtleta from './pages/TermosAtleta';
 import PoliticaDados from './pages/PoliticaDados';
 import Admin from './pages/Admin';
 import AdminLogin from './pages/AdminLogin';
+import { Toaster } from '@/components/ui/sonner';
 
 const App = () => (
   <I18nextProvider i18n={i18n}>
@@ -42,6 +43,7 @@ const App = () => (
         </main>
         <Footer />
       </div>
+      <Toaster />
     </BrowserRouter>
   </I18nextProvider>
 );

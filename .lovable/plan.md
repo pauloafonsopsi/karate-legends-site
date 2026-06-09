@@ -1,73 +1,68 @@
-## Plano: Termos, Dono do Dojo, FAQ e Painel Admin
+# Plano: Área Administrativa Polida (sem Google Sheets)
 
-### 1. Banco de dados (migração)
-Adicionar colunas em `inscricoes_atletas`:
-- `dono_dojo` (boolean, default false)
-- `sensei_nome` (text, nullable)
-- `sensei_telefone` (text, nullable)
-- `aceite_termos` (boolean, default false)
-- `aceite_privacidade` (boolean, default false)
-- `status` (text, default 'pendente') — valores: pendente, pago, aprovado, rejeitado
-- `pagamento_confirmado` (boolean, default false)
-- `observacoes` (text, nullable)
-- `respondido_em` (timestamptz, nullable)
+## 1. Desligar Google Sheets
+- `src/components/AthleteForm.tsx`: remover bloco de envio para `GOOGLE_APPS_SCRIPT_URL` (iframe + form) e a constante. Manter apenas o `supabase.from('inscricoes_atletas').insert(...)`.
+- `src/components/WaitlistForm.tsx`: idem para `lista_espera_ppv`.
+- Apagar os arquivos `google-apps-script.js` e `google-apps-script-atletas.js` da raiz.
+- Atualizar memória do projeto (`mem://integrations/google-sheets-backend`) marcando a integração como descontinuada — Lovable Cloud (Supabase) é a única fonte de dados.
 
-Criar enum `app_role` ('admin', 'user') e tabela `user_roles` com função `has_role()` (security definer).
+## 2. Criar usuário admin pré-configurado
+O Supabase Auth exige e-mail válido — "admin" puro não é aceito. Usarei:
 
-Adicionar policies em `inscricoes_atletas`:
-- SELECT, UPDATE: apenas admins (`has_role(auth.uid(), 'admin')`)
+- **E-mail:** `admin@kwf.local`
+- **Senha:** `admin12345`
 
-Adicionar policies em `lista_espera_ppv`:
-- SELECT: apenas admins
+Passos (via migration + ferramenta de dados):
+1. Habilitar `auto_confirm_email` (assim o login funciona sem caixa de entrada).
+2. Inserir o usuário em `auth.users` (via `supabase.auth.admin` no painel Cloud) e, na mesma migration, inserir o papel `admin` em `public.user_roles` para o `user_id` correspondente.
+3. Tela `/admin/login` passará a mostrar o e-mail correto como dica de acesso.
 
-### 2. Autenticação
-- Página `/admin/login` com email + senha
-- Configurar auto-confirm de email (admin único)
-- Primeiro admin precisa ser atribuído manualmente após signup (instrução para o usuário)
+> Se você preferir outro e-mail (ex.: `admin@karateworldfederation.com`), me diga antes de eu implementar.
 
-### 3. Página `/admin` (protegida)
-- Lista de inscrições de atletas em tabela com colunas: Nome, Email, WhatsApp, Estilo, Graduação, Status, Pagamento, Data
-- Botões de ação por linha: Ver detalhes (modal com todos os campos + links clicáveis para vídeo/certificado/documento), Editar status, Marcar pagamento, Adicionar observação
-- Botão "Exportar CSV"
-- Filtros por status e busca por nome/email
-- Aba secundária para `lista_espera_ppv` (também exportável)
+## 3. Refinar UI/UX do Painel `/admin`
+Manter a estética dark + gold já existente, mas elevando a qualidade visual e a ergonomia:
 
-### 4. Formulário de atletas (`AthleteForm.tsx`)
-- Adicionar checkbox "Sou dono do meu dojo" próximo ao campo Associação/Dojo
-- Se desmarcado, mostrar campos: "Nome do sensei responsável" + "Telefone do sensei"
-- Adicionar 2 checkboxes obrigatórios no fim:
-  - "Li e aceito os Termos e Condições" (link para `/termos-atleta`)
-  - "Li e aceito a Política de Dados" (link para `/politica-dados`)
-- Bloquear submit se não aceitos
-- Persistir todos os novos campos no Supabase
+**Cabeçalho / navegação**
+- Sidebar fixa à esquerda (desktop) com as seções: Visão Geral, Atletas, Lista PPV, Sair. Em mobile vira top tabs.
+- Header com saudação ("Olá, admin") + badge de ambiente.
 
-### 5. Documentos legais
-Criar duas novas páginas:
-- `/termos-atleta` — Termos específicos da inscrição contendo:
-  - Pagamento da taxa de R$ 99,00 é voluntário e não reembolsável
-  - Karate Legends não se responsabiliza pela veracidade das informações enviadas
-  - Em caso de irregularidade nos documentos, não há obrigação de notificação ao atleta
-  - Resposta apenas em casos positivos, em até 10 dias corridos
-  - Ausência de resposta em 10 dias = não aprovação (resposta negativa tácita)
-  - Aprovação não garante participação no próximo evento
-- `/politica-dados` — Tratamento de dados (LGPD):
-  - Dados coletados, finalidade, base legal, retenção, direitos do titular
+**Visão Geral (nova aba — landing do painel)**
+- Cards de métricas: total de inscritos, pendentes, pagos, aprovados, rejeitados, total da lista PPV, inscrições nos últimos 7 dias.
+- Mini-gráfico de barras (inscrições por dia, últimos 14 dias) usando Recharts (já no projeto).
+- Lista das 5 inscrições mais recentes com atalho para abrir o detalhe.
 
-Adicionar links no rodapé.
+**Aba Atletas**
+- Toolbar refinada: busca (nome/e-mail/cidade/país), filtro por status (chips clicáveis em vez de `<select>`), filtro "pagamento confirmado", filtro por estilo, ordenação (mais recentes / mais antigas / nome).
+- Tabela com colunas redimensionáveis, badges coloridos por status, ícone indicando aceite de termos/privacidade, ação rápida de marcar como "pago" direto na linha.
+- Botão **Exportar CSV** (todas as colunas, respeita filtros atuais) e **Exportar JSON**.
+- Paginação (50 por página) para escalar.
+- Drawer lateral (em vez de modal central) ao clicar em "Ver/Editar": melhor para ler links longos e editar status sem perder o contexto da lista. Drawer mostra:
+  - Dados pessoais agrupados em seções (Identificação, Dojo, Mídias, Aceites).
+  - Links de vídeo/certificado/documento como botões "Abrir em nova aba".
+  - Edição: status (chips), checkbox pagamento, observações (textarea), histórico (`criado_em`, `respondido_em`).
+  - Botões: Salvar, Excluir (com confirmação), Copiar e-mail, Copiar WhatsApp.
 
-### 6. FAQ
-Em `athletes.a3` (Como funciona a taxa) — remover menção a R$ 99,00, substituir por texto genérico sobre o trabalho do consultor técnico.
+**Aba Lista PPV**
+- Mesma toolbar simplificada (busca + exportar).
+- Tabela limpa + ação de excluir individual.
 
-### Arquivos modificados
-- Nova migração SQL
-- `src/components/AthleteForm.tsx`
-- `src/components/AdminDashboard.tsx` (novo)
-- `src/components/AdminLogin.tsx` (novo)
-- `src/components/ProtectedAdminRoute.tsx` (novo)
-- `src/pages/Admin.tsx` (nova)
-- `src/pages/AdminLogin.tsx` (nova)
-- `src/pages/TermosAtleta.tsx` (nova)
-- `src/pages/PoliticaDados.tsx` (nova)
-- `src/App.tsx` — novas rotas
-- `src/components/layout/Footer.tsx` — links
-- `src/messages/pt.json`, `en.json`, `es.json` — novas chaves + FAQ atualizado
+**Polimento geral**
+- Skeleton loaders em vez de spinner para a tabela.
+- Toast (`sonner` / `use-toast` já no projeto) confirmando salvar/excluir/exportar.
+- Empty states ilustrados ("Nenhum atleta inscrito ainda").
+- Foco em acessibilidade: contraste AA, navegação por teclado nos filtros e drawer.
+
+## 4. Detalhes técnicos
+- Sem novas tabelas — as existentes (`inscricoes_atletas`, `lista_espera_ppv`, `user_roles`) já cobrem tudo.
+- Stack reaproveitada: shadcn (`Sheet` para o drawer, `Tabs`, `Badge`, `Button`, `Input`, `Select`, `Skeleton`, `Sonner`), Recharts para o gráfico, Lucide para ícones.
+- O `useAdminAuth` e o guard atual continuam válidos; apenas o layout muda.
+- Nada de backend extra: tudo via cliente Supabase autenticado, respeitando as RLS policies já criadas (`has_role(auth.uid(), 'admin')`).
+
+## 5. O que NÃO será feito
+- Não removerei o conteúdo legal nem o formulário público — apenas a chamada de backup ao Google Sheets.
+- Não trocarei a paleta nem fontes (dark + gold, Bebas Neue / DM Sans).
+- Não criarei cadastro público de novos admins — somente login do admin pré-configurado.
+
+---
+
+**Confirma o e-mail `admin@kwf.local` para o login?** Se sim, sigo direto. Se preferir outro, me diga qual.
