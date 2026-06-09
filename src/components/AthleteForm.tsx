@@ -4,8 +4,6 @@ import { Send, Loader2, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import DriveTutorial from './DriveTutorial';
 
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcXIdnB-dWAPhHlarjerfuZBnKEXbmADzAnUTKMqQ2mE7eaD2_9wp0tXeq3pQxAKJs/exec';
-
 interface FormData {
   name: string;
   email: string;
@@ -97,58 +95,6 @@ const AthleteForm = () => {
       if (dbError) {
         console.error('Supabase error:', dbError);
         throw new Error(dbError.message);
-      }
-
-      // Backup to Google Sheets
-      try {
-        const iframe = document.createElement('iframe');
-        iframe.name = 'athlete-submit-frame';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = GOOGLE_APPS_SCRIPT_URL;
-        form.target = 'athlete-submit-frame';
-
-        const fields: Record<string, string> = {
-          type: 'athlete',
-          timestamp: new Date().toISOString(),
-          name: formData.name,
-          email: formData.email,
-          whatsapp: "'" + formData.whatsapp,
-          style: formData.style,
-          belt: formData.belt,
-          association: formData.association,
-          city: formData.city,
-          country: formData.country,
-          videoLink: formData.videoLink,
-          certificateLink: formData.certificateLink,
-          idLink: formData.idLink,
-          socialMedia: formData.socialMedia,
-          ownsDojo: formData.ownsDojo ? 'sim' : 'nao',
-          senseiName: formData.ownsDojo ? '' : formData.senseiName,
-          senseiPhone: formData.ownsDojo ? '' : "'" + formData.senseiPhone,
-        };
-
-        Object.entries(fields).forEach(([key, value]) => {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = value;
-          form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-
-        setTimeout(() => {
-          document.body.removeChild(form);
-          document.body.removeChild(iframe);
-        }, 5000);
-      } catch {
-        // Backup failure is non-critical
-        console.warn('Google Sheets backup failed');
       }
 
       setStatus('success');
