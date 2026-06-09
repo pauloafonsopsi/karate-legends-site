@@ -1,68 +1,60 @@
-# Plano: Área Administrativa Polida (sem Google Sheets)
+## Objetivo
+Substituir os campos de link (certificado e documento) por upload de arquivos com compressão automática client-side (WebP) antes de enviar para o storage, e exibir as imagens no painel admin.
 
-## 1. Desligar Google Sheets
-- `src/components/AthleteForm.tsx`: remover bloco de envio para `GOOGLE_APPS_SCRIPT_URL` (iframe + form) e a constante. Manter apenas o `supabase.from('inscricoes_atletas').insert(...)`.
-- `src/components/WaitlistForm.tsx`: idem para `lista_espera_ppv`.
-- Apagar os arquivos `google-apps-script.js` e `google-apps-script-atletas.js` da raiz.
-- Atualizar memória do projeto (`mem://integrations/google-sheets-backend`) marcando a integração como descontinuada — Lovable Cloud (Supabase) é a única fonte de dados.
+## Mudanças
 
-## 2. Criar usuário admin pré-configurado
-O Supabase Auth exige e-mail válido — "admin" puro não é aceito. Usarei:
+### 1. Storage (Lovable Cloud)
+- Criar bucket privado `atletas-docs` (acesso somente via admin).
+- Políticas RLS em `storage.objects`:
+  - INSERT público (anon) restrito ao bucket — atletas anônimos precisam subir antes de existir conta.
+  - SELECT/DELETE apenas para `has_role(auth.uid(),'admin')`.
+- Organização de pastas: `{uuid-da-inscricao-temp}/certificado.webp`, `identidade-frente.webp`, `identidade-verso.webp`.
 
-- **E-mail:** `admin@kwf.local`
-- **Senha:** `admin12345`
+### 2. Schema
+- Renomear semanticamente em `inscricoes_atletas`:
+  - `link_certificado` → continua usado, mas guardará o **path** no storage (ex: `abc123/certificado.webp`).
+  - `link_documento` → `link_documento_frente` (path).
+  - Adicionar `link_documento_verso` (path).
+- Migration: adicionar nova coluna `link_documento_verso text`; manter as outras (sem renomear para não quebrar) — `link_documento` passa a representar a frente.
 
-Passos (via migration + ferramenta de dados):
-1. Habilitar `auto_confirm_email` (assim o login funciona sem caixa de entrada).
-2. Inserir o usuário em `auth.users` (via `supabase.auth.admin` no painel Cloud) e, na mesma migration, inserir o papel `admin` em `public.user_roles` para o `user_id` correspondente.
-3. Tela `/admin/login` passará a mostrar o e-mail correto como dica de acesso.
+### 3. Formulário público (`AthleteForm.tsx`)
+- Substituir 3 inputs URL por 3 inputs `type="file"` com `accept="image/*,application/pdf"`.
+- Pipeline client-side antes do upload:
+  1. Se PDF → enviar como está (certificado pode ser PDF).
+  2. Se imagem → carregar em `<canvas>`, redimensionar para máx 1600px no maior lado, exportar como WebP qualidade 0.82.
+  3. Limite final ~500KB; se exceder, recomprimir com qualidade menor.
+- Upload via `supabase.storage.from('atletas-docs').upload(path, blob)` usando UUID temporário gerado no submit.
+- Salvar os 3 paths nas colunas correspondentes do insert.
+- Remover componente `DriveTutorial` da página (não mais necessário) — manter arquivo, só não importar.
+- Estados: progresso por arquivo, mensagens de erro, validação de tipo/tamanho máximo de origem (ex: 15MB).
 
-> Se você preferir outro e-mail (ex.: `admin@karateworldfederation.com`), me diga antes de eu implementar.
+### 4. Painel Admin (`Admin.tsx`)
+- No drawer de detalhes do atleta, substituir links externos por:
+  - Thumbnail clicável (signed URL gerada sob demanda, expiração 1h) para certificado, doc frente, doc verso.
+  - Botão "Baixar" que abre a signed URL.
+- Helper `getSignedUrl(path)` usando `supabase.storage.from('atletas-docs').createSignedUrl(path, 3600)`.
 
-## 3. Refinar UI/UX do Painel `/admin`
-Manter a estética dark + gold já existente, mas elevando a qualidade visual e a ergonomia:
+### 5. i18n
+- Novas chaves em `pt/en/es`:
+  - `form.certificate_upload`, `form.id_front_upload`, `form.id_back_upload`
+  - `form.upload_hint` (formatos aceitos, tamanho)
+  - `form.compressing`, `form.uploading`, `form.upload_error`
+- Remover/ajustar chaves antigas `*_placeholder` que sugeriam URL.
 
-**Cabeçalho / navegação**
-- Sidebar fixa à esquerda (desktop) com as seções: Visão Geral, Atletas, Lista PPV, Sair. Em mobile vira top tabs.
-- Header com saudação ("Olá, admin") + badge de ambiente.
+## Detalhes técnicos
+- Compressão pura no browser, sem libs externas (Canvas API + `canvas.toBlob('image/webp', 0.82)`).
+- Fallback: se navegador não suportar WebP no encode, cai para JPEG 0.85.
+- Nome do arquivo no storage sempre normalizado (sem acentos, lowercase).
+- `inscricoes_atletas` continua aceitando INSERT público (sem mudanças de RLS na tabela).
+- Bucket privado garante que nenhuma URL pública seja exposta; admin sempre passa por signed URL.
 
-**Visão Geral (nova aba — landing do painel)**
-- Cards de métricas: total de inscritos, pendentes, pagos, aprovados, rejeitados, total da lista PPV, inscrições nos últimos 7 dias.
-- Mini-gráfico de barras (inscrições por dia, últimos 14 dias) usando Recharts (já no projeto).
-- Lista das 5 inscrições mais recentes com atalho para abrir o detalhe.
+## Arquivos afetados
+- `supabase/migrations/<novo>.sql` — bucket + policies + coluna `link_documento_verso`.
+- `src/components/AthleteForm.tsx` — UI + lógica de upload/compressão.
+- `src/lib/imageCompress.ts` (novo) — helper de compressão.
+- `src/pages/Admin.tsx` — exibição de thumbnails e signed URLs.
+- `src/messages/{pt,en,es}.json` — novas chaves.
 
-**Aba Atletas**
-- Toolbar refinada: busca (nome/e-mail/cidade/país), filtro por status (chips clicáveis em vez de `<select>`), filtro "pagamento confirmado", filtro por estilo, ordenação (mais recentes / mais antigas / nome).
-- Tabela com colunas redimensionáveis, badges coloridos por status, ícone indicando aceite de termos/privacidade, ação rápida de marcar como "pago" direto na linha.
-- Botão **Exportar CSV** (todas as colunas, respeita filtros atuais) e **Exportar JSON**.
-- Paginação (50 por página) para escalar.
-- Drawer lateral (em vez de modal central) ao clicar em "Ver/Editar": melhor para ler links longos e editar status sem perder o contexto da lista. Drawer mostra:
-  - Dados pessoais agrupados em seções (Identificação, Dojo, Mídias, Aceites).
-  - Links de vídeo/certificado/documento como botões "Abrir em nova aba".
-  - Edição: status (chips), checkbox pagamento, observações (textarea), histórico (`criado_em`, `respondido_em`).
-  - Botões: Salvar, Excluir (com confirmação), Copiar e-mail, Copiar WhatsApp.
-
-**Aba Lista PPV**
-- Mesma toolbar simplificada (busca + exportar).
-- Tabela limpa + ação de excluir individual.
-
-**Polimento geral**
-- Skeleton loaders em vez de spinner para a tabela.
-- Toast (`sonner` / `use-toast` já no projeto) confirmando salvar/excluir/exportar.
-- Empty states ilustrados ("Nenhum atleta inscrito ainda").
-- Foco em acessibilidade: contraste AA, navegação por teclado nos filtros e drawer.
-
-## 4. Detalhes técnicos
-- Sem novas tabelas — as existentes (`inscricoes_atletas`, `lista_espera_ppv`, `user_roles`) já cobrem tudo.
-- Stack reaproveitada: shadcn (`Sheet` para o drawer, `Tabs`, `Badge`, `Button`, `Input`, `Select`, `Skeleton`, `Sonner`), Recharts para o gráfico, Lucide para ícones.
-- O `useAdminAuth` e o guard atual continuam válidos; apenas o layout muda.
-- Nada de backend extra: tudo via cliente Supabase autenticado, respeitando as RLS policies já criadas (`has_role(auth.uid(), 'admin')`).
-
-## 5. O que NÃO será feito
-- Não removerei o conteúdo legal nem o formulário público — apenas a chamada de backup ao Google Sheets.
-- Não trocarei a paleta nem fontes (dark + gold, Bebas Neue / DM Sans).
-- Não criarei cadastro público de novos admins — somente login do admin pré-configurado.
-
----
-
-**Confirma o e-mail `admin@kwf.local` para o login?** Se sim, sigo direto. Se preferir outro, me diga qual.
+## Fora de escopo
+- Reprocessar inscrições antigas (continuarão com links antigos vazios/quebrados).
+- Upload no formulário PPV (sem arquivos).
