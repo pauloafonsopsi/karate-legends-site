@@ -47,6 +47,12 @@ const AdminLogin = () => {
         <h1 className="text-4xl mb-2 text-gold">Painel Admin</h1>
         <p className="text-white/50 text-sm mb-8 uppercase tracking-widest">Acesso restrito</p>
 
+        <div className="mb-6 p-3 border border-gold/20 bg-gold/5 text-xs text-white/70">
+          <p className="uppercase tracking-widest text-gold/80 mb-1">Credenciais padrão</p>
+          <p>E-mail: <span className="text-white">admin@kwf.local</span></p>
+          <p>Senha: <span className="text-white">admin12345</span></p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-5 bg-black-card p-8 border border-white/10">
           <div>
             <label className="block text-xs uppercase tracking-widest text-white/50 mb-2">E-mail</label>
