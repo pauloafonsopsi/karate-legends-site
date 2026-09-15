@@ -52,7 +52,7 @@ const Home = () => {
             </div>
 
             {/* Próxima Edição: placeholder elegante */}
-            <div className="inline-flex flex-col items-center">
+            <div className="inline-flex flex-col items-center border-t border-gold/60 pt-5">
               <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground mb-3 font-bold flex items-center gap-4">
                 {t('hero.countdown_label')}
               </p>
