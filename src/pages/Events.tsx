@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 const Events = () => {
   const { t } = useTranslation();
@@ -11,7 +10,7 @@ const Events = () => {
       location: t('events.curitiba_loc'),
       status: null,
       type: "Championship",
-      img: heroAsset.url
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     }
   ];
 

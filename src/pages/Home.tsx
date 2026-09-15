@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
-import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -14,9 +13,10 @@ const Home = () => {
       <section className="relative min-h-[92svh] flex items-end md:items-center pt-28 pb-16 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src={heroAsset.url}
+            src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
             className="w-full h-full object-cover opacity-75"
             alt="Competição Karate Legends em uma arena iluminada"
+            referrerPolicy="no-referrer"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60"></div>

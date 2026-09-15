@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 const Blog = () => {
   const { t } = useTranslation();
@@ -12,7 +11,7 @@ const Blog = () => {
       excerpt: "Entenda as modificações nas regras tradicionais que tornam o Legends único.",
       date: "MAR 20, 2026",
       category: "Regras",
-      img: heroAsset.url
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     },
     {
       slug: "filosofia-karate-legends",
@@ -20,7 +19,7 @@ const Blog = () => {
       excerpt: "Por que criamos este palco para os karatecas do mundo.",
       date: "MAR 15, 2026",
       category: "Filosofia",
-      img: heroAsset.url
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     },
     {
       slug: "atleta-modelo",
@@ -28,7 +27,7 @@ const Blog = () => {
       excerpt: "O que nossa equipe técnica busca em um competidor de elite.",
       date: "MAR 10, 2026",
       category: "Atletas",
-      img: heroAsset.url
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     }
   ];
 
