@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -32,16 +33,15 @@ const Navbar = () => {
   return (
     <nav className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      isScrolled ? "glass-morphism py-3" : "bg-transparent py-6"
+      isScrolled ? "glass-morphism py-3" : "bg-background/20 py-5"
     )}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="flex items-center group">
+        <Link to="/" className="flex items-center group" aria-label="Karate Legends — início">
           <img 
-            src="/symbol.png" 
+            src={prestigeLogo} 
             alt="Karate Legends" 
-            className="w-10 h-10 object-contain mr-3 group-hover:scale-110 transition-transform duration-300"
+            className="h-10 w-auto max-w-[190px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
           />
-          <span className="font-display text-xl tracking-tighter gold-text-gradient">KARATE LEGENDS</span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-8">
@@ -50,7 +50,7 @@ const Navbar = () => {
               key={link.path}
               to={link.path}
               className={cn(
-                "uppercase tracking-widest text-sm font-medium transition-colors hover:text-gold",
+                "uppercase tracking-widest text-xs font-bold transition-colors hover:text-gold",
                 location.pathname === link.path ? "text-gold" : "text-white-warm/80"
               )}
             >
@@ -58,7 +58,7 @@ const Navbar = () => {
             </Link>
           ))}
           
-          <div className="flex items-center space-x-2 ml-4 border-l border-white/20 pl-4" role="group" aria-label={t('nav.language')}>
+          <div className="flex items-center space-x-2 ml-4 border-l border-border pl-4" role="group" aria-label={t('nav.language')}>
             {['pt', 'en', 'es'].map((lang) => (
               <button
                 key={lang}
@@ -67,7 +67,7 @@ const Navbar = () => {
                 aria-pressed={i18n.language.startsWith(lang)}
                 className={cn(
                   "text-xs uppercase font-bold px-2 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-black-deep",
-                  i18n.language.startsWith(lang) ? "text-gold" : "text-white/40 hover:text-white"
+                  i18n.language.startsWith(lang) ? "text-gold" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {lang}
@@ -90,7 +90,7 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div id="mobile-nav" className="md:hidden absolute top-full left-0 right-0 glass-morphism border-t border-white/10">
+        <div id="mobile-nav" className="md:hidden absolute top-full left-0 right-0 glass-morphism border-t border-border">
           <div className="flex flex-col p-6 space-y-4">
             {navLinks.map((link) => (
               <Link
@@ -105,14 +105,14 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-4 flex space-x-4 border-t border-white/10">
+            <div className="pt-4 flex space-x-4 border-t border-border">
               {['pt', 'en', 'es'].map((lang) => (
                 <button
                   key={lang}
                   onClick={() => changeLanguage(lang)}
                   className={cn(
                     "text-sm uppercase font-bold",
-                    i18n.language.startsWith(lang) ? "text-gold" : "text-white/40"
+                    i18n.language.startsWith(lang) ? "text-gold" : "text-muted-foreground"
                   )}
                 >
                   {lang.toUpperCase()}

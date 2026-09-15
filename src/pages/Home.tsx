@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import { Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
+import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -9,44 +11,38 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-28 pb-12 overflow-hidden">
+      <section className="relative min-h-[92svh] flex items-end md:items-center pt-28 pb-16 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
-            className="w-full h-full object-cover opacity-80"
-            alt="Karate Legends Hero"
-            referrerPolicy="no-referrer"
+            src={heroAsset.url}
+            className="w-full h-full object-cover opacity-75"
+            alt="Competição Karate Legends em uma arena iluminada"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black-deep via-black-deep/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black-deep/60 via-transparent to-transparent"></div>
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-left">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="mb-4 flex flex-col items-center">
+            <div className="mb-4 flex flex-col items-start max-w-3xl">
               <img
-                src="/logo.png"
+                src={prestigeLogo}
                 alt="Karate Legends Logo"
-                className="w-40 md:w-64 object-contain mb-4"
-                referrerPolicy="no-referrer"
+                className="w-64 md:w-[34rem] object-contain mb-8"
               />
-              <span className="text-sm uppercase tracking-[0.5em] text-gold font-bold mb-4 block">{t('hero.tagline')}</span>
-              <h1 className="text-7xl md:text-[10rem] font-display mb-4 tracking-tighter leading-[0.85] uppercase">
-                <span className="block text-white-warm drop-shadow-2xl">KARATE</span>
-                <span className="block text-gold drop-shadow-2xl">LEGENDS</span>
-              </h1>
+              <span className="eyebrow mb-4 block">{t('hero.tagline')}</span>
+              <h1 className="text-6xl md:text-8xl font-display mb-4 leading-[0.9] uppercase max-w-3xl">Onde técnica vira legado.</h1>
             </div>
 
-            <p className="text-xl md:text-2xl text-creme/80 max-w-2xl mx-auto mb-12 font-light tracking-wide leading-relaxed">
+            <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mb-10 font-light leading-relaxed">
               {t('hero.subtitle')}
             </p>
 
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-20">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-14 max-w-xl">
               <Link to="/ppv" className="btn-gold flex items-center gap-2 px-10 py-4 text-sm">
                 <Play size={18} fill="currentColor" />
                 {t('hero.cta_ppv')}
@@ -57,13 +53,11 @@ const Home = () => {
             </div>
 
             {/* Próxima Edição: placeholder elegante */}
-            <div className="inline-flex flex-col items-center">
-              <p className="text-xs uppercase tracking-[0.4em] text-white/50 mb-6 font-bold flex items-center gap-4">
-                <span className="h-[1px] w-8 bg-white/20" aria-hidden="true"></span>
+            <div className="inline-flex flex-col items-start border-l border-gold pl-5">
+              <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground mb-3 font-bold flex items-center gap-4">
                 {t('hero.countdown_label')}
-                <span className="h-[1px] w-8 bg-white/20" aria-hidden="true"></span>
               </p>
-              <span className="text-5xl md:text-7xl font-display text-gold tracking-tight uppercase">
+              <span className="text-4xl md:text-5xl font-display text-foreground uppercase">
                 {t('hero.countdown_value')}
               </span>
             </div>
@@ -72,28 +66,29 @@ const Home = () => {
       </section>
 
       {/* Summary & Stats */}
-      <section className="py-40 bg-black-deep relative border-t border-white/5">
+      <section className="py-28 md:py-36 bg-background relative border-t border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-4xl">
-            <h2 className="text-6xl md:text-8xl mb-12 leading-[0.9] uppercase font-display tracking-tighter">
+            <span className="eyebrow block mb-5">Karate Legends</span>
+            <h2 className="text-5xl md:text-7xl mb-10 leading-[0.9] uppercase font-display">
               {t('summary.title')}
             </h2>
             <div className="h-1 w-24 gold-gradient mb-12"></div>
-            <p className="text-xl md:text-2xl text-white/60 leading-relaxed mb-16 font-light">
+            <p className="text-lg md:text-2xl text-muted-foreground leading-relaxed mb-16 font-light">
               {t('summary.text')}
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-1 px-1 bg-white/5 border border-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-3 border-y border-border">
               {[
                 { label: t('stats.countries'), value: '2' },
                 { label: t('stats.belts'), value: '2' },
                 { label: t('stats.editions'), value: '4' }
               ].map((stat, i) => (
-                <div key={i} className="bg-black-deep p-12 flex flex-col items-center text-center group hover:bg-white/[0.02] transition-colors">
+                <div key={i} className="bg-background p-10 flex flex-col items-start text-left border-b md:border-b-0 md:border-r last:border-0 border-border group hover:bg-card transition-colors">
                   <span className="text-7xl md:text-8xl font-display text-gold mb-4 leading-none">{stat.value}</span>
-                  <span className="text-xs uppercase tracking-[0.3em] text-white/60 font-bold">{stat.label}</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-bold">{stat.label}</span>
                   {stat.label === t('stats.belts') && (
-                    <span className="text-xs text-white/40 mt-4 leading-tight font-medium max-w-[180px]">{t('stats.belts_desc')}</span>
+                    <span className="text-xs text-muted-foreground mt-4 leading-tight font-medium max-w-[180px]">{t('stats.belts_desc')}</span>
                   )}
                 </div>
               ))}
