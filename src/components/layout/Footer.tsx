@@ -38,9 +38,8 @@ const Footer = () => {
             <h4 className="text-gold font-display text-lg mb-6 tracking-widest">Navegação</h4>
             <ul className="space-y-4">
               <li><Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">{t('nav.home')}</Link></li>
-              <li><Link to="/eventos" className="text-muted-foreground hover:text-foreground transition-colors">{t('nav.events')}</Link></li>
+              {/* Eventos e Blog ocultos temporariamente */}
               <li><Link to="/atletas" className="text-muted-foreground hover:text-foreground transition-colors">{t('nav.athletes')}</Link></li>
-              <li><Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">{t('nav.blog')}</Link></li>
             </ul>
           </div>
 
