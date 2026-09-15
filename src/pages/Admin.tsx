@@ -317,6 +317,7 @@ const Admin = () => {
           </div>
 
           {fetching ? <TableSkeleton rows={6} /> : (
+            <>
             <div className="hidden md:block overflow-x-auto border border-border rounded-sm">
               <table className="w-full text-sm">
                 <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
@@ -368,6 +369,7 @@ const Admin = () => {
               </button>)}
               {!filtered.length && <EmptyState label="Nenhuma inscrição encontrada com esses filtros" />}
             </div>
+            </>
           )}
         </>
       )}
