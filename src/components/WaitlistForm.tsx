@@ -24,7 +24,6 @@ const WaitlistForm = () => {
     setErrorMsg('');
 
     try {
-      // Save to Supabase (primary)
       const { error: dbError } = await supabase.from('lista_espera_ppv').insert({
         nome: formData.name,
         email: formData.email,
@@ -54,11 +53,11 @@ const WaitlistForm = () => {
     );
   }
 
-  const inputClass = "w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white-warm placeholder:text-white/30 focus:border-gold/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black-card transition-colors";
-  const labelClass = "block text-xs uppercase tracking-widest text-white/50 mb-2";
+  const inputClass = "form-field";
+  const labelClass = "form-label";
 
   return (
-    <div className="card-premium border-gold/30 max-w-2xl mx-auto">
+    <div className="surface-elevated rounded-sm p-6 md:p-9 border-gold/30 max-w-2xl mx-auto">
       <div className="text-center mb-8">
         <Bell size={40} className="text-gold mx-auto mb-4" aria-hidden="true" />
         <h3 className="text-3xl mb-2">{t('ppv.waitlist_title')}</h3>

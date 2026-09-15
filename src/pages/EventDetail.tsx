@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Calendar, MapPin, Shield, ArrowLeft } from 'lucide-react';
+import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 interface EventData {
   title: string;
@@ -70,7 +71,7 @@ const EventDetail = () => {
 
         <div className="aspect-video bg-black-card border border-white/10 mb-16 overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
+            src={heroAsset.url}
             className="w-full h-full object-cover grayscale brightness-50"
             alt={event.title}
             loading="lazy"

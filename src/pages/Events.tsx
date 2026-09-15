@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import heroAsset from '@/assets/legends-arena-hero.jpg.asset.json';
 
 const Events = () => {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ const Events = () => {
       location: t('events.curitiba_loc'),
       status: null,
       type: "Championship",
-      img: "https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
+      img: heroAsset.url
     }
   ];
 
@@ -18,13 +19,13 @@ const Events = () => {
     <div className="pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-6">
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl mb-6">{t('events.title')}</h1>
+          <p className="eyebrow mb-4">Calendário oficial</p><h1 className="text-6xl md:text-8xl mb-6">{t('events.title')}</h1>
           <div className="h-1 w-24 gold-gradient"></div>
         </header>
 
         <div className="space-y-12">
           {events.map((event, i) => (
-            <div key={i} className="group bg-black-card border border-white/5 flex flex-col md:flex-row overflow-hidden hover:border-gold/30 transition-colors">
+            <div key={i} className="group bg-card border border-border rounded-sm flex flex-col md:flex-row overflow-hidden hover:border-gold/30 transition-colors">
               <div className="md:w-1/3 aspect-video md:aspect-auto overflow-hidden">
                 <img
                   src={event.img}
