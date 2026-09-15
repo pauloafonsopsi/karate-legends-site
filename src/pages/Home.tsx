@@ -18,32 +18,31 @@ const Home = () => {
             alt="Competição Karate Legends em uma arena iluminada"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/40 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/60"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-left">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
+            className="flex flex-col items-center"
           >
-            <div className="mb-4 flex flex-col items-start max-w-3xl">
-              <img
-                src={prestigeLogo}
-                alt="Karate Legends Logo"
-                className="w-56 md:w-[27rem] h-auto object-contain mb-8"
-              />
-              <span className="eyebrow mb-4 block">{t('hero.tagline')}</span>
-              <h1 className="text-6xl md:text-8xl font-display mb-4 leading-[0.9] uppercase max-w-3xl">Onde técnica vira legado.</h1>
-            </div>
+            <img
+              src={prestigeLogo}
+              alt="Karate Legends Logo"
+              className="w-56 md:w-[27rem] h-auto object-contain mb-8"
+            />
+            <span className="eyebrow mb-4 block">{t('hero.tagline')}</span>
+            <h1 className="text-6xl md:text-8xl font-display mb-4 leading-[0.9] uppercase max-w-3xl">Onde técnica vira legado.</h1>
 
             <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mb-10 font-light leading-relaxed">
               {t('hero.subtitle')}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-14 max-w-xl">
-              <Link to="/ppv" className="btn-gold flex items-center gap-2 px-10 py-4 text-sm">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 mb-14">
+              <Link to="/ppv" className="btn-gold flex items-center justify-center gap-2 px-10 py-4 text-sm">
                 <Play size={18} fill="currentColor" />
                 {t('hero.cta_ppv')}
               </Link>
@@ -53,7 +52,7 @@ const Home = () => {
             </div>
 
             {/* Próxima Edição: placeholder elegante */}
-            <div className="inline-flex flex-col items-start border-l border-gold pl-5">
+            <div className="inline-flex flex-col items-center">
               <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground mb-3 font-bold flex items-center gap-4">
                 {t('hero.countdown_label')}
               </p>
