@@ -32,7 +32,7 @@ const Home = () => {
               <img
                 src={prestigeLogo}
                 alt="Karate Legends Logo"
-                className="w-64 md:w-[34rem] object-contain mb-8"
+                className="w-56 md:w-[27rem] h-auto object-contain mb-8"
               />
               <span className="eyebrow mb-4 block">{t('hero.tagline')}</span>
               <h1 className="text-6xl md:text-8xl font-display mb-4 leading-[0.9] uppercase max-w-3xl">Onde técnica vira legado.</h1>

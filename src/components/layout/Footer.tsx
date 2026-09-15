@@ -15,7 +15,7 @@ const Footer = () => {
               <img
                 src={prestigeLogo}
                 alt="Karate Legends"
-                className="h-14 w-auto max-w-[260px] object-contain transition-all duration-300 group-hover:brightness-110"
+                className="h-11 w-auto max-w-[210px] object-contain transition-all duration-300 group-hover:brightness-110"
               />
             </Link>
             <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">

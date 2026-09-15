@@ -37,13 +37,13 @@ const AdminLogin = () => {
       <div className="absolute inset-y-0 left-0 w-1/2 border-r border-border hidden lg:block" aria-hidden="true" />
       <div className="max-w-6xl w-full mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
         <div className="hidden lg:block pr-12">
-          <img src={prestigeLogo} alt="Karate Legends" className="w-full max-w-md mb-12" />
+          <img src={prestigeLogo} alt="Karate Legends" className="w-full max-w-sm h-auto mb-12" />
           <p className="eyebrow mb-4">Controle da operação</p>
           <h1 className="text-6xl leading-none mb-6">Gestão com visão de campeonato.</h1>
           <p className="text-muted-foreground max-w-md leading-relaxed">Acompanhe inscrições, pagamentos, documentos e decisões em um ambiente privado.</p>
         </div>
         <div className="max-w-md w-full mx-auto">
-        <img src={prestigeLogo} alt="Karate Legends" className="w-52 mb-10 lg:hidden" />
+        <img src={prestigeLogo} alt="Karate Legends" className="w-44 h-auto mb-10 lg:hidden" />
         <p className="eyebrow mb-3">Área privada</p>
         <h2 className="text-4xl mb-2">Painel Admin</h2>
         <p className="text-muted-foreground text-sm mb-8">Entre com sua conta administrativa.</p>

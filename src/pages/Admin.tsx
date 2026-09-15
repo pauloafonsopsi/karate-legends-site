@@ -217,7 +217,7 @@ const Admin = () => {
     <div className="pt-28 pb-20 px-4 md:px-8 max-w-[1480px] mx-auto">
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4 border-b border-border pb-6">
         <div className="flex items-center gap-5">
-          <img src={prestigeLogo} alt="Karate Legends" className="hidden sm:block w-44 h-auto" />
+          <img src={prestigeLogo} alt="Karate Legends" className="hidden sm:block w-36 h-auto" />
           <div className="sm:border-l sm:border-border sm:pl-5">
           <p className="eyebrow mb-1">Centro de controle</p>
           <h1 className="text-3xl md:text-4xl text-foreground">Painel Admin</h1>
