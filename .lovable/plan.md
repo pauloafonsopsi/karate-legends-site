@@ -1,60 +1,60 @@
+# Plano: Redesign “Elite Gold Prestige”
+
 ## Objetivo
-Substituir os campos de link (certificado e documento) por upload de arquivos com compressão automática client-side (WebP) antes de enviar para o storage, e exibir as imagens no painel admin.
+Unificar o site público, a inscrição de atletas e a área administrativa em uma identidade premium de esporte de combate: preto ônix, dourado metálico convincente, títulos fortes em Bebas Neue e controles claros em DM Sans. Todo o conteúdo e as funções atuais serão preservados.
 
-## Mudanças
+## 1. Identidade e sistema visual
+- Consolidar cores, sombras, superfícies, estados e dourados em tokens semânticos únicos.
+- Trocar o dourado plano/repetitivo por uma aplicação metálica controlada: sombras profundas, faixa especular estreita e brilho direcional apenas nos elementos principais.
+- Reservar Bebas Neue para títulos curtos, números e navegação; usar DM Sans para textos, perguntas, campos e informações operacionais.
+- Aumentar contraste de textos auxiliares e uniformizar bordas, focos, estados de erro e sucesso.
+- Remover estilos antigos ou duplicados que contradizem a nova direção.
 
-### 1. Storage (Lovable Cloud)
-- Criar bucket privado `atletas-docs` (acesso somente via admin).
-- Políticas RLS em `storage.objects`:
-  - INSERT público (anon) restrito ao bucket — atletas anônimos precisam subir antes de existir conta.
-  - SELECT/DELETE apenas para `has_role(auth.uid(),'admin')`.
-- Organização de pastas: `{uuid-da-inscricao-temp}/certificado.webp`, `identidade-frente.webp`, `identidade-verso.webp`.
+## 2. Marca e imagens
+- Usar o símbolo e o logotipo atuais com regras consistentes de tamanho, respiro e aplicação.
+- Criar com GPT Image 2 versões refinadas da marca atual para fundo escuro, preservando rigorosamente o desenho e a leitura “Karate Legends”.
+- Produzir variações necessárias: símbolo, assinatura horizontal e tratamento metálico mais sóbrio, sem reinventar a marca.
+- Otimizar os arquivos finais para uso rápido no site, mantendo transparência quando necessário após o tratamento.
+- Substituir imagens externas frágeis por ativos locais e aplicar uma direção fotográfica coerente, cinematográfica e nítida.
 
-### 2. Schema
-- Renomear semanticamente em `inscricoes_atletas`:
-  - `link_certificado` → continua usado, mas guardará o **path** no storage (ex: `abc123/certificado.webp`).
-  - `link_documento` → `link_documento_frente` (path).
-  - Adicionar `link_documento_verso` (path).
-- Migration: adicionar nova coluna `link_documento_verso text`; manter as outras (sem renomear para não quebrar) — `link_documento` passa a representar a frente.
+## 3. Site público
+- Refinar navegação e rodapé para que a marca tenha mais presença sem competir com o conteúdo.
+- Reestruturar a página inicial com melhor leitura sobre a foto, hierarquia mais precisa e chamadas principais mais táteis.
+- Harmonizar Eventos, Blog e PPV com o mesmo ritmo editorial, cartões mais limpos e tratamentos fotográficos consistentes.
+- Manter a próxima seção parcialmente visível abaixo da abertura e garantir boa composição em celulares, tablets e desktops.
+- Corrigir metadados para refletir “The World Stage for Karate” e a oferta atual.
 
-### 3. Formulário público (`AthleteForm.tsx`)
-- Substituir 3 inputs URL por 3 inputs `type="file"` com `accept="image/*,application/pdf"`.
-- Pipeline client-side antes do upload:
-  1. Se PDF → enviar como está (certificado pode ser PDF).
-  2. Se imagem → carregar em `<canvas>`, redimensionar para máx 1600px no maior lado, exportar como WebP qualidade 0.82.
-  3. Limite final ~500KB; se exceder, recomprimir com qualidade menor.
-- Upload via `supabase.storage.from('atletas-docs').upload(path, blob)` usando UUID temporário gerado no submit.
-- Salvar os 3 paths nas colunas correspondentes do insert.
-- Remover componente `DriveTutorial` da página (não mais necessário) — manter arquivo, só não importar.
-- Estados: progresso por arquivo, mensagens de erro, validação de tipo/tamanho máximo de origem (ex: 15MB).
+## 4. Inscrição de atletas
+- Organizar o formulário em etapas claras: perfil, credenciais, documentos e confirmação.
+- Adicionar progresso visível, agrupamento lógico, validação por etapa e resumo antes do envio.
+- Destacar os uploads de certificado e identidade como uma etapa segura, mostrando arquivo, redução de tamanho e estado de processamento.
+- Preservar compressão, armazenamento privado, campos condicionais, aceites legais e pagamento.
+- Redesenhar requisitos e FAQ para leitura rápida, sem aumentar o volume de texto.
 
-### 4. Painel Admin (`Admin.tsx`)
-- No drawer de detalhes do atleta, substituir links externos por:
-  - Thumbnail clicável (signed URL gerada sob demanda, expiração 1h) para certificado, doc frente, doc verso.
-  - Botão "Baixar" que abre a signed URL.
-- Helper `getSignedUrl(path)` usando `supabase.storage.from('atletas-docs').createSignedUrl(path, 3600)`.
+## 5. PPV e lista de espera
+- Dar ao PPV uma apresentação visual de produto, com maior clareza sobre transmissão, dispositivos e disponibilidade.
+- Integrar a lista de espera à mesma linguagem premium, com foco evidente na ação principal.
+- Não inventar preço, data ou promessa comercial ainda não fornecidos.
 
-### 5. i18n
-- Novas chaves em `pt/en/es`:
-  - `form.certificate_upload`, `form.id_front_upload`, `form.id_back_upload`
-  - `form.upload_hint` (formatos aceitos, tamanho)
-  - `form.compressing`, `form.uploading`, `form.upload_error`
-- Remover/ajustar chaves antigas `*_placeholder` que sugeriam URL.
+## 6. Área administrativa
+- Transformar o painel em uma central de acompanhamento mais clara e densa, sem aparência genérica de painel pronto.
+- Aplicar cabeçalho operacional, indicadores consistentes, filtros compactos, tabela legível e visão mobile por cartões.
+- Unificar status em uma paleta sóbria, usando cores funcionais apenas quando realmente necessárias.
+- Melhorar o painel lateral do atleta, visualização de documentos, cópia de contato, pagamento, observações e ações.
+- Trocar confirmações nativas por diálogos próprios e acessíveis.
+- Manter o acesso existente, mas remover a senha exposta visualmente na tela de login e a opção pública de criar conta.
+
+## 7. Movimento, acessibilidade e qualidade
+- Aplicar movimentos curtos e controlados: entrada editorial, realce metálico em ações principais e feedback de estado.
+- Respeitar redução de movimento, navegação por teclado, foco visível e contraste adequado.
+- Validar as páginas principais e o painel em desktop e celular, incluindo login, filtros, formulário, uploads e abertura de documentos.
+- Corrigir avisos de interface encontrados durante a auditoria e confirmar ausência de erros no preview.
 
 ## Detalhes técnicos
-- Compressão pura no browser, sem libs externas (Canvas API + `canvas.toBlob('image/webp', 0.82)`).
-- Fallback: se navegador não suportar WebP no encode, cai para JPEG 0.85.
-- Nome do arquivo no storage sempre normalizado (sem acentos, lowercase).
-- `inscricoes_atletas` continua aceitando INSERT público (sem mudanças de RLS na tabela).
-- Bucket privado garante que nenhuma URL pública seja exposta; admin sempre passa por signed URL.
+- Alterações concentradas na apresentação React/Tailwind e nos ativos da marca; sem mudanças na estrutura dos dados ou nas regras de armazenamento.
+- Cores e efeitos novos serão definidos no sistema global e consumidos por classes semânticas.
+- Imagens geradas/editadas serão armazenadas no próprio projeto, sem links externos.
+- A senha continua sendo a solicitada; apenas deixa de aparecer para qualquer visitante da página de login.
 
-## Arquivos afetados
-- `supabase/migrations/<novo>.sql` — bucket + policies + coluna `link_documento_verso`.
-- `src/components/AthleteForm.tsx` — UI + lógica de upload/compressão.
-- `src/lib/imageCompress.ts` (novo) — helper de compressão.
-- `src/pages/Admin.tsx` — exibição de thumbnails e signed URLs.
-- `src/messages/{pt,en,es}.json` — novas chaves.
-
-## Fora de escopo
-- Reprocessar inscrições antigas (continuarão com links antigos vazios/quebrados).
-- Upload no formulário PPV (sem arquivos).
+## Resultado esperado
+Um produto visualmente coerente de ponta a ponta: impacto cinematográfico no site, inscrição simples e confiável para atletas, e uma área administrativa rápida para acompanhar pagamentos, documentos e decisões.
