@@ -37,6 +37,9 @@ const Home = () => {
               alt="Karate Legends Logo"
               className="w-56 md:w-[27rem] h-auto object-contain mb-8"
             />
+            <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mb-10 font-light leading-relaxed">
+              {t('hero.subtitle')}
+            </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 mb-14">
               <Link to="/ppv" className="btn-gold flex items-center justify-center gap-2 px-10 py-4 text-sm">
