@@ -8,6 +8,8 @@ import {
   Users, Clock, CheckCircle2, XCircle, DollarSign, Bell, LayoutDashboard, UserSquare2, Trash2, Inbox,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 
 type Inscricao = {
   id: string;
@@ -47,10 +49,10 @@ type Waitlist = {
 const STATUS_OPTIONS = ['pendente', 'pago', 'aprovado', 'rejeitado'] as const;
 
 const statusColor: Record<string, string> = {
-  pendente: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-  pago: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  aprovado: 'bg-green-500/20 text-green-300 border-green-500/30',
-  rejeitado: 'bg-red-500/20 text-red-300 border-red-500/30',
+  pendente: 'bg-secondary text-muted-foreground border-border',
+  pago: 'bg-gold/10 text-gold border-gold/35',
+  aprovado: 'bg-foreground/10 text-foreground border-foreground/25',
+  rejeitado: 'bg-destructive/15 text-destructive-foreground border-destructive/35',
 };
 
 type TabKey = 'overview' | 'atletas' | 'ppv';
@@ -66,6 +68,7 @@ const Admin = () => {
   const [filterStatus, setFilterStatus] = useState<string>('todos');
   const [filterPago, setFilterPago] = useState<'todos' | 'sim' | 'nao'>('todos');
   const [editing, setEditing] = useState<Inscricao | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ type: 'atleta' | 'ppv'; id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!loading) {
@@ -161,20 +164,14 @@ const Admin = () => {
     }
   };
 
-  const deleteRow = async (id: string) => {
-    if (!confirm('Excluir esta inscrição?')) return;
-    const { error } = await supabase.from('inscricoes_atletas').delete().eq('id', id);
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    const table = pendingDelete.type === 'atleta' ? 'inscricoes_atletas' : 'lista_espera_ppv';
+    const { error } = await supabase.from(table).delete().eq('id', pendingDelete.id);
     if (error) { toast.error(error.message); return; }
-    toast.success('Inscrição excluída');
+    toast.success(pendingDelete.type === 'atleta' ? 'Inscrição excluída' : 'Removido da lista');
+    setPendingDelete(null);
     setEditing(null);
-    load();
-  };
-
-  const deleteWaitlist = async (id: string) => {
-    if (!confirm('Remover desta lista?')) return;
-    const { error } = await supabase.from('lista_espera_ppv').delete().eq('id', id);
-    if (error) { toast.error(error.message); return; }
-    toast.success('Removido');
     load();
   };
 
@@ -217,11 +214,15 @@ const Admin = () => {
   ];
 
   return (
-    <div className="pt-28 pb-20 px-4 md:px-8 max-w-[1400px] mx-auto">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div>
-          <h1 className="text-3xl md:text-4xl text-gold">Painel Admin</h1>
+    <div className="pt-28 pb-20 px-4 md:px-8 max-w-[1480px] mx-auto">
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-4 border-b border-border pb-6">
+        <div className="flex items-center gap-5">
+          <img src={prestigeLogo} alt="Karate Legends" className="hidden sm:block w-44 h-auto" />
+          <div className="sm:border-l sm:border-border sm:pl-5">
+          <p className="eyebrow mb-1">Centro de controle</p>
+          <h1 className="text-3xl md:text-4xl text-foreground">Painel Admin</h1>
           <p className="text-xs text-white/40 uppercase tracking-widest mt-1">{session.user.email}</p>
+          </div>
         </div>
         <button onClick={logout} className="btn-outline-gold flex items-center gap-2 text-sm">
           <LogOut size={14} /> Sair
@@ -248,14 +249,14 @@ const Admin = () => {
         <div className="space-y-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <StatCard icon={Users} label="Total" value={stats.total} accent="text-gold" />
-            <StatCard icon={Clock} label="Pendentes" value={stats.pendentes} accent="text-yellow-300" />
-            <StatCard icon={DollarSign} label="Pagos" value={stats.pagos} accent="text-blue-300" />
-            <StatCard icon={CheckCircle2} label="Aprovados" value={stats.aprovados} accent="text-green-300" />
-            <StatCard icon={XCircle} label="Rejeitados" value={stats.rejeitados} accent="text-red-300" />
-            <StatCard icon={Bell} label="Lista PPV" value={stats.ppv} accent="text-white" />
+            <StatCard icon={Clock} label="Pendentes" value={stats.pendentes} accent="text-muted-foreground" />
+            <StatCard icon={DollarSign} label="Pagos" value={stats.pagos} accent="text-gold" />
+            <StatCard icon={CheckCircle2} label="Aprovados" value={stats.aprovados} accent="text-foreground" />
+            <StatCard icon={XCircle} label="Rejeitados" value={stats.rejeitados} accent="text-muted-foreground" />
+            <StatCard icon={Bell} label="Lista PPV" value={stats.ppv} accent="text-foreground" />
           </div>
 
-          <div className="border border-white/10 bg-white/[0.02] p-5">
+          <div className="surface-elevated rounded-sm p-5 md:p-7">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg text-gold uppercase tracking-widest">Inscrições recentes</h2>
@@ -316,7 +317,7 @@ const Admin = () => {
           </div>
 
           {fetching ? <TableSkeleton rows={6} /> : (
-            <div className="overflow-x-auto border border-white/10">
+            <div className="hidden md:block overflow-x-auto border border-border rounded-sm">
               <table className="w-full text-sm">
                 <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
                   <tr>
@@ -345,7 +346,7 @@ const Admin = () => {
                       </td>
                       <td className="p-3">
                         <button onClick={() => togglePaid(a)}
-                          className={`text-xs px-2 py-1 border transition-colors ${a.pagamento_confirmado ? 'border-green-500/40 text-green-300 bg-green-500/10' : 'border-white/10 text-white/40 hover:border-gold/40 hover:text-gold'}`}>
+                           className={`text-xs px-2 py-1 border transition-colors ${a.pagamento_confirmado ? 'border-gold/40 text-gold bg-gold/10' : 'border-border text-muted-foreground hover:border-gold/40 hover:text-gold'}`}>
                           {a.pagamento_confirmado ? '✓ Pago' : 'Marcar'}
                         </button>
                       </td>
@@ -359,6 +360,13 @@ const Admin = () => {
                   )}
                 </tbody>
               </table>
+            </div>
+            <div className="md:hidden space-y-3">
+              {filtered.map(a => <button key={a.id} onClick={() => setEditing(a)} className="w-full surface-elevated rounded-sm p-4 text-left">
+                <div className="flex justify-between gap-3 mb-3"><div><p className="font-bold text-foreground">{a.nome}</p><p className="text-xs text-muted-foreground mt-1">{a.estilo} · {a.graduacao}</p></div><span className={`self-start px-2 py-1 text-[10px] border ${statusColor[a.status] || ''}`}>{a.status}</span></div>
+                <div className="flex justify-between text-xs text-muted-foreground"><span>{a.cidade || '—'}, {a.pais || '—'}</span><span>{new Date(a.criado_em).toLocaleDateString('pt-BR')}</span></div>
+              </button>)}
+              {!filtered.length && <EmptyState label="Nenhuma inscrição encontrada com esses filtros" />}
             </div>
           )}
         </>
@@ -393,7 +401,7 @@ const Admin = () => {
                     <td className="p-3 text-white/70">{w.email}</td>
                     <td className="p-3 text-white/70">{w.whatsapp}</td>
                     <td className="p-3">
-                      <button onClick={() => deleteWaitlist(w.id)} className="text-red-400/70 hover:text-red-400" title="Remover">
+                       <button onClick={() => setPendingDelete({ type: 'ppv', id: w.id, name: w.nome })} className="text-destructive/80 hover:text-destructive" title="Remover">
                         <Trash2 size={14} />
                       </button>
                     </td>
@@ -506,7 +514,7 @@ const Admin = () => {
                 </Section>
 
                 <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                  <button onClick={() => deleteRow(editing.id)} className="text-red-400 text-xs hover:underline flex items-center gap-1">
+                   <button onClick={() => setPendingDelete({ type: 'atleta', id: editing.id, name: editing.nome })} className="text-destructive text-xs hover:underline flex items-center gap-1">
                     <Trash2 size={12} /> Excluir inscrição
                   </button>
                   <button onClick={saveEdit} className="btn-gold flex items-center gap-2 text-sm">
@@ -518,6 +526,12 @@ const Admin = () => {
           )}
         </SheetContent>
       </Sheet>
+      <AlertDialog open={!!pendingDelete} onOpenChange={(open) => !open && setPendingDelete(null)}>
+        <AlertDialogContent className="bg-card border-border text-foreground rounded-sm">
+          <AlertDialogHeader><AlertDialogTitle>Confirmar exclusão</AlertDialogTitle><AlertDialogDescription>Esta ação removerá permanentemente o registro de {pendingDelete?.name}. Não será possível desfazer.</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>Cancelar</AlertDialogCancel><AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Excluir registro</AlertDialogAction></AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
@@ -604,7 +618,7 @@ const StoragePreview = ({ label, path }: { label: string; path: string | null })
 };
 
 const StatCard = ({ icon: Icon, label, value, accent }: { icon: typeof Users; label: string; value: number; accent: string }) => (
-  <div className="border border-white/10 bg-white/[0.02] p-4 hover:border-gold/20 transition-colors">
+  <div className="surface-elevated rounded-sm p-4 hover:border-gold/30 transition-colors">
     <div className="flex items-center justify-between mb-2">
       <Icon size={16} className={accent} />
       <span className="text-[10px] uppercase tracking-widest text-white/40">{label}</span>
