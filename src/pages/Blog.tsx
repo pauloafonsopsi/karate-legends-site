@@ -11,7 +11,7 @@ const Blog = () => {
       excerpt: "Entenda as modificações nas regras tradicionais que tornam o Legends único.",
       date: "MAR 20, 2026",
       category: "Regras",
-      img: "https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=2070&auto=format&fit=crop"
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     },
     {
       slug: "filosofia-karate-legends",
@@ -19,7 +19,7 @@ const Blog = () => {
       excerpt: "Por que criamos este palco para os karatecas do mundo.",
       date: "MAR 15, 2026",
       category: "Filosofia",
-      img: "https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     },
     {
       slug: "atleta-modelo",
@@ -27,7 +27,7 @@ const Blog = () => {
       excerpt: "O que nossa equipe técnica busca em um competidor de elite.",
       date: "MAR 10, 2026",
       category: "Atletas",
-      img: "https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=2072&auto=format&fit=crop"
+      img: "https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
     }
   ];
 
@@ -35,7 +35,7 @@ const Blog = () => {
     <div className="pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-6">
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl mb-6">BLOG</h1>
+          <p className="eyebrow mb-4">Editorial Legends</p><h1 className="text-6xl md:text-8xl mb-6">BLOG</h1>
           <div className="h-1 w-24 gold-gradient"></div>
         </header>
 

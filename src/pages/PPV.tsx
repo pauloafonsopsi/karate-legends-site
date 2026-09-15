@@ -8,9 +8,10 @@ const PPV = () => {
   return (
     <div className="pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-6">
-        <header className="text-center mb-20">
+        <header className="text-center mb-16 max-w-4xl mx-auto">
+          <p className="eyebrow mb-4">Experiência digital</p>
           <h1 className="text-6xl md:text-8xl mb-6">{t('ppv.title')}</h1>
-          <p className="text-white-warm/70 text-xl max-w-2xl mx-auto">{t('ppv.subtitle')}</p>
+           <p className="text-muted-foreground text-xl max-w-2xl mx-auto">{t('ppv.subtitle')}</p>
         </header>
 
         {/* Waitlist Form */}
@@ -39,9 +40,9 @@ const PPV = () => {
         </section>
 
         {/* Dispositivos */}
-        <section aria-labelledby="ppv-devices-heading" className="bg-black-card p-12 border border-white/5 text-center">
+        <section aria-labelledby="ppv-devices-heading" className="bg-card p-8 md:p-12 border border-border text-center rounded-sm">
           <h2 id="ppv-devices-heading" className="text-2xl mb-8 uppercase tracking-widest">{t('ppv.devices_title')}</h2>
-          <div className="flex justify-center gap-12 text-white/60">
+          <div className="flex flex-wrap justify-center gap-10 md:gap-16 text-muted-foreground">
             <div className="flex flex-col items-center gap-2"><Tv size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Smart TV</span></div>
             <div className="flex flex-col items-center gap-2"><Smartphone size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Mobile</span></div>
             <div className="flex flex-col items-center gap-2"><Tablet size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Tablet</span></div>

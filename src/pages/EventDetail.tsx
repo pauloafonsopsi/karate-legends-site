@@ -70,7 +70,7 @@ const EventDetail = () => {
 
         <div className="aspect-video bg-black-card border border-white/10 mb-16 overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1526671315163-1aa5e1267e8e?q=80&w=2070&auto=format&fit=crop"
+            src="https://lh3.googleusercontent.com/d/14fUNhoYfrrzIXBLUuzkbJ8LFNz8LkaE_"
             className="w-full h-full object-cover grayscale brightness-50"
             alt={event.title}
             loading="lazy"

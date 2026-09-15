@@ -15,15 +15,15 @@ export default {
     extend: {
       colors: {
         gold: {
-          light: "#E2C36B",
-          DEFAULT: "#C9A84C",
-          dark: "#8B7332",
+          light: "hsl(var(--gold-high))",
+          DEFAULT: "hsl(var(--gold-mid))",
+          dark: "hsl(var(--gold-deep))",
         },
-        "black-deep": "#050505",
-        "black-card": "#0A0A0A",
-        "black-accent": "#0F0F0F",
-        "white-warm": "#F5F0E6",
-        creme: "#E8DFC8",
+        "black-deep": "hsl(var(--background))",
+        "black-card": "hsl(var(--card))",
+        "black-accent": "hsl(var(--secondary))",
+        "white-warm": "hsl(var(--foreground))",
+        creme: "hsl(var(--foreground))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -60,7 +60,7 @@ export default {
       },
       fontFamily: {
         display: ['"Bebas Neue"', "sans-serif"],
-        sans: ['"DM Sans"', '"Inter"', "sans-serif"],
+        sans: ['"DM Sans"', "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
