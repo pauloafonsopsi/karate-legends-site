@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Send, Loader2, CheckCircle, Upload, FileCheck2, X } from 'lucide-react';
+import { Send, Loader2, CheckCircle, Upload, FileCheck2, X, ArrowLeft, ArrowRight, User, ShieldCheck, Files, CreditCard } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, formatBytes } from '@/lib/imageCompress';
 
@@ -42,6 +42,7 @@ const AthleteForm = () => {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [stage, setStage] = useState<'' | 'processing' | 'uploading'>('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [step, setStep] = useState(1);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement;
@@ -102,11 +103,12 @@ const AthleteForm = () => {
       setStage('uploading');
       const folder = crypto.randomUUID();
       const uploadOne = async (slot: UploadSlot, name: string) => {
-        const f = files[slot]!;
+        const f = files[slot];
+        if (!f?.processed || !f.ext) throw new Error(`Arquivo ${name} indisponível`);
         const path = `${folder}/${name}.${f.ext}`;
         const { error } = await supabase.storage
           .from('atletas-docs')
-          .upload(path, f.processed!, { contentType: f.processed!.type, upsert: false });
+          .upload(path, f.processed, { contentType: f.processed.type, upsert: false });
         if (error) throw new Error(`Upload ${name}: ${error.message}`);
         return path;
       };
@@ -147,6 +149,7 @@ const AthleteForm = () => {
       setStage('');
       setFormData(initialData);
       setFiles({ certificate: null, idFront: null, idBack: null });
+      setStep(1);
     } catch {
       setStatus('error');
       setStage('');
@@ -154,9 +157,32 @@ const AthleteForm = () => {
     }
   };
 
-  const inputClass = "w-full bg-white/5 border border-white/10 px-4 py-3 text-sm text-white-warm placeholder:text-white/30 focus:border-gold/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:ring-offset-2 focus-visible:ring-offset-black-card transition-colors";
-  const labelClass = "block text-xs uppercase tracking-widest text-white/50 mb-2";
+  const inputClass = "form-field";
+  const labelClass = "form-label";
   const optionClass = "bg-black-card text-white-warm";
+  const steps = [
+    { n: 1, label: 'Perfil', icon: User },
+    { n: 2, label: 'Graduação', icon: ShieldCheck },
+    { n: 3, label: 'Documentos', icon: Files },
+    { n: 4, label: 'Revisão', icon: CreditCard },
+  ];
+
+  const nextStep = () => {
+    setErrorMsg('');
+    if (step === 1 && [formData.name, formData.email, formData.whatsapp, formData.city, formData.country, formData.socialMedia].some(v => !v.trim())) {
+      setErrorMsg(t('form.required_fields')); return;
+    }
+    if (step === 2 && [formData.style, formData.belt, formData.association, formData.videoLink].some(v => !v.trim())) {
+      setErrorMsg(t('form.required_fields')); return;
+    }
+    if (step === 2 && !formData.ownsDojo && (!formData.senseiName.trim() || !formData.senseiPhone.trim())) {
+      setErrorMsg(t('form.required_fields')); return;
+    }
+    if (step === 3 && (!files.certificate?.processed || !files.idFront?.processed || !files.idBack?.processed)) {
+      setErrorMsg(t('form.required_fields')); return;
+    }
+    setStep(s => Math.min(4, s + 1));
+  };
 
   if (status === 'success') {
     return (
@@ -170,8 +196,23 @@ const AthleteForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 p-8" aria-label={t('form.athlete_title')}>
-      <h3 className="text-2xl text-gold mb-6 uppercase tracking-widest">{t('form.athlete_title')}</h3>
+    <form onSubmit={handleSubmit} className="p-5 md:p-9" aria-label={t('form.athlete_title')}>
+      <div className="mb-9 border-b border-border pb-7">
+        <p className="eyebrow mb-2">Aplicação oficial</p>
+        <h3 className="text-3xl md:text-4xl text-foreground">{t('form.athlete_title')}</h3>
+        <div className="grid grid-cols-4 mt-7" aria-label="Progresso da inscrição">
+          {steps.map(({ n, label, icon: Icon }) => (
+            <button key={n} type="button" onClick={() => n < step && setStep(n)} disabled={n > step}
+              className={`relative flex flex-col items-start gap-2 border-t pt-3 text-left transition-colors ${n <= step ? 'border-gold text-gold' : 'border-border text-muted-foreground'}`}>
+              <span className="flex items-center gap-2"><Icon size={14} /><span className="hidden sm:inline text-[10px] uppercase tracking-widest">{label}</span></span>
+              <span className="text-xs">0{n}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-6 min-h-[430px]">
+      {step === 1 && <>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -186,24 +227,18 @@ const AthleteForm = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="athlete-whatsapp" className={labelClass}>{t('form.whatsapp')} *</label>
-          <input id="athlete-whatsapp" name="whatsapp" type="tel" value={formData.whatsapp} onChange={handleChange} required autoComplete="tel"
-            className={inputClass} placeholder="+55 11 99999-9999" />
-        </div>
-        <div>
-          <label htmlFor="athlete-style" className={labelClass}>{t('form.style')} *</label>
-          <select id="athlete-style" name="style" value={formData.style} onChange={handleChange} required
-            className={inputClass}>
-            <option value="" className={optionClass}>{t('form.select')}</option>
-            <option value="Shotokan" className={optionClass}>Shotokan</option>
-            <option value="Shito-Ryu" className={optionClass}>Shito-Ryu</option>
-          </select>
-        </div>
-      </div>
+      <div><label htmlFor="athlete-whatsapp" className={labelClass}>{t('form.whatsapp')} *</label><input id="athlete-whatsapp" name="whatsapp" type="tel" value={formData.whatsapp} onChange={handleChange} required autoComplete="tel" className={inputClass} placeholder="+55 11 99999-9999" /></div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label htmlFor="athlete-city" className={labelClass}>{t('form.city')} *</label><input id="athlete-city" name="city" value={formData.city} onChange={handleChange} required autoComplete="address-level2" className={inputClass} placeholder={t('form.city_placeholder')} /></div>
+        <div><label htmlFor="athlete-country" className={labelClass}>{t('form.country')} *</label><input id="athlete-country" name="country" value={formData.country} onChange={handleChange} required autoComplete="country-name" className={inputClass} placeholder={t('form.country_placeholder')} /></div>
+      </div>
+      <div><label htmlFor="athlete-social" className={labelClass}>{t('form.social_media')} *</label><input id="athlete-social" name="socialMedia" value={formData.socialMedia} onChange={handleChange} required className={inputClass} placeholder="@seu_perfil" /></div>
+      </>}
+
+      {step === 2 && <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label htmlFor="athlete-style" className={labelClass}>{t('form.style')} *</label><select id="athlete-style" name="style" value={formData.style} onChange={handleChange} required className={inputClass}><option value="" className={optionClass}>{t('form.select')}</option><option value="Shotokan" className={optionClass}>Shotokan</option><option value="Shito-Ryu" className={optionClass}>Shito-Ryu</option></select></div>
         <div>
           <label htmlFor="athlete-belt" className={labelClass}>{t('form.belt')} *</label>
           <select id="athlete-belt" name="belt" value={formData.belt} onChange={handleChange} required
@@ -217,7 +252,7 @@ const AthleteForm = () => {
             <option value="5th Dan+" className={optionClass}>5º Dan+</option>
           </select>
         </div>
-        <div>
+        <div className="md:col-span-1">
           <label htmlFor="athlete-association" className={labelClass}>{t('form.association')} *</label>
           <input id="athlete-association" name="association" value={formData.association} onChange={handleChange} required autoComplete="organization"
             className={inputClass} placeholder={t('form.association_placeholder')} />
@@ -246,25 +281,6 @@ const AthleteForm = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="athlete-social" className={labelClass}>{t('form.social_media')} *</label>
-          <input id="athlete-social" name="socialMedia" value={formData.socialMedia} onChange={handleChange} required
-            className={inputClass} placeholder="@seu_perfil" />
-        </div>
-        <div>
-          <label htmlFor="athlete-city" className={labelClass}>{t('form.city')} *</label>
-          <input id="athlete-city" name="city" value={formData.city} onChange={handleChange} required autoComplete="address-level2"
-            className={inputClass} placeholder={t('form.city_placeholder')} />
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="athlete-country" className={labelClass}>{t('form.country')} *</label>
-        <input id="athlete-country" name="country" value={formData.country} onChange={handleChange} required autoComplete="country-name"
-          className={inputClass} placeholder={t('form.country_placeholder')} />
-      </div>
-
       <div>
         <label htmlFor="athlete-video" className={labelClass}>{t('form.video_link')} *</label>
         <input id="athlete-video" name="videoLink" type="url" value={formData.videoLink} onChange={handleChange} required
@@ -272,7 +288,10 @@ const AthleteForm = () => {
           className={inputClass} placeholder={t('form.video_placeholder')} />
         <p id="athlete-video-hint" className="text-white/50 text-xs mt-2">{t('form.video_hint')}</p>
       </div>
+      </>}
 
+      {step === 3 && <>
+      <div className="border-l border-gold pl-4 mb-7"><p className="text-sm text-foreground">Envie arquivos nítidos e completos.</p><p className="text-xs text-muted-foreground mt-1">As imagens são otimizadas automaticamente antes do armazenamento seguro.</p></div>
       <FileField
         id="athlete-certificate"
         label={`${t('form.certificate_link')} *`}
@@ -298,7 +317,14 @@ const AthleteForm = () => {
         onChange={(f) => handleFile('idBack', f)}
         t={t}
       />
+      </>}
 
+      {step === 4 && <>
+      <div className="surface-elevated p-5 space-y-4">
+        <div className="flex justify-between gap-4"><span className="text-muted-foreground text-sm">Atleta</span><strong className="text-sm text-right">{formData.name}</strong></div>
+        <div className="flex justify-between gap-4"><span className="text-muted-foreground text-sm">Categoria</span><strong className="text-sm text-right">{formData.style} · {formData.belt}</strong></div>
+        <div className="flex justify-between gap-4"><span className="text-muted-foreground text-sm">Documentos</span><strong className="text-sm text-gold">3 arquivos prontos</strong></div>
+      </div>
       <div className="space-y-3 pt-2 border-t border-white/10">
         <label className="flex items-start gap-3 text-sm text-white/80 cursor-pointer">
           <input type="checkbox" name="acceptTerms" checked={formData.acceptTerms} onChange={handleChange}
@@ -323,15 +349,19 @@ const AthleteForm = () => {
           </span>
         </label>
       </div>
+      </>}
 
       {errorMsg && <p role="alert" className="text-red-400 text-sm">{errorMsg}</p>}
-
-      <button type="submit" disabled={status === 'loading'} className="btn-gold w-full flex items-center justify-center gap-3">
+      </div>
+      <div className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-6">
+      {step > 1 ? <button type="button" onClick={() => { setErrorMsg(''); setStep(s => s - 1); }} className="btn-outline-gold px-4 md:px-6 flex items-center gap-2"><ArrowLeft size={16} /> Voltar</button> : <span />}
+      {step < 4 ? <button type="button" onClick={nextStep} className="btn-gold px-5 md:px-7 flex items-center gap-2">Continuar <ArrowRight size={16} /></button> : <button type="submit" disabled={status === 'loading'} className="btn-gold flex items-center justify-center gap-3">
         {status === 'loading' ? <Loader2 size={18} className="animate-spin" aria-hidden="true" /> : <Send size={18} aria-hidden="true" />}
         {status === 'loading'
           ? (stage === 'uploading' ? t('form.uploading') : t('form.sending'))
           : t('athletes.apply_now')}
-      </button>
+      </button>}
+      </div>
     </form>
   );
 };
@@ -345,12 +375,12 @@ const FileField = ({ id, label, hint, slot, onChange, t }: {
   const has = !!slot;
   return (
     <div>
-      <label htmlFor={id} className="block text-xs uppercase tracking-widest text-white/50 mb-2">{label}</label>
+      <label htmlFor={id} className="form-label">{label}</label>
       <input ref={ref} id={id} type="file" accept="image/*,application/pdf" className="sr-only"
         onChange={(e) => onChange(e.target.files?.[0] ?? null)} />
       {!has ? (
         <button type="button" onClick={() => ref.current?.click()}
-          className="w-full flex items-center justify-center gap-3 border border-dashed border-white/20 hover:border-gold/40 hover:bg-white/[0.02] px-4 py-6 text-sm text-white/70 transition-colors">
+          className="w-full flex items-center justify-center gap-3 rounded-sm border border-dashed border-border hover:border-gold/50 hover:bg-secondary px-4 py-7 text-sm text-muted-foreground transition-colors">
           <Upload size={18} className="text-gold" />
           <span>{t('form.upload_choose')}</span>
         </button>
@@ -362,11 +392,11 @@ const FileField = ({ id, label, hint, slot, onChange, t }: {
             <FileCheck2 size={16} className="text-green-400 flex-shrink-0" />
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-white/90 truncate">{slot!.file.name}</p>
+            <p className="text-white/90 truncate">{slot.file.name}</p>
             <p className="text-xs text-white/40">
-              {slot!.processing
+              {slot.processing
                 ? t('form.processing')
-                : `${formatBytes(slot!.file.size)} → ${formatBytes(slot!.processed!.size)}`}
+                : `${formatBytes(slot.file.size)} → ${slot.processed ? formatBytes(slot.processed.size) : '—'}`}
             </p>
           </div>
           <button type="button" onClick={() => ref.current?.click()}
