@@ -34,8 +34,9 @@ const Home = () => {
               alt="Karate Legends Logo"
               className="w-56 md:w-[27rem] h-auto object-contain mb-8"
             />
-            <span className="eyebrow mb-4 block">{t('hero.tagline')}</span>
-            <h1 className="text-6xl md:text-8xl font-display mb-4 leading-[0.9] uppercase max-w-3xl">Onde técnica vira legado.</h1>
+            <h1 className="text-4xl md:text-6xl font-display mb-4 leading-tight uppercase max-w-3xl">
+              {t('hero.tagline')}
+            </h1>
 
             <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mb-10 font-light leading-relaxed">
               {t('hero.subtitle')}
