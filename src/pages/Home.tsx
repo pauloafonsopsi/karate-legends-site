@@ -29,14 +29,16 @@ const Home = () => {
             transition={{ duration: 1, ease: "easeOut" }}
             className="flex flex-col items-center"
           >
-            <h1 className="text-base md:text-2xl text-gold uppercase font-bold tracking-[0.45em] md:tracking-[0.6em] mb-8">
-              {t('hero.tagline')}
-            </h1>
-            <img
-              src={prestigeLogo}
-              alt="Karate Legends Logo"
-              className="w-56 md:w-[27rem] h-auto object-contain mb-8"
-            />
+            <div className="w-56 md:w-[27rem] mb-8">
+              <h1 className="w-full mb-5 font-sans text-[0.68rem] md:text-lg font-bold uppercase leading-none text-gold tracking-[0.12em] text-justify [text-align-last:justify] whitespace-nowrap">
+                {t('hero.tagline')}
+              </h1>
+              <img
+                src={prestigeLogo}
+                alt="Karate Legends Logo"
+                className="w-full h-auto object-contain"
+              />
+            </div>
             <p className="text-lg md:text-xl text-foreground/70 max-w-2xl mb-10 font-light leading-relaxed">
               {t('hero.subtitle')}
             </p>
