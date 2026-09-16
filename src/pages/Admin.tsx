@@ -116,12 +116,16 @@ const Admin = () => {
 
   const load = async () => {
     setFetching(true);
-    const [a, w] = await Promise.all([
+    const [a, w, m, s] = await Promise.all([
       supabase.from('inscricoes_atletas').select('*').order('criado_em', { ascending: false }),
       supabase.from('lista_espera_ppv').select('*').order('criado_em', { ascending: false }),
+      supabase.from('membros').select('*').order('criado_em', { ascending: false }),
+      supabase.from('assinaturas').select('*').order('criado_em', { ascending: false }),
     ]);
     if (a.data) setAtletas(a.data as Inscricao[]);
     if (w.data) setWaitlist(w.data as Waitlist[]);
+    if (m.data) setMembros(m.data as Membro[]);
+    if (s.data) setAssinaturas(s.data as Assinatura[]);
     setFetching(false);
   };
 
