@@ -8,14 +8,15 @@
     "open_menu": "Abrir menu",
     "close_menu": "Fechar menu",
     "language": "Idioma",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "members": "Membros"
   },
   "hero": {
     "title": "KARATE LEGENDS",
     "tagline": "The World Stage for Karate",
     "subtitle": "Onde lendas são forjadas. O palco mundial para os melhores faixas pretas.",
     "cta_ppv": "Assista ao Vivo - PPV",
-    "cta_apply": "Aplique como Atleta",
+    "cta_apply": "Seja Membro",
     "countdown_label": "Próxima Edição",
     "countdown_value": "Em Breve"
   },
@@ -196,5 +197,32 @@
       "security_title": "7. Segurança",
       "security_text": "Adotamos medidas técnicas e administrativas razoáveis para proteger os dados. O candidato é responsável por compartilhar links de Google Drive cientes de que ele mesmo definiu o acesso público — a organização não se responsabiliza por acessos indevidos a links tornados públicos pelo próprio candidato."
     }
+  },
+  "members": {
+    "eyebrow": "Seja membro",
+    "title": "Aplicação como Membro",
+    "subtitle": "Membros assistem a todos os PPVs sem pagar por evento e recebem a newsletter mensal inclusa.",
+    "plan_member": "Membro Legends",
+    "plan_ppv": "PPV por evento",
+    "plan_newsletter": "Newsletter mensal",
+    "per_month": "/mês",
+    "per_event": "por evento",
+    "best_value": "Melhor escolha",
+    "benefit_ppv": "PPV de todos os eventos incluso (grátis)",
+    "benefit_newsletter": "Newsletter mensal inclusa (grátis)",
+    "benefit_community": "Avisos antecipados de cada edição",
+    "ppv_feature_live": "Transmissão ao vivo da edição",
+    "ppv_feature_replay": "Replay por 7 dias",
+    "news_feature_monthly": "Uma edição por mês",
+    "news_feature_inside": "Bastidores, atletas e análises",
+    "choose": "Escolher",
+    "change_plan": "Trocar de plano",
+    "your_data": "Seus dados",
+    "go_to_payment": "Ir para o pagamento",
+    "success_title": "Pagamento concluído",
+    "success_text": "Você receberá um e-mail com a confirmação e os acessos.",
+    "no_session_title": "Pagamento não identificado",
+    "no_session_text": "Não encontramos os dados desse pagamento. Se você concluiu a compra, verifique seu e-mail.",
+    "back_to_plans": "Voltar aos planos"
   }
 }

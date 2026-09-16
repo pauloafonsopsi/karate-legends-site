@@ -55,7 +55,40 @@ const statusColor: Record<string, string> = {
   rejeitado: 'bg-destructive/15 text-destructive-foreground border-destructive/35',
 };
 
-type TabKey = 'overview' | 'atletas' | 'ppv';
+type Membro = {
+  id: string;
+  criado_em: string;
+  nome: string;
+  email: string;
+  whatsapp: string;
+  cidade: string | null;
+  pais: string | null;
+  plano: string;
+  status: string;
+  observacoes: string | null;
+};
+
+type Assinatura = {
+  id: string;
+  email: string | null;
+  price_id: string | null;
+  status: string;
+  tipo: string | null;
+  valor_centavos: number | null;
+  moeda: string | null;
+  periodo_fim: string | null;
+  cancel_at_period_end: boolean | null;
+  environment: string;
+  criado_em: string;
+};
+
+const PLANO_LABEL: Record<string, string> = {
+  membro_mensal: 'Membro R$ 19,90/mês',
+  ppv_evento_unico: 'PPV R$ 59,90/evento',
+  newsletter_mensal: 'Newsletter R$ 29,90/mês',
+};
+
+type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -63,12 +96,14 @@ const Admin = () => {
   const [tab, setTab] = useState<TabKey>('overview');
   const [atletas, setAtletas] = useState<Inscricao[]>([]);
   const [waitlist, setWaitlist] = useState<Waitlist[]>([]);
+  const [membros, setMembros] = useState<Membro[]>([]);
+  const [assinaturas, setAssinaturas] = useState<Assinatura[]>([]);
   const [fetching, setFetching] = useState(false);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('todos');
   const [filterPago, setFilterPago] = useState<'todos' | 'sim' | 'nao'>('todos');
   const [editing, setEditing] = useState<Inscricao | null>(null);
-  const [pendingDelete, setPendingDelete] = useState<{ type: 'atleta' | 'ppv'; id: string; name: string } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ type: 'atleta' | 'ppv' | 'membro'; id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!loading) {
@@ -81,12 +116,16 @@ const Admin = () => {
 
   const load = async () => {
     setFetching(true);
-    const [a, w] = await Promise.all([
+    const [a, w, m, s] = await Promise.all([
       supabase.from('inscricoes_atletas').select('*').order('criado_em', { ascending: false }),
       supabase.from('lista_espera_ppv').select('*').order('criado_em', { ascending: false }),
+      supabase.from('membros').select('*').order('criado_em', { ascending: false }),
+      supabase.from('assinaturas').select('*').order('criado_em', { ascending: false }),
     ]);
     if (a.data) setAtletas(a.data as Inscricao[]);
     if (w.data) setWaitlist(w.data as Waitlist[]);
+    if (m.data) setMembros(m.data as Membro[]);
+    if (s.data) setAssinaturas(s.data as Assinatura[]);
     setFetching(false);
   };
 
@@ -166,7 +205,9 @@ const Admin = () => {
 
   const confirmDelete = async () => {
     if (!pendingDelete) return;
-    const table = pendingDelete.type === 'atleta' ? 'inscricoes_atletas' : 'lista_espera_ppv';
+    const table = pendingDelete.type === 'atleta'
+      ? 'inscricoes_atletas'
+      : pendingDelete.type === 'membro' ? 'membros' : 'lista_espera_ppv';
     const { error } = await supabase.from(table).delete().eq('id', pendingDelete.id);
     if (error) { toast.error(error.message); return; }
     toast.success(pendingDelete.type === 'atleta' ? 'Inscrição excluída' : 'Removido da lista');
@@ -210,6 +251,8 @@ const Admin = () => {
   const TABS: { key: TabKey; label: string; icon: typeof Users; count?: number }[] = [
     { key: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
     { key: 'atletas', label: 'Atletas', icon: UserSquare2, count: atletas.length },
+    { key: 'membros', label: 'Membros', icon: Users, count: membros.length },
+    { key: 'pagamentos', label: 'Pagamentos', icon: DollarSign, count: assinaturas.length },
     { key: 'ppv', label: 'Lista PPV', icon: Bell, count: waitlist.length },
   ];
 
@@ -370,6 +413,108 @@ const Admin = () => {
               {!filtered.length && <EmptyState label="Nenhuma inscrição encontrada com esses filtros" />}
             </div>
             </>
+          )}
+        </>
+      )}
+
+      {tab === 'membros' && (
+        <>
+          <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+            <p className="text-sm text-white/50">{membros.length} cadastro(s) de membro</p>
+            <button onClick={() => exportCSV(membros as unknown as Record<string, unknown>[], 'membros.csv')}
+              className="btn-outline-gold text-sm flex items-center gap-2">
+              <Download size={14} /> CSV
+            </button>
+          </div>
+          {fetching ? <TableSkeleton rows={5} /> : (
+            <div className="overflow-x-auto border border-white/10">
+              <table className="w-full text-sm">
+                <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
+                  <tr>
+                    <th className="text-left p-3">Data</th>
+                    <th className="text-left p-3">Nome</th>
+                    <th className="text-left p-3">Contato</th>
+                    <th className="text-left p-3">Local</th>
+                    <th className="text-left p-3">Plano</th>
+                    <th className="text-left p-3">Status</th>
+                    <th className="text-left p-3">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {membros.map(m => (
+                    <tr key={m.id} className="border-t border-white/5 hover:bg-white/[0.02]">
+                      <td className="p-3 text-white/60 text-xs">{new Date(m.criado_em).toLocaleDateString('pt-BR')}</td>
+                      <td className="p-3 text-white">{m.nome}</td>
+                      <td className="p-3 text-white/70">
+                        <button onClick={() => copy(m.email, 'E-mail')} className="hover:text-gold block">{m.email}</button>
+                        <span className="text-white/40 text-xs">{m.whatsapp}</span>
+                      </td>
+                      <td className="p-3 text-white/60 text-xs">{[m.cidade, m.pais].filter(Boolean).join(', ') || '—'}</td>
+                      <td className="p-3 text-white/70 text-xs">{PLANO_LABEL[m.plano] ?? m.plano}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] uppercase tracking-widest px-2 py-1 border rounded-sm ${statusColor[m.status] ?? statusColor.pendente}`}>{m.status}</span>
+                      </td>
+                      <td className="p-3">
+                        <button onClick={() => setPendingDelete({ type: 'membro', id: m.id, name: m.nome })} className="text-destructive/80 hover:text-destructive" title="Remover">
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {!membros.length && <tr><td colSpan={7}><EmptyState label="Nenhum membro cadastrado ainda" /></td></tr>}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === 'pagamentos' && (
+        <>
+          <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+            <p className="text-sm text-white/50">{assinaturas.length} registro(s) de pagamento e assinatura</p>
+            <button onClick={() => exportCSV(assinaturas as unknown as Record<string, unknown>[], 'pagamentos.csv')}
+              className="btn-outline-gold text-sm flex items-center gap-2">
+              <Download size={14} /> CSV
+            </button>
+          </div>
+          {fetching ? <TableSkeleton rows={5} /> : (
+            <div className="overflow-x-auto border border-white/10">
+              <table className="w-full text-sm">
+                <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
+                  <tr>
+                    <th className="text-left p-3">Data</th>
+                    <th className="text-left p-3">E-mail</th>
+                    <th className="text-left p-3">Tipo</th>
+                    <th className="text-left p-3">Valor</th>
+                    <th className="text-left p-3">Status</th>
+                    <th className="text-left p-3">Renova em</th>
+                    <th className="text-left p-3">Ambiente</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {assinaturas.map(s => (
+                    <tr key={s.id} className="border-t border-white/5 hover:bg-white/[0.02]">
+                      <td className="p-3 text-white/60 text-xs">{new Date(s.criado_em).toLocaleDateString('pt-BR')}</td>
+                      <td className="p-3 text-white/70">{s.email ?? '—'}</td>
+                      <td className="p-3 text-white/70 text-xs">{s.tipo ?? (s.price_id ? PLANO_LABEL[s.price_id] ?? s.price_id : '—')}</td>
+                      <td className="p-3 text-white">
+                        {s.valor_centavos != null
+                          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: (s.moeda ?? 'brl').toUpperCase() }).format(s.valor_centavos / 100)
+                          : '—'}
+                      </td>
+                      <td className="p-3">
+                        <span className={`text-[11px] uppercase tracking-widest px-2 py-1 border rounded-sm ${s.status === 'active' ? statusColor.pago : statusColor.pendente}`}>{s.status}</span>
+                        {s.cancel_at_period_end && <span className="block text-[10px] text-white/40 mt-1">cancela no fim do período</span>}
+                      </td>
+                      <td className="p-3 text-white/60 text-xs">{s.periodo_fim ? new Date(s.periodo_fim).toLocaleDateString('pt-BR') : '—'}</td>
+                      <td className="p-3 text-white/40 text-xs uppercase">{s.environment === 'live' ? 'real' : 'teste'}</td>
+                    </tr>
+                  ))}
+                  {!assinaturas.length && <tr><td colSpan={7}><EmptyState label="Nenhum pagamento registrado ainda" /></td></tr>}
+                </tbody>
+              </table>
+            </div>
           )}
         </>
       )}

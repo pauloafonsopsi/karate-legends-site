@@ -8,14 +8,15 @@
     "open_menu": "Open menu",
     "close_menu": "Close menu",
     "language": "Language",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "members": "Members"
   },
   "hero": {
     "title": "KARATE LEGENDS",
     "tagline": "The World Stage for Karate",
     "subtitle": "Where legends are forged. The world stage for the best black belts.",
     "cta_ppv": "Watch Live - PPV",
-    "cta_apply": "Apply as Athlete",
+    "cta_apply": "Become a Member",
     "countdown_label": "Next Edition",
     "countdown_value": "Coming Soon"
   },
@@ -196,5 +197,32 @@
       "security_title": "7. Security",
       "security_text": "We adopt reasonable technical and administrative measures to protect the data. The applicant is responsible for sharing Google Drive links aware that they themselves set public access — the organization is not liable for unauthorized access to links made public by the applicant."
     }
+  },
+  "members": {
+    "eyebrow": "Become a member",
+    "title": "Member Application",
+    "subtitle": "Members watch every PPV without paying per event and get the monthly newsletter included.",
+    "plan_member": "Legends Member",
+    "plan_ppv": "PPV per event",
+    "plan_newsletter": "Monthly newsletter",
+    "per_month": "/month",
+    "per_event": "per event",
+    "best_value": "Best value",
+    "benefit_ppv": "PPV for every event included (free)",
+    "benefit_newsletter": "Monthly newsletter included (free)",
+    "benefit_community": "Early notice of every edition",
+    "ppv_feature_live": "Live broadcast of the edition",
+    "ppv_feature_replay": "Replay for 7 days",
+    "news_feature_monthly": "One issue per month",
+    "news_feature_inside": "Behind the scenes, athletes and analysis",
+    "choose": "Choose",
+    "change_plan": "Change plan",
+    "your_data": "Your details",
+    "go_to_payment": "Go to payment",
+    "success_title": "Payment complete",
+    "success_text": "You will receive an email with your confirmation and access.",
+    "no_session_title": "Payment not identified",
+    "no_session_text": "We couldn't find this payment. If you completed the purchase, check your email.",
+    "back_to_plans": "Back to plans"
   }
 }

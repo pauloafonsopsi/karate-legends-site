@@ -21,7 +21,7 @@ const Navbar = () => {
   const navLinks = [
     { name: t('nav.home'), path: '/' },
     // { name: t('nav.events'), path: '/eventos' },
-    { name: t('nav.athletes'), path: '/atletas' },
+    { name: t('nav.members'), path: '/membros' },
     // { name: t('nav.blog'), path: '/blog' },
     { name: t('nav.ppv'), path: '/ppv' },
   ];
