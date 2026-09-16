@@ -10,7 +10,7 @@
 
 ## Members + payments
 - [x] Enable built-in Stripe payments and create products (member 19.90/mo, PPV 59.90/event, newsletter 29.90/mo).
-- [ ] Replace the athlete section with a member section (basic data only).
-- [ ] Store member signups in the backend and show them in the admin panel.
-- [ ] Implement checkout (embedded) and the payments webhook.
-- [ ] Answer the user's question about purchase/subscription business logic.
+- [x] Replace the athlete section with a member section (basic data only).
+- [x] Store member signups in the backend and show them in the admin panel.
+- [x] Implement checkout (embedded) and the payments webhook.
+- [x] Answer the user's question about purchase/subscription business logic.
