@@ -103,7 +103,7 @@ const Admin = () => {
   const [filterStatus, setFilterStatus] = useState<string>('todos');
   const [filterPago, setFilterPago] = useState<'todos' | 'sim' | 'nao'>('todos');
   const [editing, setEditing] = useState<Inscricao | null>(null);
-  const [pendingDelete, setPendingDelete] = useState<{ type: 'atleta' | 'ppv'; id: string; name: string } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ type: 'atleta' | 'ppv' | 'membro'; id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (!loading) {
@@ -205,7 +205,9 @@ const Admin = () => {
 
   const confirmDelete = async () => {
     if (!pendingDelete) return;
-    const table = pendingDelete.type === 'atleta' ? 'inscricoes_atletas' : 'lista_espera_ppv';
+    const table = pendingDelete.type === 'atleta'
+      ? 'inscricoes_atletas'
+      : pendingDelete.type === 'membro' ? 'membros' : 'lista_espera_ppv';
     const { error } = await supabase.from(table).delete().eq('id', pendingDelete.id);
     if (error) { toast.error(error.message); return; }
     toast.success(pendingDelete.type === 'atleta' ? 'Inscrição excluída' : 'Removido da lista');
@@ -249,6 +251,8 @@ const Admin = () => {
   const TABS: { key: TabKey; label: string; icon: typeof Users; count?: number }[] = [
     { key: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
     { key: 'atletas', label: 'Atletas', icon: UserSquare2, count: atletas.length },
+    { key: 'membros', label: 'Membros', icon: Users, count: membros.length },
+    { key: 'pagamentos', label: 'Pagamentos', icon: DollarSign, count: assinaturas.length },
     { key: 'ppv', label: 'Lista PPV', icon: Bell, count: waitlist.length },
   ];
 
