@@ -417,6 +417,108 @@ const Admin = () => {
         </>
       )}
 
+      {tab === 'membros' && (
+        <>
+          <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+            <p className="text-sm text-white/50">{membros.length} cadastro(s) de membro</p>
+            <button onClick={() => exportCSV(membros as unknown as Record<string, unknown>[], 'membros.csv')}
+              className="btn-outline-gold text-sm flex items-center gap-2">
+              <Download size={14} /> CSV
+            </button>
+          </div>
+          {fetching ? <TableSkeleton rows={5} /> : (
+            <div className="overflow-x-auto border border-white/10">
+              <table className="w-full text-sm">
+                <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
+                  <tr>
+                    <th className="text-left p-3">Data</th>
+                    <th className="text-left p-3">Nome</th>
+                    <th className="text-left p-3">Contato</th>
+                    <th className="text-left p-3">Local</th>
+                    <th className="text-left p-3">Plano</th>
+                    <th className="text-left p-3">Status</th>
+                    <th className="text-left p-3">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {membros.map(m => (
+                    <tr key={m.id} className="border-t border-white/5 hover:bg-white/[0.02]">
+                      <td className="p-3 text-white/60 text-xs">{new Date(m.criado_em).toLocaleDateString('pt-BR')}</td>
+                      <td className="p-3 text-white">{m.nome}</td>
+                      <td className="p-3 text-white/70">
+                        <button onClick={() => copy(m.email, 'E-mail')} className="hover:text-gold block">{m.email}</button>
+                        <span className="text-white/40 text-xs">{m.whatsapp}</span>
+                      </td>
+                      <td className="p-3 text-white/60 text-xs">{[m.cidade, m.pais].filter(Boolean).join(', ') || '—'}</td>
+                      <td className="p-3 text-white/70 text-xs">{PLANO_LABEL[m.plano] ?? m.plano}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] uppercase tracking-widest px-2 py-1 border rounded-sm ${statusColor[m.status] ?? statusColor.pendente}`}>{m.status}</span>
+                      </td>
+                      <td className="p-3">
+                        <button onClick={() => setPendingDelete({ type: 'membro', id: m.id, name: m.nome })} className="text-destructive/80 hover:text-destructive" title="Remover">
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {!membros.length && <tr><td colSpan={7}><EmptyState label="Nenhum membro cadastrado ainda" /></td></tr>}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === 'pagamentos' && (
+        <>
+          <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
+            <p className="text-sm text-white/50">{assinaturas.length} registro(s) de pagamento e assinatura</p>
+            <button onClick={() => exportCSV(assinaturas as unknown as Record<string, unknown>[], 'pagamentos.csv')}
+              className="btn-outline-gold text-sm flex items-center gap-2">
+              <Download size={14} /> CSV
+            </button>
+          </div>
+          {fetching ? <TableSkeleton rows={5} /> : (
+            <div className="overflow-x-auto border border-white/10">
+              <table className="w-full text-sm">
+                <thead className="bg-white/5 text-xs uppercase tracking-widest text-white/50">
+                  <tr>
+                    <th className="text-left p-3">Data</th>
+                    <th className="text-left p-3">E-mail</th>
+                    <th className="text-left p-3">Tipo</th>
+                    <th className="text-left p-3">Valor</th>
+                    <th className="text-left p-3">Status</th>
+                    <th className="text-left p-3">Renova em</th>
+                    <th className="text-left p-3">Ambiente</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {assinaturas.map(s => (
+                    <tr key={s.id} className="border-t border-white/5 hover:bg-white/[0.02]">
+                      <td className="p-3 text-white/60 text-xs">{new Date(s.criado_em).toLocaleDateString('pt-BR')}</td>
+                      <td className="p-3 text-white/70">{s.email ?? '—'}</td>
+                      <td className="p-3 text-white/70 text-xs">{s.tipo ?? (s.price_id ? PLANO_LABEL[s.price_id] ?? s.price_id : '—')}</td>
+                      <td className="p-3 text-white">
+                        {s.valor_centavos != null
+                          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: (s.moeda ?? 'brl').toUpperCase() }).format(s.valor_centavos / 100)
+                          : '—'}
+                      </td>
+                      <td className="p-3">
+                        <span className={`text-[11px] uppercase tracking-widest px-2 py-1 border rounded-sm ${s.status === 'active' ? statusColor.pago : statusColor.pendente}`}>{s.status}</span>
+                        {s.cancel_at_period_end && <span className="block text-[10px] text-white/40 mt-1">cancela no fim do período</span>}
+                      </td>
+                      <td className="p-3 text-white/60 text-xs">{s.periodo_fim ? new Date(s.periodo_fim).toLocaleDateString('pt-BR') : '—'}</td>
+                      <td className="p-3 text-white/40 text-xs uppercase">{s.environment === 'live' ? 'real' : 'teste'}</td>
+                    </tr>
+                  ))}
+                  {!assinaturas.length && <tr><td colSpan={7}><EmptyState label="Nenhum pagamento registrado ainda" /></td></tr>}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
       {tab === 'ppv' && (
         <>
           <div className="flex justify-between items-center mb-4">
