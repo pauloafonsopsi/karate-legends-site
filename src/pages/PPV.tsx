@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Tv, Smartphone, Tablet, Radio, Repeat, Lock } from 'lucide-react';
 import WaitlistForm from '@/components/WaitlistForm';
 
@@ -13,6 +14,18 @@ const PPV = () => {
           <h1 className="text-6xl md:text-8xl mb-6">{t('ppv.title')}</h1>
            <p className="text-muted-foreground text-xl max-w-2xl mx-auto">{t('ppv.subtitle')}</p>
         </header>
+
+        {/* Planos */}
+        <section className="surface-elevated rounded-sm p-7 md:p-10 mb-16 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-8 items-center">
+          <div>
+            <p className="eyebrow mb-3">{t('members.eyebrow')}</p>
+            <h2 className="text-3xl md:text-4xl mb-3">{t('members.subtitle')}</h2>
+            <p className="text-muted-foreground text-sm">
+              PPV R$ 59,90 {t('members.per_event')} · {t('members.plan_newsletter')} R$ 29,90{t('members.per_month')} · {t('members.plan_member')} R$ 19,90{t('members.per_month')}
+            </p>
+          </div>
+          <Link to="/membros" className="btn-gold text-center px-8 py-4 text-sm">{t('hero.cta_apply')}</Link>
+        </section>
 
         {/* Waitlist Form */}
         <div className="mb-24">
