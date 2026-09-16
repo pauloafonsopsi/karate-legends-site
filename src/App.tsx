@@ -6,7 +6,8 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import EventDetail from './pages/EventDetail';
-import Athletes from './pages/Athletes';
+import Membros from './pages/Membros';
+import CheckoutRetorno from './pages/CheckoutRetorno';
 import Blog from './pages/Blog';
 import PPV from './pages/PPV';
 import Privacy from './pages/Privacy';
@@ -28,7 +29,9 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/eventos" element={<Events />} />
             <Route path="/eventos/:slug" element={<EventDetail />} />
-            <Route path="/atletas" element={<Athletes />} />
+            <Route path="/membros" element={<Membros />} />
+            <Route path="/atletas" element={<Navigate to="/membros" replace />} />
+            <Route path="/checkout/retorno" element={<CheckoutRetorno />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ppv" element={<PPV />} />
             <Route path="/privacidade" element={<Privacy />} />
