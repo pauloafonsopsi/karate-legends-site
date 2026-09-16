@@ -42,7 +42,7 @@ async function createCheckoutSession(options: {
     mode: isRecurring ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
-    automatic_tax: { enabled: true },
+    // Stripe Tax não é suportado para contas no Brasil — preços são finais (imposto incluso).
     ...(customerId && { customer: customerId }),
     ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
     metadata,
