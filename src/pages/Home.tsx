@@ -48,7 +48,7 @@ const Home = () => {
                 <Play size={18} fill="currentColor" />
                 {t('hero.cta_ppv')}
               </Link>
-              <Link to="/atletas" className="btn-outline-gold px-10 py-4 text-sm">
+              <Link to="/membros" className="btn-outline-gold px-10 py-4 text-sm">
                 {t('hero.cta_apply')}
               </Link>
             </div>
