@@ -55,7 +55,40 @@ const statusColor: Record<string, string> = {
   rejeitado: 'bg-destructive/15 text-destructive-foreground border-destructive/35',
 };
 
-type TabKey = 'overview' | 'atletas' | 'ppv';
+type Membro = {
+  id: string;
+  criado_em: string;
+  nome: string;
+  email: string;
+  whatsapp: string;
+  cidade: string | null;
+  pais: string | null;
+  plano: string;
+  status: string;
+  observacoes: string | null;
+};
+
+type Assinatura = {
+  id: string;
+  email: string | null;
+  price_id: string | null;
+  status: string;
+  tipo: string | null;
+  valor_centavos: number | null;
+  moeda: string | null;
+  periodo_fim: string | null;
+  cancel_at_period_end: boolean | null;
+  environment: string;
+  criado_em: string;
+};
+
+const PLANO_LABEL: Record<string, string> = {
+  membro_mensal: 'Membro R$ 19,90/mês',
+  ppv_evento_unico: 'PPV R$ 59,90/evento',
+  newsletter_mensal: 'Newsletter R$ 29,90/mês',
+};
+
+type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -63,6 +96,8 @@ const Admin = () => {
   const [tab, setTab] = useState<TabKey>('overview');
   const [atletas, setAtletas] = useState<Inscricao[]>([]);
   const [waitlist, setWaitlist] = useState<Waitlist[]>([]);
+  const [membros, setMembros] = useState<Membro[]>([]);
+  const [assinaturas, setAssinaturas] = useState<Assinatura[]>([]);
   const [fetching, setFetching] = useState(false);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('todos');
