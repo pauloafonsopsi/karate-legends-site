@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      assinaturas: {
+        Row: {
+          atualizado_em: string
+          cancel_at_period_end: boolean
+          criado_em: string
+          email: string
+          environment: string
+          id: string
+          moeda: string | null
+          periodo_fim: string | null
+          periodo_inicio: string | null
+          price_id: string | null
+          product_id: string | null
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          tipo: string
+          valor_centavos: number | null
+        }
+        Insert: {
+          atualizado_em?: string
+          cancel_at_period_end?: boolean
+          criado_em?: string
+          email: string
+          environment?: string
+          id?: string
+          moeda?: string | null
+          periodo_fim?: string | null
+          periodo_inicio?: string | null
+          price_id?: string | null
+          product_id?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          tipo?: string
+          valor_centavos?: number | null
+        }
+        Update: {
+          atualizado_em?: string
+          cancel_at_period_end?: boolean
+          criado_em?: string
+          email?: string
+          environment?: string
+          id?: string
+          moeda?: string | null
+          periodo_fim?: string | null
+          periodo_inicio?: string | null
+          price_id?: string | null
+          product_id?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          tipo?: string
+          valor_centavos?: number | null
+        }
+        Relationships: []
+      }
       inscricoes_atletas: {
         Row: {
           aceite_privacidade: boolean
@@ -115,6 +172,51 @@ export type Database = {
           email?: string
           id?: string
           nome?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
+      membros: {
+        Row: {
+          aceite_privacidade: boolean
+          aceite_termos: boolean
+          cidade: string | null
+          criado_em: string
+          email: string
+          id: string
+          nome: string
+          observacoes: string | null
+          pais: string | null
+          plano: string
+          status: string
+          whatsapp: string
+        }
+        Insert: {
+          aceite_privacidade?: boolean
+          aceite_termos?: boolean
+          cidade?: string | null
+          criado_em?: string
+          email: string
+          id?: string
+          nome: string
+          observacoes?: string | null
+          pais?: string | null
+          plano?: string
+          status?: string
+          whatsapp: string
+        }
+        Update: {
+          aceite_privacidade?: boolean
+          aceite_termos?: boolean
+          cidade?: string | null
+          criado_em?: string
+          email?: string
+          id?: string
+          nome?: string
+          observacoes?: string | null
+          pais?: string | null
+          plano?: string
+          status?: string
           whatsapp?: string
         }
         Relationships: []
