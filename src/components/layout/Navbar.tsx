@@ -21,9 +21,9 @@ const Navbar = () => {
   const navLinks = [
     { name: t('nav.home'), path: '/' },
     // { name: t('nav.events'), path: '/eventos' },
-    { name: t('nav.members'), path: '/membros' },
-    // { name: t('nav.blog'), path: '/blog' },
+        // { name: t('nav.blog'), path: '/blog' },
     { name: t('nav.ppv'), path: '/ppv' },
+    { name: t('nav.athletes'), path: '/atletas' },
   ];
 
   const changeLanguage = (lng: string) => {
