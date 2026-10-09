@@ -22,7 +22,7 @@ const Membros = () => {
 
   const [plans, setPlans] = useState<Plano[] | null>(null);
   const [loadError, setLoadError] = useState(false);
-  const load = () => { setLoadError(false); fetchPlanos().then(setPlans).catch(() => setLoadError(true)); };
+  const load = () => { setLoadError(false); fetchPlanos().then(ps => setPlans(ps.filter(p => !p.chave.startsWith('registro_')))).catch(() => setLoadError(true)); };
   useEffect(load, []);
   const lang = i18n.language;
 

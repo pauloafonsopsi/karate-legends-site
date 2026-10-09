@@ -14,3 +14,8 @@
 - Status changes on events and fights are logged in `status_historico` by trigger; accounts and purchases must record their origin from day one; why: data not recorded when it happens cannot be recovered for reports.
 - Legends Registry numbers are reserved only by the `reservar_registros_legends` database function (champions first, then by edition order); why: numbering is a rule, not panel data.
 - Work proceeds in the five blocks of the current master plan; a block starts only after the owner writes "aprovado"; why: owner-controlled scope.
+- One account (`contas`, created only by `minha_conta_iniciar`) serves PPV buyers and athletes; courtesies are applied in that function on first login; why: one identity and origin recorded from the first sign-in.
+- Registry status is derived by `registro_ativo` (paid/courtesy `registros` or a current belt) and the Legend Path by `caminho_da_lenda`; registry rows are written only by the payments webhook or database functions; why: payment and rules stay server-side.
+- Barriers (age, styles) and the founder window are read from `config_registro` and re-checked in `create-checkout`; founder renewals charge the price stored on the account; why: the browser never decides who may pay or how much.
+- New accounts get a Registry number via `atribuir_numero` after the first active registry; why: numbering is a rule, not panel data.
+- Only staff (admin, consultor) can mark a goal as verified, enforced by trigger on `metas_atleta`; consultants never read `registros` or payments; why: least privilege.
