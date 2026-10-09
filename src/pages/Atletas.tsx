@@ -1,4 +1,5 @@
 import { Crown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLegends } from '@/hooks/useLegends';
 
@@ -26,7 +27,7 @@ const Atletas = () => {
             <div key={p.t} className="surface-elevated rounded-sm p-8">
               <h2 className="font-display text-3xl uppercase mb-2">{p.t}</h2>
               <p className="text-muted-foreground text-sm mb-6">{p.d}</p>
-              <button disabled className="btn-outline-gold min-h-[44px] opacity-60 cursor-not-allowed">{t('legends.soon')}</button>
+              <Link to="/atleta" className="btn-gold inline-flex items-center min-h-[44px]">{p.t}</Link>
             </div>
           ))}
         </section>

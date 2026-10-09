@@ -18,6 +18,10 @@ import TermosAtleta from './pages/TermosAtleta';
 import PoliticaDados from './pages/PoliticaDados';
 import Admin from './pages/Admin';
 import AdminLogin from './pages/AdminLogin';
+import Entrar from './pages/Entrar';
+import RedefinirSenha from './pages/RedefinirSenha';
+import AreaAtleta from './pages/AreaAtleta';
+import Consultor from './pages/Consultor';
 import { Toaster } from '@/components/ui/sonner';
 
 const App = () => (
@@ -40,6 +44,10 @@ const App = () => (
             <Route path="/reembolso" element={<Refund />} />
             <Route path="/termos-atleta" element={<TermosAtleta />} />
             <Route path="/politica-dados" element={<PoliticaDados />} />
+            <Route path="/entrar" element={<Entrar />} />
+            <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+            <Route path="/atleta" element={<AreaAtleta />} />
+            <Route path="/consultor" element={<Consultor />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<Navigate to="/" replace />} />

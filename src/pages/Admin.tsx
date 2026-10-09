@@ -15,6 +15,7 @@ import AdminPlanos from '@/components/admin/AdminPlanos';
 import AdminDados from '@/components/admin/AdminDados';
 import AdminSenha from '@/components/admin/AdminSenha';
 import AdminLegends from '@/components/admin/AdminLegends';
+import AdminRegistro from '@/components/admin/AdminRegistro';
 
 type Inscricao = {
   id: string;
@@ -93,7 +94,7 @@ const PLANO_LABEL: Record<string, string> = {
   newsletter_mensal: 'Newsletter R$ 29,90/mês',
 };
 
-type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv' | 'conteudos' | 'planos' | 'dados' | 'legends';
+type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv' | 'conteudos' | 'planos' | 'dados' | 'legends' | 'registro';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -256,6 +257,7 @@ const Admin = () => {
   const TABS: { key: TabKey; label: string; icon: typeof Users; count?: number }[] = [
     { key: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
     { key: 'legends', label: 'História e card', icon: FileText },
+    { key: 'registro', label: 'Registro Legends', icon: UserSquare2 },
     { key: 'dados', label: 'Central de Dados', icon: Inbox },
     { key: 'atletas', label: 'Atletas', icon: UserSquare2, count: atletas.length },
     { key: 'membros', label: 'Membros', icon: Users, count: membros.length },
@@ -533,6 +535,7 @@ const Admin = () => {
       {tab === 'planos' && <AdminPlanos />}
       {tab === 'dados' && <AdminDados />}
       {tab === 'legends' && <AdminLegends />}
+      {tab === 'registro' && <AdminRegistro />}
 
       {tab === 'ppv' && (
         <>

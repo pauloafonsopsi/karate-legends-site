@@ -7,7 +7,7 @@ import { useConta, type Conta } from '@/hooks/useConta';
 import { StripeEmbeddedCheckout } from '@/components/StripeEmbeddedCheckout';
 import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
 import { formatPreco } from '@/lib/planos';
-import { comprimirImagem } from '@/lib/imageCompress';
+import { compressImage } from '@/lib/imageCompress';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Meta = Tables<'metas'>;
@@ -249,10 +249,9 @@ const MetaItem = ({ meta, contaId, userId, atual, status, onSalvo }: { meta: Met
     let arquivo_path = atual?.arquivo_path ?? null;
     if (file) {
       if (file.size > 15 * 1024 * 1024) { toast.error('Arquivo acima de 15 MB.'); setBusy(false); return; }
-      const f = file.type.startsWith('image/') ? await comprimirImagem(file) : file;
-      const ext = f.name.split('.').pop() || 'webp';
-      arquivo_path = `contas/${userId}/${meta.id}-${Date.now()}.${ext}`;
-      const { error } = await supabase.storage.from('atletas-docs').upload(arquivo_path, f);
+      const c = await compressImage(file);
+      arquivo_path = `contas/${userId}/${meta.id}-${Date.now()}.${c.ext}`;
+      const { error } = await supabase.storage.from('atletas-docs').upload(arquivo_path, c.blob, { contentType: c.mime });
       if (error) { toast.error('Falha no envio do arquivo.'); setBusy(false); return; }
     }
     const { error } = await supabase.from('metas_atleta').upsert({ conta_id: contaId, meta_id: meta.id, link: link || null, arquivo_path, status: 'enviada' }, { onConflict: 'conta_id,meta_id' });
