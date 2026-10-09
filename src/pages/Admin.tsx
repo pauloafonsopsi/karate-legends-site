@@ -10,6 +10,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
+import AdminConteudos from '@/components/admin/AdminConteudos';
 
 type Inscricao = {
   id: string;
@@ -88,7 +89,7 @@ const PLANO_LABEL: Record<string, string> = {
   newsletter_mensal: 'Newsletter R$ 29,90/mês',
 };
 
-type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv';
+type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv' | 'conteudos';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -254,6 +255,7 @@ const Admin = () => {
     { key: 'membros', label: 'Membros', icon: Users, count: membros.length },
     { key: 'pagamentos', label: 'Pagamentos', icon: DollarSign, count: assinaturas.length },
     { key: 'ppv', label: 'Lista PPV', icon: Bell, count: waitlist.length },
+    { key: 'conteudos', label: 'Conteúdos', icon: FileText },
   ];
 
   return (
@@ -518,6 +520,8 @@ const Admin = () => {
           )}
         </>
       )}
+
+      {tab === 'conteudos' && <AdminConteudos />}
 
       {tab === 'ppv' && (
         <>
