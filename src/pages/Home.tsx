@@ -95,9 +95,9 @@ const Home = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 border-y border-border">
               {[
-                { label: t('stats.countries'), value: nums ? String(nums.paises) : '–' },
-                { label: t('stats.belts'), value: nums ? String(nums.cinturoes) : '–' },
-                { label: t('stats.editions'), value: nums ? String(nums.edicoes) : '–' }
+                { label: t('stats.countries'), value: nums ? String(nums.paises) : '…' },
+                { label: t('stats.belts'), value: nums ? String(nums.cinturoes) : '…' },
+                { label: t('stats.editions'), value: nums ? String(nums.edicoes) : '…' }
               ].map((stat, i) => (
                 <div key={i} className="bg-background p-10 flex flex-col items-start text-left border-b md:border-b-0 md:border-r last:border-0 border-border group hover:bg-card transition-colors">
                   <span className="text-7xl md:text-8xl font-display text-gold mb-4 leading-none">{stat.value}</span>
