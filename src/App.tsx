@@ -9,6 +9,7 @@ import EventDetail from './pages/EventDetail';
 import Membros from './pages/Membros';
 import CheckoutRetorno from './pages/CheckoutRetorno';
 import Blog from './pages/Blog';
+import Atletas from './pages/Atletas';
 import PPV from './pages/PPV';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
@@ -30,7 +31,7 @@ const App = () => (
             <Route path="/eventos" element={<Events />} />
             <Route path="/eventos/:slug" element={<EventDetail />} />
             <Route path="/membros" element={<Membros />} />
-            <Route path="/atletas" element={<Navigate to="/membros" replace />} />
+            <Route path="/atletas" element={<Atletas />} />
             <Route path="/checkout/retorno" element={<CheckoutRetorno />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ppv" element={<PPV />} />

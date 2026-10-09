@@ -15,14 +15,10 @@
 - [x] Implement checkout (embedded) and the payments webhook.
 - [x] Answer the user's question about purchase/subscription business logic.
 
-## Painel autônomo (plano mestre)
-- [x] Bloco 0: AGENTS.md com regras de arquitetura.
-- [x] Bloco 1: textos do site editáveis no painel (PT/EN/ES, restaurar original).
-- [x] Bloco 2: planos e benefícios no banco; alteração de preço pelo servidor.
-- [ ] Bloco 5: central de dados, Excel formatado, relatórios, WhatsApp.
-- [ ] Bloco 3: eventos e PPV cadastráveis; contagem regressiva ligada ao evento.
-- [ ] Bloco 4: área do membro com link por e-mail e liberação do PPV (depende: plataforma de transmissão).
-- [ ] Bloco 6: e-mails automáticos e newsletter (depende: domínio de e-mail).
-- [ ] Bloco 7: configurações gerais e versões dos termos.
-- [ ] Bloco 8: trocar senha do admin, convites, auditoria, revisão de segurança.
-- [ ] Bloco 9: testes, lançamento e Stripe em produção.
+## Nova direção (5 blocos, cada um após "aprovado")
+- [x] Bloco 1: história e card, PPV com acervo, Home por dados, menu Home/PPV/Atletas, planos Membro/Newsletter inativos.
+- [ ] Bloco 1: carga das 5 edições (aguarda dados do Paulo).
+- [ ] Bloco 2: conta e Registro Legends (aguarda "aprovado").
+- [ ] Bloco 3: aplicação por evento.
+- [ ] Bloco 4: painel do promotor.
+- [ ] Bloco 5: publicação.
