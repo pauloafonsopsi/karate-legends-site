@@ -13,6 +13,7 @@ import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 import AdminConteudos from '@/components/admin/AdminConteudos';
 import AdminPlanos from '@/components/admin/AdminPlanos';
 import AdminDados from '@/components/admin/AdminDados';
+import AdminSenha from '@/components/admin/AdminSenha';
 import AdminLegends from '@/components/admin/AdminLegends';
 
 type Inscricao = {
@@ -275,9 +276,10 @@ const Admin = () => {
           <p className="text-xs text-white/40 uppercase tracking-widest mt-1">{session.user.email}</p>
           </div>
         </div>
+        <div className="flex gap-2 flex-wrap"><AdminSenha />
         <button onClick={logout} className="btn-outline-gold flex items-center gap-2 text-sm">
           <LogOut size={14} /> Sair
-        </button>
+        </button></div>
       </div>
 
       <div className="flex gap-1 mb-8 border-b border-white/10 overflow-x-auto">
