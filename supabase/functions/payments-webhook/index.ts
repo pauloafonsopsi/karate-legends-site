@@ -97,8 +97,19 @@ async function registrarMensal(subscription: any, env: StripeEnv) {
   if (ativo) await getSupabase().rpc("atribuir_numero", { _conta_id: conta.id });
 }
 
+// Taxa de aplicação paga: a aplicação entra em análise.
+async function registrarAplicacao(session: any) {
+  const id = session.metadata?.aplicacaoId;
+  if (!id) return;
+  await getSupabase().from("aplicacoes").update({
+    status: "em_analise", pago_em: new Date().toISOString(), valor_centavos: session.amount_total ?? null,
+    stripe_ref: typeof session.payment_intent === "string" ? session.payment_intent : session.id,
+  }).eq("id", id).eq("status", "aguardando_pagamento");
+}
+
 async function recordOneTime(session: any, env: StripeEnv) {
   if (session.metadata?.tipo === "registro") await registrarAnual(session, env);
+  if (session.metadata?.tipo === "aplicacao") await registrarAplicacao(session);
   const email = session.customer_details?.email ?? session.metadata?.email ?? "desconhecido";
   await getSupabase().from("assinaturas").upsert({
     email,
@@ -106,7 +117,7 @@ async function recordOneTime(session: any, env: StripeEnv) {
     stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
     price_id: session.metadata?.price_id ?? null,
     status: "pago",
-    tipo: session.metadata?.tipo === "registro" ? "registro" : "ppv",
+    tipo: ["registro", "aplicacao"].includes(session.metadata?.tipo) ? session.metadata.tipo : "ppv",
     user_id: session.metadata?.userId ?? null,
     origem: session.metadata?.origem ?? null,
     valor_centavos: session.amount_total ?? null,

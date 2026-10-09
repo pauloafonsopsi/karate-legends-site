@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   try {
-    const { priceId, customerEmail, returnUrl, environment, origem } = (await req.json()) ?? {};
+    const { priceId, returnUrl, environment, origem, aplicacaoId } = (await req.json()) ?? {};
     if (typeof priceId !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(priceId) || typeof returnUrl !== 'string') {
       return json({ error: 'priceId and returnUrl are required' }, 400);
     }
@@ -57,7 +57,11 @@ Deno.serve(async (req) => {
       user = data.user ? { id: data.user.id, email: data.user.email ?? undefined } : null;
     }
 
+    // Todo pagamento fica ligado à conta logada, nunca a um e-mail digitado.
+    if (!user) return json({ error: 'Entre na sua conta para continuar.' }, 401);
+
     const isRegistro = priceId.startsWith('registro_');
+    const isAplicacao = priceId === 'aplicacao_evento';
     let fundador = false;
     let precoTravado: number | null = null;
     let contaOrigem: string | null = typeof origem === 'string' ? origem.slice(0, 80) : null;
@@ -80,13 +84,37 @@ Deno.serve(async (req) => {
     }
 
     const stripe = createStripeClient(env);
+
+    if (isAplicacao) {
+      if (typeof aplicacaoId !== 'string') return json({ error: 'Aplicação inválida.' }, 400);
+      const { data: ap } = await admin.from('aplicacoes').select('id,status,evento_id,conta_id,origem,contas!inner(user_id),eventos(nome)')
+        .eq('id', aplicacaoId).maybeSingle();
+      if (!ap || (ap as any).contas.user_id !== user.id) return json({ error: 'Aplicação não encontrada.' }, 404);
+      if (ap.status !== 'aguardando_pagamento') return json({ error: 'Esta aplicação já foi paga.' }, 400);
+      const { data: j } = await admin.from('janelas_aplicacao').select('*').eq('evento_id', ap.evento_id).maybeSingle();
+      const agora = new Date();
+      if (!j?.ativo || (j.fecha_em && new Date(j.fecha_em) < agora) || (j.abre_em && new Date(j.abre_em) > agora)) return json({ error: 'As aplicações deste evento estão fechadas.' }, 400);
+      if (!j.taxa_centavos) return json({ error: 'Aplicação sem taxa.' }, 400);
+      const nome = `Aplicação ${(ap as any).eventos?.nome ?? 'Karate Legends'}`;
+      const customerId = await resolveOrCreateCustomer(stripe, { email: user.email, userId: user.id });
+      const metadata: Record<string, string> = { price_id: priceId, tipo: 'aplicacao', aplicacaoId: ap.id, userId: user.id,
+        ...(user.email && { email: user.email }), ...(ap.origem && { origem: ap.origem }) };
+      const session = await stripe.checkout.sessions.create({
+        // Valor lido do banco no servidor; o navegador só informa qual aplicação.
+        line_items: [{ price_data: { currency: 'brl', product_data: { name: nome }, unit_amount: j.taxa_centavos }, quantity: 1 }],
+        mode: 'payment', ui_mode: 'embedded_page', return_url: returnUrl, customer: customerId,
+        payment_intent_data: { description: nome, metadata }, metadata,
+      });
+      return json({ clientSecret: session.client_secret });
+    }
+
     const prices = await stripe.prices.list({ lookup_keys: [priceId] });
     if (!prices.data.length) throw new Error("Price not found");
     const stripePrice = prices.data[0];
     const isRecurring = stripePrice.type === "recurring";
     const productId = typeof stripePrice.product === "string" ? stripePrice.product : stripePrice.product.id;
 
-    const email = user?.email ?? (typeof customerEmail === 'string' ? customerEmail : undefined);
+    const email = user.email;
     const customerId = (email || user) ? await resolveOrCreateCustomer(stripe, { email, userId: user?.id }) : undefined;
 
     let productDescription: string | undefined;
