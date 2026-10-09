@@ -17,6 +17,7 @@
 
 ## Nova direção (5 blocos, cada um após "aprovado")
 - [x] Bloco 1: história e card, PPV com acervo, Home por dados, menu Home/PPV/Atletas, planos Membro/Newsletter inativos.
+- [x] Riscos do Bloco 1: painel testado como admin, traduções EN/ES, troca de senha.
 - [ ] Bloco 1: carga das 5 edições (aguarda dados do Paulo).
 - [ ] Bloco 2: conta e Registro Legends (aguarda "aprovado").
 - [ ] Bloco 3: aplicação por evento.
