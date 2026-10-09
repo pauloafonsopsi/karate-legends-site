@@ -19,3 +19,6 @@
 - Barriers (age, styles) and the founder window are read from `config_registro` and re-checked in `create-checkout`; founder renewals charge the price stored on the account; why: the browser never decides who may pay or how much.
 - New accounts get a Registry number via `atribuir_numero` after the first active registry; why: numbering is a rule, not panel data.
 - Only staff (admin, consultor) can mark a goal as verified, enforced by trigger on `metas_atleta`; consultants never read `registros` or payments; why: least privilege.
+- Event applications live in `aplicacoes` (one per account and event), configured per event in `janelas_aplicacao`; athletes create them only via `aplicar_evento` (re-checks registry, verified goals, window, category, ID document) and confirm via `confirmar_presenca`; staff may only change the decision status, enforced by trigger; why: rules stay server-side.
+- The application fee is read from `janelas_aplicacao` by `create-checkout`, paid status set only by the webhook, refunds of a cancelled event only by `admin-aplicacoes-reembolso`; internal notes live in `aplicacoes_notas`, staff-only; why: the browser never sets amounts or payment state and athletes never see notes.
+- Every checkout requires a signed-in account; why: purchases belong to the account, not to a typed e-mail.

@@ -20,6 +20,6 @@
 - [x] Riscos do Bloco 1: painel testado como admin, traduções EN/ES, troca de senha.
 - [ ] Bloco 1: carga das 5 edições (aguarda dados do Paulo).
 - [x] Bloco 2: conta e Registro Legends.
-- [ ] Bloco 3: aplicação por evento.
+- [x] Bloco 3: aplicação por evento (e riscos: PPV ligado à conta, envio público de arquivos fechado).
 - [ ] Bloco 4: painel do promotor.
 - [ ] Bloco 5: publicação.
