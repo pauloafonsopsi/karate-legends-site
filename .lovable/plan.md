@@ -1,30 +1,32 @@
-# Plano mestre: nova direção do Karate Legends
+# Bloco 2. Conta e Registro Legends
 
-Duas portas: PPV (quem assiste) e Atletas (quem luta). Menu: Home, PPV, Atletas. Cada bloco começa quando Paulo escrever "aprovado".
+## Entrada (sua pergunta)
+Sim: Google e e-mail com senha, na mesma tela, com "esqueci a senha". O código por e-mail fica para quando houver domínio próprio.
 
-## Bloco 1. História e card (feito)
-- Eventos, categorias, atletas, lutas, cinturões e ranking no banco e no painel (aba História e card).
-- Atleta histórico sem conta; botão que reserva números de Registro Legends (campeões primeiro, depois ordem das edições).
-- PPV: próximo evento com card, contagem e compra do avulso; acervo das edições com resultados e gravações públicas.
-- Home: números e contagem derivados dos eventos.
-- Membro e Newsletter inativos; só o PPV avulso à venda.
-- Histórico de mudanças de status de eventos e lutas.
-- Pendente: carga das 5 edições (Paulo envia os dados).
+## O que você vai ver
+1. **Uma conta só** para quem compra PPV e para quem luta. Página "Entrar" com Google ou e-mail e senha.
+2. **Aba Atletas**: "Sou atleta registrado" e "Quero ser Legends" levam ao mesmo caminho: entrar, completar cadastro, ver critérios, pagar se não houver registro ativo, abrir a área do atleta.
+3. **Barreiras antes do pagamento**: idade mínima e estilos aceitos, editáveis no painel (hoje 18 anos; Shotokan e Shito-Ryu). Quem não passa não chega ao pagamento.
+4. **Metas**: lista editável (nome, descrição, se exige arquivo). Cada meta fica pendente, enviada ou verificada; verificar é um clique no painel. Antes de pagar, a pessoa vê o que vai ficar pendente.
+5. **Classe Fundadora**: até a data definida no painel, só o anual de R$ 99,90 à vista. Fundador ganha número, selo permanente e renova pelo preço que pagou enquanto não deixar vencer. Depois da data, entra também o mensal de R$ 9,90. Preços alterados no painel pelo mecanismo de planos atual.
+6. **Cortesias automáticas**: atleta histórico com e-mail informado por você (ou vínculo manual); campeão ativo enquanto tiver o cinturão; quem pagou nas inscrições antigas ganha o ano fundador; quem foi aprovado naquela análise começa com metas verificadas.
+7. **Área do atleta**: número de registro, Caminho da Lenda (Registrado, Apto, Convocado, Lutou, Ranqueado, Desafiante, Campeão), lutas feitas, próximas lutas. Registro vencido trava a aplicação e preserva o histórico.
+8. **Origem**: cada conta e compra grava a origem do link (?origem=instagram) ou indicação; cada mudança de status fica registrada com data.
+9. **Consultor técnico**: você convida pelo painel; ele verifica metas e vê atletas, sem acesso a valores.
+10. **Painel**: nova aba "Registro Legends" com contas, metas a verificar, cortesias, barreiras, data fundadora e equipe.
 
-## Bloco 2. Conta e Registro Legends
-Conta única para comprador de PPV e atleta; barreiras e metas editáveis; Classe Fundadora; cortesias; área do atleta; origem gravada em contas e compras; papel de consultor técnico.
+## Fora deste bloco
+Aplicação por evento (Bloco 3), listas de ação e WhatsApp (Bloco 4), e-mails automáticos.
 
-## Bloco 3. Aplicação por evento
-Janela, vagas, categorias e taxa por evento; convocação; devolução em evento cancelado.
+## Detalhes técnicos
+- Tabelas: `contas` (perfil ligado ao usuário, origem, estilo, nascimento, atleta_id), `registros` (tipo anual/mensal/cortesia, fundador, preço travado, início/vencimento, origem), `metas` e `metas_atleta` (status + arquivo no bucket privado), `cortesias_email`, `config_registro` (idade mínima, estilos, data fundadora). Tudo com RLS; dono lê o próprio, admin tudo, consultor só metas e contas sem financeiro.
+- Papel `consultor` no enum `app_role`; checagem por `has_role` no banco e nas funções.
+- Planos novos `registro_anual`, `registro_fundador`, `registro_mensal` na tabela `planos`; preço do fundador travado guardado no registro, renovação cobra o price travado.
+- `create-checkout` passa a exigir conta logada para registro, revalida barreiras no servidor e grava origem; webhook cria/renova `registros` e status_historico.
+- Função de banco aplica cortesias no primeiro login (por e-mail confirmado) e calcula o Caminho da Lenda a partir de lutas, cinturões e ranking.
+- Google gerenciado pelo Cloud e e-mail/senha ativados; página /redefinir-senha.
+- Teste no navegador em 360 e 1280 px: cadastro, barreira, checkout sandbox, cortesia, verificação de meta.
 
-## Bloco 4. Painel do promotor
-Funil, receita, origem, listas com ação e WhatsApp editável, gerador de link com origem, exportação CSV.
-
-## Bloco 5. Publicação
-Termos novos (resposta garantida, arrependimento de 7 dias), Stripe em produção, publicar.
-
-## Avaliações
-- Banco para o Bloco 4: origem (canal, campanha, indicação) em contas e compras desde o Bloco 2; status_historico para todos os status; pagamentos ligados ao id da conta.
-- Login no celular: código por e-mail exige domínio próprio para volume; recomendação Google mais senha, com código por e-mail quando houver domínio.
-- Highlight: aceitar link do YouTube não listado (upload de vídeo é caro e pesado).
-- Depois dos 5 blocos: e-mails automáticos, configurações gerais, auditoria completa.
+## Riscos
+- PIX depende da conta Stripe habilitar; até lá só cartão.
+- Cortesia por e-mail só vale se o atleta usar o mesmo e-mail; o vínculo manual cobre o resto.
