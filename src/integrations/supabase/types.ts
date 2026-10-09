@@ -687,7 +687,7 @@ export type Database = {
       reservar_registros_legends: { Args: never; Returns: number }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "consultor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -815,7 +815,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "consultor"],
     },
   },
 } as const
