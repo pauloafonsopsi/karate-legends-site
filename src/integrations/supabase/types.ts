@@ -14,6 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
+      aplicacoes: {
+        Row: {
+          aceite_termos: boolean
+          atualizado_em: string
+          autoriza_divulgacao: boolean
+          categoria_id: string | null
+          conta_id: string
+          criado_em: string
+          evento_id: string
+          highlight_link: string | null
+          id: string
+          origem: string | null
+          pago_em: string | null
+          presenca_confirmada: boolean
+          respondido_em: string | null
+          status: string
+          stripe_ref: string | null
+          valor_centavos: number | null
+        }
+        Insert: {
+          aceite_termos?: boolean
+          atualizado_em?: string
+          autoriza_divulgacao?: boolean
+          categoria_id?: string | null
+          conta_id: string
+          criado_em?: string
+          evento_id: string
+          highlight_link?: string | null
+          id?: string
+          origem?: string | null
+          pago_em?: string | null
+          presenca_confirmada?: boolean
+          respondido_em?: string | null
+          status?: string
+          stripe_ref?: string | null
+          valor_centavos?: number | null
+        }
+        Update: {
+          aceite_termos?: boolean
+          atualizado_em?: string
+          autoriza_divulgacao?: boolean
+          categoria_id?: string | null
+          conta_id?: string
+          criado_em?: string
+          evento_id?: string
+          highlight_link?: string | null
+          id?: string
+          origem?: string | null
+          pago_em?: string | null
+          presenca_confirmada?: boolean
+          respondido_em?: string | null
+          status?: string
+          stripe_ref?: string | null
+          valor_centavos?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aplicacoes_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aplicacoes_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aplicacoes_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aplicacoes_notas: {
+        Row: {
+          aplicacao_id: string
+          atualizado_em: string
+          atualizado_por: string | null
+          nota: string
+        }
+        Insert: {
+          aplicacao_id: string
+          atualizado_em?: string
+          atualizado_por?: string | null
+          nota?: string
+        }
+        Update: {
+          aplicacao_id?: string
+          atualizado_em?: string
+          atualizado_por?: string | null
+          nota?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aplicacoes_notas_aplicacao_id_fkey"
+            columns: ["aplicacao_id"]
+            isOneToOne: true
+            referencedRelation: "aplicacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assinaturas: {
         Row: {
           atualizado_em: string
@@ -240,6 +348,8 @@ export type Database = {
           atualizado_em: string
           cidade: string | null
           criado_em: string
+          doc_frente_path: string | null
+          doc_verso_path: string | null
           dojo: string | null
           email: string
           estilo: string | null
@@ -260,6 +370,8 @@ export type Database = {
           atualizado_em?: string
           cidade?: string | null
           criado_em?: string
+          doc_frente_path?: string | null
+          doc_verso_path?: string | null
           dojo?: string | null
           email: string
           estilo?: string | null
@@ -280,6 +392,8 @@ export type Database = {
           atualizado_em?: string
           cidade?: string | null
           criado_em?: string
+          doc_frente_path?: string | null
+          doc_verso_path?: string | null
           dojo?: string | null
           email?: string
           estilo?: string | null
@@ -510,6 +624,50 @@ export type Database = {
           whatsapp?: string
         }
         Relationships: []
+      }
+      janelas_aplicacao: {
+        Row: {
+          abre_em: string | null
+          ativo: boolean
+          atualizado_em: string
+          categorias: string[]
+          evento_id: string
+          fecha_em: string | null
+          resposta_ate: string | null
+          taxa_centavos: number
+          vagas: number | null
+        }
+        Insert: {
+          abre_em?: string | null
+          ativo?: boolean
+          atualizado_em?: string
+          categorias?: string[]
+          evento_id: string
+          fecha_em?: string | null
+          resposta_ate?: string | null
+          taxa_centavos?: number
+          vagas?: number | null
+        }
+        Update: {
+          abre_em?: string | null
+          ativo?: boolean
+          atualizado_em?: string
+          categorias?: string[]
+          evento_id?: string
+          fecha_em?: string | null
+          resposta_ate?: string | null
+          taxa_centavos?: number
+          vagas?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "janelas_aplicacao_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: true
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lista_espera_ppv: {
         Row: {
@@ -953,8 +1111,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      aplicar_evento: {
+        Args: {
+          _aceite: boolean
+          _autoriza: boolean
+          _categoria_id: string
+          _evento_id: string
+          _highlight: string
+        }
+        Returns: string
+      }
       atribuir_numero: { Args: { _conta_id: string }; Returns: number }
       caminho_da_lenda: { Args: { _conta_id: string }; Returns: string }
+      confirmar_presenca: { Args: { _aplicacao_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
