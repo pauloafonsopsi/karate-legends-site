@@ -8,6 +8,7 @@ import { StripeEmbeddedCheckout } from '@/components/StripeEmbeddedCheckout';
 import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
 import { formatPreco } from '@/lib/planos';
 import { compressImage } from '@/lib/imageCompress';
+import AplicacoesAtleta from '@/components/registro/AplicacoesAtleta';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Meta = Tables<'metas'>;
@@ -166,7 +167,7 @@ const AreaAtleta = () => {
             {!passa ? (
               <p role="alert" className="surface-elevated p-6">Neste momento o Registro Legends é exclusivo para quem atende os critérios acima.</p>
             ) : checkout ? (
-              <div className="surface-elevated rounded-sm p-4"><StripeEmbeddedCheckout priceId={checkout} customerEmail={conta.email}
+              <div className="surface-elevated rounded-sm p-4"><StripeEmbeddedCheckout priceId={checkout}
                 returnUrl={`${window.location.origin}/atleta?pagamento=ok`} /></div>
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
@@ -192,7 +193,7 @@ const AreaAtleta = () => {
                 {vigente?.tipo === 'anual' && conta.fundador && <button onClick={() => setCheckout('registro_anual')} className="btn-outline-gold text-sm mt-4 min-h-[44px]">Renovar pelo preço de fundador</button>}
               </div>
             </section>
-            {checkout && <div className="surface-elevated rounded-sm p-4"><StripeEmbeddedCheckout priceId={checkout} customerEmail={conta.email} returnUrl={`${window.location.origin}/atleta?pagamento=ok`} /></div>}
+            {checkout && <div className="surface-elevated rounded-sm p-4"><StripeEmbeddedCheckout priceId={checkout} returnUrl={`${window.location.origin}/atleta?pagamento=ok`} /></div>}
 
             <section aria-labelledby="cam">
               <h2 id="cam" className="font-display text-4xl uppercase mb-4">Caminho da Lenda</h2>
@@ -209,6 +210,13 @@ const AreaAtleta = () => {
               <h2 id="mt" className="font-display text-4xl uppercase mb-2">Metas</h2>
               <p className="text-sm text-muted-foreground mb-4">Com todas verificadas você pode aplicar aos eventos.</p>
               <Metas />
+            </section>
+
+            <section aria-labelledby="ap">
+              <h2 id="ap" className="font-display text-4xl uppercase mb-2">Aplicar a eventos</h2>
+              <p className="text-sm text-muted-foreground mb-4">Toda aplicação recebe resposta até a data informada. Evento cancelado devolve a taxa.</p>
+              <AplicacoesAtleta conta={conta} userId={session.user.id} apto={metas.length > 0 && metas.every(m => statusMeta(m.id) === 'verificada')}
+                highlightPadrao={minhas.find(x => metas.find(m => m.id === x.meta_id)?.nome.toLowerCase().includes('highlight'))?.link ?? ''} onMudou={carregar} />
             </section>
 
             <section aria-labelledby="lt">
