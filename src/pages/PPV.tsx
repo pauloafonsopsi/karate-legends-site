@@ -1,73 +1,123 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { fetchPlanos, formatPreco, txt, type Plano } from '@/lib/planos';
 import { Link } from 'react-router-dom';
-import { Tv, Smartphone, Tablet, Radio, Repeat, Lock } from 'lucide-react';
+import { Loader2, MapPin, PlayCircle } from 'lucide-react';
+import { fetchPlanos, formatPreco, txt, type Plano } from '@/lib/planos';
+import { useLegends } from '@/hooks/useLegends';
+import { dataBR, FORMATO, proximoEvento, realizados } from '@/lib/legends';
+import Contagem from '@/components/legends/Contagem';
+import CardLutas from '@/components/legends/CardLutas';
 import WaitlistForm from '@/components/WaitlistForm';
+import { StripeEmbeddedCheckout } from '@/components/StripeEmbeddedCheckout';
 
 const PPV = () => {
   const { t, i18n } = useTranslation();
-  const [planos, setPlanos] = useState<Plano[]>([]);
-  useEffect(() => { fetchPlanos().then(setPlanos).catch(() => {}); }, []);
+  const { data, error, reload } = useLegends();
+  const [plano, setPlano] = useState<Plano | null>(null);
+  const [email, setEmail] = useState('');
+  const [checkout, setCheckout] = useState(false);
+  const [aberto, setAberto] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPlanos().then(ps => setPlano(ps.find(p => p.chave.startsWith('ppv')) ?? null)).catch(() => {});
+  }, []);
+
+  const prox = data ? proximoEvento(data.eventos) : null;
+  const acervo = data ? realizados(data.eventos) : [];
+  const lutasDe = (id: string) => data?.lutas.filter(l => l.evento_id === id) ?? [];
 
   return (
     <div className="pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <header className="text-center mb-16 max-w-4xl mx-auto">
-          <p className="eyebrow mb-4">Experiência digital</p>
+      <div className="max-w-6xl mx-auto px-6">
+        <header className="text-center mb-14 max-w-3xl mx-auto">
+          <p className="eyebrow mb-4">{t('ppv.eyebrow', 'Pay-per-view')}</p>
           <h1 className="text-6xl md:text-8xl mb-6">{t('ppv.title')}</h1>
-           <p className="text-muted-foreground text-xl max-w-2xl mx-auto">{t('ppv.subtitle')}</p>
+          <p className="text-muted-foreground text-lg">{t('ppv.subtitle')}</p>
         </header>
 
-        {/* Planos */}
-        <section className="surface-elevated rounded-sm p-7 md:p-10 mb-16 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-8 items-center">
-          <div>
-            <p className="eyebrow mb-3">{t('members.eyebrow')}</p>
-            <h2 className="text-3xl md:text-4xl mb-3">{t('members.subtitle')}</h2>
-            <p className="text-muted-foreground text-sm">
-              {planos.map(p => `${txt(p.titulo, i18n.language)} ${formatPreco(p.preco_centavos, p.moeda)} ${txt(p.periodo, i18n.language) ?? ''}`).join('  |  ')}
+        {error && (
+          <div role="alert" className="surface-elevated p-6 rounded-sm text-center mb-12">
+            <p className="mb-4">Não foi possível carregar os eventos.</p>
+            <button onClick={reload} className="btn-outline-gold min-h-[44px]">Tentar de novo</button>
+          </div>
+        )}
+        {!data && !error && <div className="h-96 surface-elevated rounded-sm animate-pulse mb-16" aria-label="Carregando" />}
+
+        {data && (prox ? (
+          <section aria-labelledby="prox" className="surface-elevated rounded-sm p-6 md:p-10 mb-20">
+            <p className="eyebrow mb-3 text-center">Próximo evento</p>
+            <h2 id="prox" className="text-4xl md:text-6xl text-center mb-3">{prox.nome}</h2>
+            <p className="text-center text-muted-foreground mb-8 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
+              <span>{dataBR(prox.data_evento)}</span>
+              {(prox.local || prox.cidade) && <span className="flex items-center gap-1"><MapPin size={14} aria-hidden="true" />{[prox.local, prox.cidade].filter(Boolean).join(', ')}</span>}
             </p>
-          </div>
-          <Link to="/membros" className="btn-gold text-center px-8 py-4 text-sm">{t('hero.cta_apply')}</Link>
-        </section>
+            <div className="mb-10"><Contagem data={prox.data_evento} /></div>
 
-        {/* Waitlist Form */}
-        <div className="mb-24">
-          <WaitlistForm />
-        </div>
+            <div className="max-w-md mx-auto mb-12 text-center">
+              {plano ? (
+                checkout ? (
+                  <StripeEmbeddedCheckout priceId={plano.chave} customerEmail={email} />
+                ) : (
+                  <form onSubmit={e => { e.preventDefault(); if (/\S+@\S+\.\S+/.test(email)) setCheckout(true); }} className="space-y-3">
+                    <p className="font-display text-4xl text-gold">{formatPreco(plano.preco_centavos, plano.moeda)}</p>
+                    <p className="text-sm text-muted-foreground">{txt(plano.periodo, i18n.language)}</p>
+                    <label htmlFor="ppv-email" className="sr-only">E-mail</label>
+                    <input id="ppv-email" type="email" required placeholder="Seu e-mail" value={email} onChange={e => setEmail(e.target.value)} className="form-field text-base w-full" />
+                    <button type="submit" className="btn-gold w-full min-h-[44px]">Comprar acesso</button>
+                  </form>
+                )
+              ) : <Loader2 className="animate-spin mx-auto text-gold" aria-label="Carregando" />}
+            </div>
 
-        {/* Recursos da transmissão */}
-        <section aria-labelledby="ppv-features-heading" className="mb-20">
-          <h2 id="ppv-features-heading" className="sr-only">{t('ppv.features_title')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { icon: Radio, label: t('ppv.features.live') },
-              { icon: Repeat, label: t('ppv.features.replay') },
-              { icon: Lock, label: t('ppv.features.exclusive') }
-            ].map((feature, i) => {
-              const Icon = feature.icon;
-              return (
-                <div key={i} className="card-premium flex flex-col items-center text-center py-12">
-                  <Icon size={32} className="text-gold mb-6" aria-hidden="true" />
-                  <p className="text-sm text-white/80 leading-relaxed max-w-[220px]">{feature.label}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+            <h3 className="eyebrow mb-4">Card</h3>
+            <CardLutas lutas={lutasDe(prox.id)} atletas={data.atletas} categorias={data.categorias} />
+          </section>
+        ) : (
+          <section className="mb-20">
+            <p className="text-center text-muted-foreground mb-8">A próxima edição será anunciada em breve. Deixe seu contato para ser avisado.</p>
+            <WaitlistForm />
+          </section>
+        ))}
 
-        {/* Dispositivos */}
-        <section aria-labelledby="ppv-devices-heading" className="bg-card p-8 md:p-12 border border-border text-center rounded-sm">
-          <h2 id="ppv-devices-heading" className="text-2xl mb-8 uppercase tracking-widest">{t('ppv.devices_title')}</h2>
-          <div className="flex flex-wrap justify-center gap-10 md:gap-16 text-muted-foreground">
-            <div className="flex flex-col items-center gap-2"><Tv size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Smart TV</span></div>
-            <div className="flex flex-col items-center gap-2"><Smartphone size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Mobile</span></div>
-            <div className="flex flex-col items-center gap-2"><Tablet size={40} aria-hidden="true" /><span className="text-xs uppercase tracking-widest">Tablet</span></div>
-          </div>
-          <p className="mt-12 text-white/50 text-sm max-w-xl mx-auto italic">
-            {t('ppv.streaming_note')}
-          </p>
-        </section>
+        {data && (
+          <section aria-labelledby="acervo">
+            <p className="eyebrow mb-3">Acervo</p>
+            <h2 id="acervo" className="text-4xl md:text-6xl mb-8">Edições realizadas</h2>
+            {acervo.length === 0 ? (
+              <p className="text-muted-foreground">O acervo das edições será publicado em breve.</p>
+            ) : (
+              <div className="space-y-4">
+                {acervo.map(ev => (
+                  <article key={ev.id} className="surface-elevated rounded-sm">
+                    <button onClick={() => setAberto(aberto === ev.id ? null : ev.id)} aria-expanded={aberto === ev.id}
+                      className="w-full text-left p-5 md:p-6 flex flex-wrap items-center justify-between gap-3 min-h-[44px]">
+                      <div>
+                        <p className="text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground mb-1">
+                          {[ev.edicao ? `${ev.edicao}ª edição` : null, FORMATO[ev.formato], dataBR(ev.data_evento)].filter(Boolean).join('  |  ')}
+                        </p>
+                        <h3 className="font-display text-2xl md:text-3xl uppercase">{ev.nome}</h3>
+                      </div>
+                      <span className="text-xs uppercase tracking-widest text-gold">{aberto === ev.id ? 'Fechar' : 'Ver resultados'}</span>
+                    </button>
+                    {aberto === ev.id && (
+                      <div className="px-5 md:px-6 pb-6">
+                        {ev.gravacao_publica && ev.link_gravacao && (
+                          <a href={ev.link_gravacao} target="_blank" rel="noopener noreferrer" className="btn-outline-gold inline-flex items-center gap-2 mb-5 min-h-[44px]">
+                            <PlayCircle size={16} aria-hidden="true" /> Assistir edição completa
+                          </a>
+                        )}
+                        <CardLutas lutas={lutasDe(ev.id)} atletas={data.atletas} categorias={data.categorias} mostrarResultado />
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+            <p className="text-center mt-12 text-sm text-muted-foreground">
+              Conheça cinturões e ranking em <Link to="/atletas" className="text-gold underline">Atletas</Link>.
+            </p>
+          </section>
+        )}
       </div>
     </div>
   );

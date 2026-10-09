@@ -1,0 +1,68 @@
+import { Crown } from 'lucide-react';
+import { useLegends } from '@/hooks/useLegends';
+
+const Atletas = () => {
+  const { data, error, reload } = useLegends();
+  const nome = (id: string) => data?.atletas.find(a => a.id === id)?.nome ?? '';
+  const cats = data?.categorias.filter(c =>
+    data.cinturoes.some(x => x.categoria_id === c.id) || data.rankings.some(r => r.categoria_id === c.id)) ?? [];
+
+  return (
+    <div className="pt-32 pb-20">
+      <div className="max-w-6xl mx-auto px-6">
+        <header className="text-center mb-14 max-w-3xl mx-auto">
+          <p className="eyebrow mb-4">Atletas</p>
+          <h1 className="text-6xl md:text-8xl mb-6">Registro Legends</h1>
+          <p className="text-muted-foreground text-lg">O registro oficial de quem luta no Karate Legends. Abertura em breve.</p>
+        </header>
+
+        <section className="grid md:grid-cols-2 gap-4 mb-20" aria-label="Acesso do atleta">
+          {[
+            { t: 'Sou atleta registrado', d: 'Acesse sua carteira, seu cartel e o Caminho da Lenda.' },
+            { t: 'Quero ser Legends', d: 'Conheça os critérios e garanta seu número na Classe Fundadora.' },
+          ].map(p => (
+            <div key={p.t} className="surface-elevated rounded-sm p-8">
+              <h2 className="font-display text-3xl uppercase mb-2">{p.t}</h2>
+              <p className="text-muted-foreground text-sm mb-6">{p.d}</p>
+              <button disabled className="btn-outline-gold min-h-[44px] opacity-60 cursor-not-allowed">Disponível em breve</button>
+            </div>
+          ))}
+        </section>
+
+        <section aria-labelledby="cint">
+          <p className="eyebrow mb-3">Cinturões e ranking</p>
+          <h2 id="cint" className="text-4xl md:text-6xl mb-8">Quem domina cada categoria</h2>
+          {error && <div role="alert" className="surface-elevated p-6"><p className="mb-4">Não foi possível carregar.</p><button onClick={reload} className="btn-outline-gold min-h-[44px]">Tentar de novo</button></div>}
+          {!data && !error && <div className="h-64 surface-elevated animate-pulse rounded-sm" aria-label="Carregando" />}
+          {data && cats.length === 0 && <p className="text-muted-foreground">Cinturões e ranking serão publicados em breve.</p>}
+          <div className="grid md:grid-cols-2 gap-4">
+            {cats.map(c => {
+              const cin = data!.cinturoes.find(x => x.categoria_id === c.id);
+              const rk = data!.rankings.filter(r => r.categoria_id === c.id).sort((a, b) => a.posicao - b.posicao);
+              return (
+                <article key={c.id} className="surface-elevated rounded-sm p-6">
+                  <h3 className="eyebrow mb-4">{c.nome}</h3>
+                  {cin && (
+                    <p className="flex items-center gap-3 mb-5">
+                      <Crown className="text-gold" size={22} aria-label="Campeão" />
+                      <span className="font-display text-3xl uppercase">{nome(cin.atleta_id)}</span>
+                    </p>
+                  )}
+                  <ol className="space-y-2">
+                    {rk.map(r => (
+                      <li key={r.id} className="flex gap-4 text-sm border-t border-border pt-2">
+                        <span className="font-display text-gold w-5">{r.posicao}</span>{nome(r.atleta_id)}
+                      </li>
+                    ))}
+                  </ol>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default Atletas;
