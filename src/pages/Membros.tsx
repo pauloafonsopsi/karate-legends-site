@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchPlanos, formatPreco, txt, type Plano } from '@/lib/planos';
 import { useTranslation } from 'react-i18next';
 import { Check, ArrowLeft, Loader2, Crown, Radio, Mail } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { StripeEmbeddedCheckout } from '@/components/StripeEmbeddedCheckout';
 import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
 
-type PlanId = 'membro_mensal' | 'ppv_evento_unico' | 'newsletter_mensal';
+type PlanId = string;
+const ICONS: Record<string, typeof Crown> = { crown: Crown, radio: Radio, mail: Mail };
 
 const Membros = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [plan, setPlan] = useState<PlanId | null>(null);
   const [checkout, setCheckout] = useState<{ priceId: PlanId; email: string } | null>(null);
   const [saving, setSaving] = useState(false);
@@ -18,33 +20,11 @@ const Membros = () => {
     aceiteTermos: false, aceitePrivacidade: false,
   });
 
-  const plans: { id: PlanId; icon: typeof Crown; title: string; price: string; period: string; features: string[]; highlight?: boolean }[] = [
-    {
-      id: 'membro_mensal',
-      icon: Crown,
-      title: t('members.plan_member'),
-      price: 'R$ 19,90',
-      period: t('members.per_month'),
-      highlight: true,
-      features: [t('members.benefit_ppv'), t('members.benefit_newsletter'), t('members.benefit_community')],
-    },
-    {
-      id: 'ppv_evento_unico',
-      icon: Radio,
-      title: t('members.plan_ppv'),
-      price: 'R$ 59,90',
-      period: t('members.per_event'),
-      features: [t('members.ppv_feature_live'), t('members.ppv_feature_replay')],
-    },
-    {
-      id: 'newsletter_mensal',
-      icon: Mail,
-      title: t('members.plan_newsletter'),
-      price: 'R$ 29,90',
-      period: t('members.per_month'),
-      features: [t('members.news_feature_monthly'), t('members.news_feature_inside')],
-    },
-  ];
+  const [plans, setPlans] = useState<Plano[] | null>(null);
+  const [loadError, setLoadError] = useState(false);
+  const load = () => { setLoadError(false); fetchPlanos().then(setPlans).catch(() => setLoadError(true)); };
+  useEffect(load, []);
+  const lang = i18n.language;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
@@ -91,16 +71,30 @@ const Membros = () => {
           <p className="text-muted-foreground text-lg md:text-xl">{t('members.subtitle')}</p>
         </header>
 
-        {!plan && (
+        {!plan && loadError && (
+          <div role="alert" className="surface-elevated p-7 rounded-sm max-w-xl">
+            <p className="mb-4">{t('form.error')}</p>
+            <button onClick={load} className="btn-outline-gold">Tentar de novo</button>
+          </div>
+        )}
+        {!plan && !loadError && !plans && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6" aria-busy="true">
+            {[0, 1, 2].map(i => <div key={i} className="surface-elevated rounded-sm h-96 animate-pulse" />)}
+          </div>
+        )}
+        {!plan && plans && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map(({ id, icon: Icon, title, price, period, features, highlight }) => (
-              <div key={id} className={`surface-elevated p-7 rounded-sm flex flex-col ${highlight ? 'border border-gold/60' : ''}`}>
-                {highlight && <p className="eyebrow mb-3">{t('members.best_value')}</p>}
+            {plans.map(p => {
+              const Icon = ICONS[p.icone] ?? Crown;
+              const features = txt(p.beneficios, lang) ?? [];
+              return (
+              <div key={p.id} className={`surface-elevated p-7 rounded-sm flex flex-col ${p.destaque ? 'border border-gold/60' : ''}`}>
+                {p.destaque && <p className="eyebrow mb-3">{t('members.best_value')}</p>}
                 <Icon size={24} className="text-gold mb-5" aria-hidden="true" />
-                <h2 className="text-3xl mb-2">{title}</h2>
+                <h2 className="text-3xl mb-2">{txt(p.titulo, lang)}</h2>
                 <p className="mb-6">
-                  <span className="text-4xl font-display text-gold">{price}</span>
-                  <span className="text-muted-foreground text-sm ml-2">{period}</span>
+                  <span className="text-4xl font-display text-gold">{formatPreco(p.preco_centavos, p.moeda)}</span>
+                  <span className="text-muted-foreground text-sm ml-2">{txt(p.periodo, lang)}</span>
                 </p>
                 <ul className="space-y-3 mb-8 flex-grow">
                   {features.map((f, i) => (
@@ -110,11 +104,11 @@ const Membros = () => {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => setPlan(id)} className={highlight ? 'btn-gold w-full' : 'btn-outline-gold w-full'}>
+                <button onClick={() => setPlan(p.chave)} className={p.destaque ? 'btn-gold w-full' : 'btn-outline-gold w-full'}>
                   {t('members.choose')}
                 </button>
               </div>
-            ))}
+            );})}
           </div>
         )}
 

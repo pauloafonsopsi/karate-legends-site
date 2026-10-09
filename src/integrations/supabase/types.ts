@@ -248,6 +248,51 @@ export type Database = {
         }
         Relationships: []
       }
+      planos: {
+        Row: {
+          ativo: boolean
+          atualizado_em: string
+          beneficios: Json
+          chave: string
+          destaque: boolean
+          icone: string
+          id: string
+          moeda: string
+          ordem: number
+          periodo: Json
+          preco_centavos: number | null
+          titulo: Json
+        }
+        Insert: {
+          ativo?: boolean
+          atualizado_em?: string
+          beneficios?: Json
+          chave: string
+          destaque?: boolean
+          icone?: string
+          id?: string
+          moeda?: string
+          ordem?: number
+          periodo?: Json
+          preco_centavos?: number | null
+          titulo?: Json
+        }
+        Update: {
+          ativo?: boolean
+          atualizado_em?: string
+          beneficios?: Json
+          chave?: string
+          destaque?: boolean
+          icone?: string
+          id?: string
+          moeda?: string
+          ordem?: number
+          periodo?: Json
+          preco_centavos?: number | null
+          titulo?: Json
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           criado_em: string
