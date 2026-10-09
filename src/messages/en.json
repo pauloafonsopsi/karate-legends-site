@@ -266,6 +266,7 @@
     "st_realizada": "Completed",
     "st_cancelada": "Cancelled",
     "grand_prix": "Grand Prix",
-    "lutas_casadas": "Superfights"
+    "lutas_casadas": "Superfights",
+    "login_to_buy": "Sign in to buy"
   }
 }

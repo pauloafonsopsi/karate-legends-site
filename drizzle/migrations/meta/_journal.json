@@ -43,6 +43,13 @@
       "when": 1791571728553,
       "tag": "0005_registro_legends",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791572935261,
+      "tag": "0006_bloco3_aplicacoes",
+      "breakpoints": true
     }
   ]
 }
