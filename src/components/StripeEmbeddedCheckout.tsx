@@ -7,14 +7,15 @@ interface StripeEmbeddedCheckoutProps {
   priceId: string;
   customerEmail?: string;
   returnUrl?: string;
+  aplicacaoId?: string;
 }
 
-export function StripeEmbeddedCheckout({ priceId, customerEmail, returnUrl }: StripeEmbeddedCheckoutProps) {
+export function StripeEmbeddedCheckout({ priceId, returnUrl, aplicacaoId }: StripeEmbeddedCheckoutProps) {
   const fetchClientSecret = async (): Promise<string> => {
     const { data, error } = await supabase.functions.invoke("create-checkout", {
       body: {
         priceId,
-        customerEmail,
+        aplicacaoId,
         returnUrl: returnUrl ?? `${window.location.origin}/checkout/retorno?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
         origem: lerOrigem().origem,

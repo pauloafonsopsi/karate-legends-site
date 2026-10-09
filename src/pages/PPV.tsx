@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { useConta } from '@/hooks/useConta';
 import { Loader2, MapPin, PlayCircle } from 'lucide-react';
 import { fetchPlanos, formatPreco, txt, type Plano } from '@/lib/planos';
 import { useLegends } from '@/hooks/useLegends';
@@ -14,7 +15,7 @@ const PPV = () => {
   const { t, i18n } = useTranslation();
   const { data, error, reload } = useLegends();
   const [plano, setPlano] = useState<Plano | null>(null);
-  const [email, setEmail] = useState('');
+  const { session } = useConta();
   const [checkout, setCheckout] = useState(false);
   const [aberto, setAberto] = useState<string | null>(null);
 
@@ -55,16 +56,18 @@ const PPV = () => {
 
             <div className="max-w-md mx-auto mb-12 text-center">
               {plano ? (
-                checkout ? (
-                  <StripeEmbeddedCheckout priceId={plano.chave} customerEmail={email} />
+                checkout && session ? (
+                  <StripeEmbeddedCheckout priceId={plano.chave} />
                 ) : (
-                  <form onSubmit={e => { e.preventDefault(); if (/\S+@\S+\.\S+/.test(email)) setCheckout(true); }} className="space-y-3">
+                  <div className="space-y-3">
                     <p className="font-display text-4xl text-gold">{formatPreco(plano.preco_centavos, plano.moeda)}</p>
                     <p className="text-sm text-muted-foreground">{txt(plano.periodo, i18n.language)}</p>
-                    <label htmlFor="ppv-email" className="sr-only">E-mail</label>
-                    <input id="ppv-email" type="email" required placeholder={t('legends.email')} value={email} onChange={e => setEmail(e.target.value)} className="form-field text-base w-full" />
-                    <button type="submit" className="btn-gold w-full min-h-[44px]">{t('legends.buy')}</button>
-                  </form>
+                    {session ? (
+                      <button onClick={() => setCheckout(true)} className="btn-gold w-full min-h-[44px]">{t('legends.buy')}</button>
+                    ) : (
+                      <Link to="/entrar?volta=/ppv" className="btn-gold w-full min-h-[44px] flex items-center justify-center">{t('legends.login_to_buy', 'Entre para comprar')}</Link>
+                    )}
+                  </div>
                 )
               ) : <Loader2 className="animate-spin mx-auto text-gold" aria-label="Carregando" />}
             </div>
