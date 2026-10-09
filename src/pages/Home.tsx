@@ -8,7 +8,7 @@ import Contagem from '@/components/legends/Contagem';
 import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data } = useLegends();
   const prox = data ? proximoEvento(data.eventos) : null;
   const nums = data ? numerosHome(data) : null;
@@ -68,7 +68,7 @@ const Home = () => {
                 <>
                   <span className="font-display text-2xl md:text-3xl uppercase mb-4">{prox.nome}</span>
                   <Contagem data={prox.data_evento} />
-                  <span className="text-xs text-muted-foreground mt-3">{dataBR(prox.data_evento)}</span>
+                  <span className="text-xs text-muted-foreground mt-3">{dataBR(prox.data_evento, i18n.language, t('legends.date_tbd'))}</span>
                 </>
               ) : (
                 <span className="text-4xl md:text-5xl font-display text-foreground uppercase">

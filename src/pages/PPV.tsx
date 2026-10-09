@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Loader2, MapPin, PlayCircle } from 'lucide-react';
 import { fetchPlanos, formatPreco, txt, type Plano } from '@/lib/planos';
 import { useLegends } from '@/hooks/useLegends';
-import { dataBR, FORMATO, proximoEvento, realizados } from '@/lib/legends';
+import { dataBR, proximoEvento, realizados } from '@/lib/legends';
 import Contagem from '@/components/legends/Contagem';
 import CardLutas from '@/components/legends/CardLutas';
 import WaitlistForm from '@/components/WaitlistForm';
@@ -37,18 +37,18 @@ const PPV = () => {
 
         {error && (
           <div role="alert" className="surface-elevated p-6 rounded-sm text-center mb-12">
-            <p className="mb-4">Não foi possível carregar os eventos.</p>
-            <button onClick={reload} className="btn-outline-gold min-h-[44px]">Tentar de novo</button>
+            <p className="mb-4">{t('legends.load_error')}</p>
+            <button onClick={reload} className="btn-outline-gold min-h-[44px]">{t('legends.retry')}</button>
           </div>
         )}
         {!data && !error && <div className="h-96 surface-elevated rounded-sm animate-pulse mb-16" aria-label="Carregando" />}
 
         {data && (prox ? (
           <section aria-labelledby="prox" className="surface-elevated rounded-sm p-6 md:p-10 mb-20">
-            <p className="eyebrow mb-3 text-center">Próximo evento</p>
+            <p className="eyebrow mb-3 text-center">{t('legends.next_event')}</p>
             <h2 id="prox" className="text-4xl md:text-6xl text-center mb-3">{prox.nome}</h2>
             <p className="text-center text-muted-foreground mb-8 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
-              <span>{dataBR(prox.data_evento)}</span>
+              <span>{dataBR(prox.data_evento, i18n.language, t('legends.date_tbd'))}</span>
               {(prox.local || prox.cidade) && <span className="flex items-center gap-1"><MapPin size={14} aria-hidden="true" />{[prox.local, prox.cidade].filter(Boolean).join(', ')}</span>}
             </p>
             <div className="mb-10"><Contagem data={prox.data_evento} /></div>
@@ -62,29 +62,29 @@ const PPV = () => {
                     <p className="font-display text-4xl text-gold">{formatPreco(plano.preco_centavos, plano.moeda)}</p>
                     <p className="text-sm text-muted-foreground">{txt(plano.periodo, i18n.language)}</p>
                     <label htmlFor="ppv-email" className="sr-only">E-mail</label>
-                    <input id="ppv-email" type="email" required placeholder="Seu e-mail" value={email} onChange={e => setEmail(e.target.value)} className="form-field text-base w-full" />
-                    <button type="submit" className="btn-gold w-full min-h-[44px]">Comprar acesso</button>
+                    <input id="ppv-email" type="email" required placeholder={t('legends.email')} value={email} onChange={e => setEmail(e.target.value)} className="form-field text-base w-full" />
+                    <button type="submit" className="btn-gold w-full min-h-[44px]">{t('legends.buy')}</button>
                   </form>
                 )
               ) : <Loader2 className="animate-spin mx-auto text-gold" aria-label="Carregando" />}
             </div>
 
-            <h3 className="eyebrow mb-4">Card</h3>
+            <h3 className="eyebrow mb-4">{t('legends.card')}</h3>
             <CardLutas lutas={lutasDe(prox.id)} atletas={data.atletas} categorias={data.categorias} />
           </section>
         ) : (
           <section className="mb-20">
-            <p className="text-center text-muted-foreground mb-8">A próxima edição será anunciada em breve. Deixe seu contato para ser avisado.</p>
+            <p className="text-center text-muted-foreground mb-8">{t('legends.coming')}</p>
             <WaitlistForm />
           </section>
         ))}
 
         {data && (
           <section aria-labelledby="acervo">
-            <p className="eyebrow mb-3">Acervo</p>
-            <h2 id="acervo" className="text-4xl md:text-6xl mb-8">Edições realizadas</h2>
+            <p className="eyebrow mb-3">{t('legends.archive')}</p>
+            <h2 id="acervo" className="text-4xl md:text-6xl mb-8">{t('legends.editions')}</h2>
             {acervo.length === 0 ? (
-              <p className="text-muted-foreground">O acervo das edições será publicado em breve.</p>
+              <p className="text-muted-foreground">{t('legends.archive_empty')}</p>
             ) : (
               <div className="space-y-4">
                 {acervo.map(ev => (
@@ -93,17 +93,17 @@ const PPV = () => {
                       className="w-full text-left p-5 md:p-6 flex flex-wrap items-center justify-between gap-3 min-h-[44px]">
                       <div>
                         <p className="text-[0.68rem] uppercase tracking-[0.22em] text-muted-foreground mb-1">
-                          {[ev.edicao ? `${ev.edicao}ª edição` : null, FORMATO[ev.formato], dataBR(ev.data_evento)].filter(Boolean).join('  |  ')}
+                          {[ev.edicao ? t('legends.edition', { n: ev.edicao }) : null, t(`legends.${ev.formato}`), dataBR(ev.data_evento, i18n.language, t('legends.date_tbd'))].filter(Boolean).join('  |  ')}
                         </p>
                         <h3 className="font-display text-2xl md:text-3xl uppercase">{ev.nome}</h3>
                       </div>
-                      <span className="text-xs uppercase tracking-widest text-gold">{aberto === ev.id ? 'Fechar' : 'Ver resultados'}</span>
+                      <span className="text-xs uppercase tracking-widest text-gold">{aberto === ev.id ? t('legends.close') : t('legends.results')}</span>
                     </button>
                     {aberto === ev.id && (
                       <div className="px-5 md:px-6 pb-6">
                         {ev.gravacao_publica && ev.link_gravacao && (
                           <a href={ev.link_gravacao} target="_blank" rel="noopener noreferrer" className="btn-outline-gold inline-flex items-center gap-2 mb-5 min-h-[44px]">
-                            <PlayCircle size={16} aria-hidden="true" /> Assistir edição completa
+                            <PlayCircle size={16} aria-hidden="true" /> {t('legends.watch_full')}
                           </a>
                         )}
                         <CardLutas lutas={lutasDe(ev.id)} atletas={data.atletas} categorias={data.categorias} mostrarResultado />
@@ -114,7 +114,7 @@ const PPV = () => {
               </div>
             )}
             <p className="text-center mt-12 text-sm text-muted-foreground">
-              Conheça cinturões e ranking em <Link to="/atletas" className="text-gold underline">Atletas</Link>.
+              {t('legends.see_belts')} <Link to="/atletas" className="text-gold underline">{t('nav.athletes')}</Link>.
             </p>
           </section>
         )}

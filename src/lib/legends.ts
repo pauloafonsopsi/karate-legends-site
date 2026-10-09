@@ -12,8 +12,9 @@ export const FORMATO: Record<string, string> = { grand_prix: 'Grand Prix', lutas
 export const STATUS_EVENTO: Record<string, string> = { agendado: 'Agendado', realizado: 'Realizado', cancelado: 'Cancelado' };
 export const STATUS_LUTA: Record<string, string> = { anunciada: 'Anunciada', realizada: 'Realizada', cancelada: 'Cancelada' };
 
-export const dataBR = (d: string | null) =>
-  d ? new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : 'Data a definir';
+const LOCALE: Record<string, string> = { pt: 'pt-BR', en: 'en-US', es: 'es-ES' };
+export const dataBR = (d: string | null, lang = 'pt', semData = 'Data a definir') =>
+  d ? new Date(d).toLocaleDateString(LOCALE[lang.slice(0, 2)] ?? 'pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : semData;
 
 /** Everything the public pages need, in one round trip per table. RLS returns only published rows. */
 export async function fetchLegends() {

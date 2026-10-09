@@ -18,7 +18,7 @@ function Editor({ table, row, fields, onDone }: { table: string; row: Row; field
   const save = async () => {
     setBusy(true);
     const { id, ...rest } = r;
-    const clean = Object.fromEntries(Object.entries(rest).filter(([k]) => fields.some(f => f.k === k)).map(([k, v]) => [k, v === '' ? null : v]));
+    const clean = Object.fromEntries(Object.entries(rest).filter(([k]) => k === 'evento_id' || fields.some(f => f.k === k)).map(([k, v]) => [k, v === '' ? null : v]));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const q = supabase.from(table as any);
     const { error } = id ? await q.update(clean).eq('id', id) : await q.insert(clean);
