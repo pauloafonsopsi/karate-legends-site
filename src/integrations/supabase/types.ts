@@ -71,6 +71,139 @@ export type Database = {
         }
         Relationships: []
       }
+      atletas: {
+        Row: {
+          apelido: string | null
+          atualizado_em: string
+          cidade: string | null
+          criado_em: string
+          dojo: string | null
+          estilo: string | null
+          foto_url: string | null
+          graduacao: string | null
+          historico: boolean
+          id: string
+          nome: string
+          pais: string | null
+          publicado: boolean
+          registro_legends: number | null
+        }
+        Insert: {
+          apelido?: string | null
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          dojo?: string | null
+          estilo?: string | null
+          foto_url?: string | null
+          graduacao?: string | null
+          historico?: boolean
+          id?: string
+          nome: string
+          pais?: string | null
+          publicado?: boolean
+          registro_legends?: number | null
+        }
+        Update: {
+          apelido?: string | null
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          dojo?: string | null
+          estilo?: string | null
+          foto_url?: string | null
+          graduacao?: string | null
+          historico?: boolean
+          id?: string
+          nome?: string
+          pais?: string | null
+          publicado?: boolean
+          registro_legends?: number | null
+        }
+        Relationships: []
+      }
+      categorias: {
+        Row: {
+          ativo: boolean
+          criado_em: string
+          descricao: string | null
+          id: string
+          nome: string
+          ordem: number
+        }
+        Insert: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+        }
+        Update: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+        }
+        Relationships: []
+      }
+      cinturoes: {
+        Row: {
+          atleta_id: string
+          categoria_id: string
+          criado_em: string
+          desde: string | null
+          id: string
+          luta_id: string | null
+          publicado: boolean
+          vigente: boolean
+        }
+        Insert: {
+          atleta_id: string
+          categoria_id: string
+          criado_em?: string
+          desde?: string | null
+          id?: string
+          luta_id?: string | null
+          publicado?: boolean
+          vigente?: boolean
+        }
+        Update: {
+          atleta_id?: string
+          categoria_id?: string
+          criado_em?: string
+          desde?: string | null
+          id?: string
+          luta_id?: string | null
+          publicado?: boolean
+          vigente?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cinturoes_atleta_id_fkey"
+            columns: ["atleta_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cinturoes_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cinturoes_luta_id_fkey"
+            columns: ["luta_id"]
+            isOneToOne: false
+            referencedRelation: "lutas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conteudos: {
         Row: {
           atualizado_em: string
@@ -95,6 +228,69 @@ export type Database = {
           id?: string
           idioma?: string
           valor?: string
+        }
+        Relationships: []
+      }
+      eventos: {
+        Row: {
+          atualizado_em: string
+          cidade: string | null
+          criado_em: string
+          data_evento: string | null
+          descricao: string | null
+          edicao: number | null
+          formato: string
+          gravacao_publica: boolean
+          id: string
+          imagem_url: string | null
+          link_gravacao: string | null
+          local: string | null
+          nome: string
+          pais: string | null
+          ppv_plano_chave: string | null
+          publicado: boolean
+          slug: string
+          status: string
+        }
+        Insert: {
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          data_evento?: string | null
+          descricao?: string | null
+          edicao?: number | null
+          formato?: string
+          gravacao_publica?: boolean
+          id?: string
+          imagem_url?: string | null
+          link_gravacao?: string | null
+          local?: string | null
+          nome: string
+          pais?: string | null
+          ppv_plano_chave?: string | null
+          publicado?: boolean
+          slug: string
+          status?: string
+        }
+        Update: {
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          data_evento?: string | null
+          descricao?: string | null
+          edicao?: number | null
+          formato?: string
+          gravacao_publica?: boolean
+          id?: string
+          imagem_url?: string | null
+          link_gravacao?: string | null
+          local?: string | null
+          nome?: string
+          pais?: string | null
+          ppv_plano_chave?: string | null
+          publicado?: boolean
+          slug?: string
+          status?: string
         }
         Relationships: []
       }
@@ -203,6 +399,96 @@ export type Database = {
         }
         Relationships: []
       }
+      lutas: {
+        Row: {
+          atleta_a_id: string | null
+          atleta_b_id: string | null
+          atualizado_em: string
+          categoria_id: string | null
+          criado_em: string
+          evento_id: string
+          fase: string | null
+          id: string
+          link_gravacao: string | null
+          metodo: string | null
+          ordem: number
+          resultado: string | null
+          status: string
+          vale_cinturao: boolean
+          vencedor_id: string | null
+        }
+        Insert: {
+          atleta_a_id?: string | null
+          atleta_b_id?: string | null
+          atualizado_em?: string
+          categoria_id?: string | null
+          criado_em?: string
+          evento_id: string
+          fase?: string | null
+          id?: string
+          link_gravacao?: string | null
+          metodo?: string | null
+          ordem?: number
+          resultado?: string | null
+          status?: string
+          vale_cinturao?: boolean
+          vencedor_id?: string | null
+        }
+        Update: {
+          atleta_a_id?: string | null
+          atleta_b_id?: string | null
+          atualizado_em?: string
+          categoria_id?: string | null
+          criado_em?: string
+          evento_id?: string
+          fase?: string | null
+          id?: string
+          link_gravacao?: string | null
+          metodo?: string | null
+          ordem?: number
+          resultado?: string | null
+          status?: string
+          vale_cinturao?: boolean
+          vencedor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lutas_atleta_a_id_fkey"
+            columns: ["atleta_a_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lutas_atleta_b_id_fkey"
+            columns: ["atleta_b_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lutas_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lutas_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lutas_vencedor_id_fkey"
+            columns: ["vencedor_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       membros: {
         Row: {
           aceite_privacidade: boolean
@@ -293,6 +579,78 @@ export type Database = {
         }
         Relationships: []
       }
+      rankings: {
+        Row: {
+          atleta_id: string
+          atualizado_em: string
+          categoria_id: string
+          id: string
+          posicao: number
+          publicado: boolean
+        }
+        Insert: {
+          atleta_id: string
+          atualizado_em?: string
+          categoria_id: string
+          id?: string
+          posicao: number
+          publicado?: boolean
+        }
+        Update: {
+          atleta_id?: string
+          atualizado_em?: string
+          categoria_id?: string
+          id?: string
+          posicao?: number
+          publicado?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rankings_atleta_id_fkey"
+            columns: ["atleta_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rankings_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      status_historico: {
+        Row: {
+          alterado_em: string
+          alterado_por: string | null
+          id: string
+          registro_id: string
+          status_anterior: string | null
+          status_novo: string | null
+          tabela: string
+        }
+        Insert: {
+          alterado_em?: string
+          alterado_por?: string | null
+          id?: string
+          registro_id: string
+          status_anterior?: string | null
+          status_novo?: string | null
+          tabela: string
+        }
+        Update: {
+          alterado_em?: string
+          alterado_por?: string | null
+          id?: string
+          registro_id?: string
+          status_anterior?: string | null
+          status_novo?: string | null
+          tabela?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           criado_em: string
@@ -326,6 +684,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      reservar_registros_legends: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "admin" | "user"
