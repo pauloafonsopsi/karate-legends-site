@@ -18,7 +18,7 @@
 ## Painel autônomo (plano mestre)
 - [x] Bloco 0: AGENTS.md com regras de arquitetura.
 - [x] Bloco 1: textos do site editáveis no painel (PT/EN/ES, restaurar original).
-- [ ] Bloco 2: planos e benefícios no banco; alteração de preço pelo servidor.
+- [x] Bloco 2: planos e benefícios no banco; alteração de preço pelo servidor.
 - [ ] Bloco 5: central de dados, Excel formatado, relatórios, WhatsApp.
 - [ ] Bloco 3: eventos e PPV cadastráveis; contagem regressiva ligada ao evento.
 - [ ] Bloco 4: área do membro com link por e-mail e liberação do PPV (depende: plataforma de transmissão).
