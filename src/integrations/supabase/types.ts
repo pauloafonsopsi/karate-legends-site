@@ -23,6 +23,7 @@ export type Database = {
           environment: string
           id: string
           moeda: string | null
+          origem: string | null
           periodo_fim: string | null
           periodo_inicio: string | null
           price_id: string | null
@@ -31,6 +32,7 @@ export type Database = {
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
           tipo: string
+          user_id: string | null
           valor_centavos: number | null
         }
         Insert: {
@@ -41,6 +43,7 @@ export type Database = {
           environment?: string
           id?: string
           moeda?: string | null
+          origem?: string | null
           periodo_fim?: string | null
           periodo_inicio?: string | null
           price_id?: string | null
@@ -49,6 +52,7 @@ export type Database = {
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           tipo?: string
+          user_id?: string | null
           valor_centavos?: number | null
         }
         Update: {
@@ -59,6 +63,7 @@ export type Database = {
           environment?: string
           id?: string
           moeda?: string | null
+          origem?: string | null
           periodo_fim?: string | null
           periodo_inicio?: string | null
           price_id?: string | null
@@ -67,6 +72,7 @@ export type Database = {
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           tipo?: string
+          user_id?: string | null
           valor_centavos?: number | null
         }
         Relationships: []
@@ -204,6 +210,101 @@ export type Database = {
           },
         ]
       }
+      config_registro: {
+        Row: {
+          atualizado_em: string
+          estilos: string[]
+          fundador_ate: string | null
+          id: boolean
+          idade_minima: number
+        }
+        Insert: {
+          atualizado_em?: string
+          estilos?: string[]
+          fundador_ate?: string | null
+          id?: boolean
+          idade_minima?: number
+        }
+        Update: {
+          atualizado_em?: string
+          estilos?: string[]
+          fundador_ate?: string | null
+          id?: boolean
+          idade_minima?: number
+        }
+        Relationships: []
+      }
+      contas: {
+        Row: {
+          atleta_id: string | null
+          atualizado_em: string
+          cidade: string | null
+          criado_em: string
+          dojo: string | null
+          email: string
+          estilo: string | null
+          fundador: boolean
+          fundador_preco_centavos: number | null
+          graduacao: string | null
+          id: string
+          indicacao: string | null
+          nascimento: string | null
+          nome: string | null
+          origem: string | null
+          pais: string | null
+          user_id: string
+          whatsapp: string | null
+        }
+        Insert: {
+          atleta_id?: string | null
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          dojo?: string | null
+          email: string
+          estilo?: string | null
+          fundador?: boolean
+          fundador_preco_centavos?: number | null
+          graduacao?: string | null
+          id?: string
+          indicacao?: string | null
+          nascimento?: string | null
+          nome?: string | null
+          origem?: string | null
+          pais?: string | null
+          user_id: string
+          whatsapp?: string | null
+        }
+        Update: {
+          atleta_id?: string | null
+          atualizado_em?: string
+          cidade?: string | null
+          criado_em?: string
+          dojo?: string | null
+          email?: string
+          estilo?: string | null
+          fundador?: boolean
+          fundador_preco_centavos?: number | null
+          graduacao?: string | null
+          id?: string
+          indicacao?: string | null
+          nascimento?: string | null
+          nome?: string | null
+          origem?: string | null
+          pais?: string | null
+          user_id?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contas_atleta_id_fkey"
+            columns: ["atleta_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conteudos: {
         Row: {
           atualizado_em: string
@@ -230,6 +331,41 @@ export type Database = {
           valor?: string
         }
         Relationships: []
+      }
+      cortesias_email: {
+        Row: {
+          atleta_id: string | null
+          criado_em: string
+          email: string
+          id: string
+          observacao: string | null
+          usado_em: string | null
+        }
+        Insert: {
+          atleta_id?: string | null
+          criado_em?: string
+          email: string
+          id?: string
+          observacao?: string | null
+          usado_em?: string | null
+        }
+        Update: {
+          atleta_id?: string | null
+          criado_em?: string
+          email?: string
+          id?: string
+          observacao?: string | null
+          usado_em?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cortesias_email_atleta_id_fkey"
+            columns: ["atleta_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       eventos: {
         Row: {
@@ -534,6 +670,87 @@ export type Database = {
         }
         Relationships: []
       }
+      metas: {
+        Row: {
+          ativo: boolean
+          criado_em: string
+          descricao: string | null
+          exige_arquivo: boolean
+          id: string
+          nome: string
+          ordem: number
+        }
+        Insert: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string | null
+          exige_arquivo?: boolean
+          id?: string
+          nome: string
+          ordem?: number
+        }
+        Update: {
+          ativo?: boolean
+          criado_em?: string
+          descricao?: string | null
+          exige_arquivo?: boolean
+          id?: string
+          nome?: string
+          ordem?: number
+        }
+        Relationships: []
+      }
+      metas_atleta: {
+        Row: {
+          arquivo_path: string | null
+          atualizado_em: string
+          conta_id: string
+          id: string
+          link: string | null
+          meta_id: string
+          status: string
+          verificado_em: string | null
+          verificado_por: string | null
+        }
+        Insert: {
+          arquivo_path?: string | null
+          atualizado_em?: string
+          conta_id: string
+          id?: string
+          link?: string | null
+          meta_id: string
+          status?: string
+          verificado_em?: string | null
+          verificado_por?: string | null
+        }
+        Update: {
+          arquivo_path?: string | null
+          atualizado_em?: string
+          conta_id?: string
+          id?: string
+          link?: string | null
+          meta_id?: string
+          status?: string
+          verificado_em?: string | null
+          verificado_por?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_atleta_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metas_atleta_meta_id_fkey"
+            columns: ["meta_id"]
+            isOneToOne: false
+            referencedRelation: "metas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planos: {
         Row: {
           ativo: boolean
@@ -621,6 +838,65 @@ export type Database = {
           },
         ]
       }
+      registros: {
+        Row: {
+          atualizado_em: string
+          conta_id: string
+          criado_em: string
+          environment: string | null
+          fundador: boolean
+          id: string
+          inicio: string
+          origem: string | null
+          preco_centavos: number | null
+          price_id: string | null
+          status: string
+          stripe_ref: string | null
+          tipo: string
+          vencimento: string | null
+        }
+        Insert: {
+          atualizado_em?: string
+          conta_id: string
+          criado_em?: string
+          environment?: string | null
+          fundador?: boolean
+          id?: string
+          inicio?: string
+          origem?: string | null
+          preco_centavos?: number | null
+          price_id?: string | null
+          status?: string
+          stripe_ref?: string | null
+          tipo: string
+          vencimento?: string | null
+        }
+        Update: {
+          atualizado_em?: string
+          conta_id?: string
+          criado_em?: string
+          environment?: string | null
+          fundador?: boolean
+          id?: string
+          inicio?: string
+          origem?: string | null
+          preco_centavos?: number | null
+          price_id?: string | null
+          status?: string
+          stripe_ref?: string | null
+          tipo?: string
+          vencimento?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registros_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       status_historico: {
         Row: {
           alterado_em: string
@@ -677,6 +953,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      atribuir_numero: { Args: { _conta_id: string }; Returns: number }
+      caminho_da_lenda: { Args: { _conta_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -684,6 +962,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      minha_conta_iniciar: {
+        Args: { _indicacao?: string; _origem?: string }
+        Returns: string
+      }
+      registro_ativo: { Args: { _conta_id: string }; Returns: boolean }
       reservar_registros_legends: { Args: never; Returns: number }
     }
     Enums: {
