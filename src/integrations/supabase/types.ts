@@ -71,6 +71,33 @@ export type Database = {
         }
         Relationships: []
       }
+      conteudos: {
+        Row: {
+          atualizado_em: string
+          atualizado_por: string | null
+          chave: string
+          id: string
+          idioma: string
+          valor: string
+        }
+        Insert: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          chave: string
+          id?: string
+          idioma: string
+          valor: string
+        }
+        Update: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          chave?: string
+          id?: string
+          idioma?: string
+          valor?: string
+        }
+        Relationships: []
+      }
       inscricoes_atletas: {
         Row: {
           aceite_privacidade: boolean
