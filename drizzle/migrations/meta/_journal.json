@@ -29,6 +29,20 @@
       "when": 1791569320469,
       "tag": "0003_bloco1_historia_card",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791571649227,
+      "tag": "0004_add_consultor_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791571728553,
+      "tag": "0005_registro_legends",
+      "breakpoints": true
     }
   ]
 }
