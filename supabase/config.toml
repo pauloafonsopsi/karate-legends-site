@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.admin-plano-preco]
 verify_jwt = false
+
+[functions.admin-equipe]
+verify_jwt = false
