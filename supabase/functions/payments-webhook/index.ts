@@ -39,6 +39,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
       tipo: priceId === "newsletter_mensal" ? "newsletter" : priceId === "registro_mensal" ? "registro" : "membro",
       user_id: subscription.metadata?.userId ?? null,
       origem: subscription.metadata?.origem ?? null,
+      origem_ultima: subscription.metadata?.origem_ultima ?? null,
       valor_centavos: item?.price?.unit_amount ?? null,
       moeda: item?.price?.currency ?? null,
       periodo_inicio: iso(item?.current_period_start ?? subscription.current_period_start),
@@ -120,10 +121,26 @@ async function recordOneTime(session: any, env: StripeEnv) {
     tipo: ["registro", "aplicacao"].includes(session.metadata?.tipo) ? session.metadata.tipo : "ppv",
     user_id: session.metadata?.userId ?? null,
     origem: session.metadata?.origem ?? null,
+    origem_ultima: session.metadata?.origem_ultima ?? null,
+    evento_id: session.metadata?.evento_id ?? null,
     valor_centavos: session.amount_total ?? null,
     moeda: session.currency ?? null,
     environment: env,
   }, { onConflict: "stripe_subscription_id" });
+}
+
+// Cada fatura paga do registro mensal vira uma cobrança própria (receita real mês a mês).
+async function registrarCobranca(invoice: any, env: StripeEnv) {
+  const subId = invoice.parent?.subscription_details?.subscription ?? invoice.subscription ?? null;
+  const meta = invoice.parent?.subscription_details?.metadata ?? invoice.subscription_details?.metadata ?? {};
+  if (!subId || meta.tipo !== "registro" || !(invoice.amount_paid > 0)) return;
+  const conta = await contaDe(meta.userId);
+  await getSupabase().from("cobrancas").upsert({
+    stripe_ref: invoice.id, assinatura_ref: typeof subId === "string" ? subId : subId.id, conta_id: conta?.id ?? null,
+    tipo: "registro_mensal", valor_centavos: invoice.amount_paid,
+    pago_em: iso(invoice.status_transitions?.paid_at) ?? new Date().toISOString(),
+    environment: env, origem: meta.origem ?? null, origem_ultima: meta.origem_ultima ?? null,
+  }, { onConflict: "stripe_ref" });
 }
 
 async function handleWebhook(req: Request, env: StripeEnv) {
@@ -154,6 +171,9 @@ async function handleWebhook(req: Request, env: StripeEnv) {
     }
     case "checkout.session.async_payment_succeeded":
       await recordOneTime(event.data.object, env);
+      break;
+    case "invoice.paid":
+      await registrarCobranca(event.data.object, env);
       break;
     default:
       console.log("Unhandled event:", event.type);
