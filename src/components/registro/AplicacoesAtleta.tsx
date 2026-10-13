@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Check, Loader2, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import i18n from '@/lib/i18n';
 import { compressImage } from '@/lib/imageCompress';
 import { formatPreco } from '@/lib/planos';
 import { StripeEmbeddedCheckout } from '@/components/StripeEmbeddedCheckout';

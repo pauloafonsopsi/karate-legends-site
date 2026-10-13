@@ -42,7 +42,9 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   try {
-    const { priceId, returnUrl, environment, origem, aplicacaoId } = (await req.json()) ?? {};
+    const { priceId, returnUrl, environment, origem, aplicacaoId, origemUltima, idioma } = (await req.json()) ?? {};
+    const ultima = typeof origemUltima === 'string' && origemUltima ? origemUltima.slice(0, 80) : null;
+    const lang = ['en', 'es'].includes(idioma) ? idioma : 'pt';
     if (typeof priceId !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(priceId) || typeof returnUrl !== 'string') {
       return json({ error: 'priceId and returnUrl are required' }, 400);
     }
@@ -59,6 +61,21 @@ Deno.serve(async (req) => {
 
     // Todo pagamento fica ligado à conta logada, nunca a um e-mail digitado.
     if (!user) return json({ error: 'Entre na sua conta para continuar.' }, 401);
+
+    // Registra a versão dos termos aceita ao abrir o pagamento.
+    const { data: contaAceite } = await admin.from('contas').select('id').eq('user_id', user.id).maybeSingle();
+    if (contaAceite) {
+      const slugs = ['termos', 'reembolso', 'privacidade', ...(priceId === 'aplicacao_evento' || priceId.startsWith('registro_') ? ['termos-atleta'] : [])];
+      const [{ data: pts }, { data: trs }] = await Promise.all([
+        admin.from('documentos_legais').select('slug,versao').in('slug', slugs),
+        lang === 'pt' ? Promise.resolve({ data: [] as any[] }) : admin.from('documentos_legais_traducoes').select('slug,versao').eq('idioma', lang).in('slug', slugs),
+      ]);
+      const linhas = (pts ?? []).map((d: any) => {
+        const t = (trs ?? []).find((x: any) => x.slug === d.slug);
+        return { conta_id: contaAceite.id, slug: d.slug, idioma: t ? lang : 'pt', versao: t ? t.versao : d.versao, contexto: `compra:${priceId}` };
+      });
+      if (linhas.length) await admin.from('aceites').insert(linhas);
+    }
 
     const isRegistro = priceId.startsWith('registro_');
     const isAplicacao = priceId === 'aplicacao_evento';
