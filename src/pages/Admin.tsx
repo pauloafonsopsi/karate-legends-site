@@ -15,6 +15,7 @@ import AdminPlanos from '@/components/admin/AdminPlanos';
 import AdminPromotor from '@/components/admin/AdminPromotor';
 import AdminLegal from '@/components/admin/AdminLegal';
 import AdminSenha from '@/components/admin/AdminSenha';
+import AvisoEmpresa from '@/components/admin/AvisoEmpresa';
 import AdminLegends from '@/components/admin/AdminLegends';
 import AdminRegistro from '@/components/admin/AdminRegistro';
 import AdminAplicacoes from '@/components/admin/AdminAplicacoes';
@@ -287,6 +288,8 @@ const Admin = () => {
           <LogOut size={14} /> Sair
         </button></div>
       </div>
+
+      <AvisoEmpresa onAbrir={() => setTab('legal')} versao={tab} />
 
       <div className="flex gap-1 mb-8 border-b border-white/10 overflow-x-auto">
         {TABS.map(t => {
