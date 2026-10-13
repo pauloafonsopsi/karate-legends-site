@@ -145,6 +145,8 @@ const FormAplicar = ({ janela, cats, conta, userId, highlightPadrao, onCancelar,
         _evento_id: janela.evento_id, _categoria_id: cat, _highlight: hl.trim(), _autoriza: autoriza, _aceite: aceite,
       });
       if (error) throw new Error(error.message);
+      // Guarda qual versão dos termos foi aceita nesta aplicação.
+      await supabase.rpc('registrar_aceite', { _slugs: ['termos-atleta', 'privacidade'], _idioma: (i18n.language || 'pt').slice(0, 2), _contexto: `aplicacao:${data}` });
       toast.success(janela.taxa_centavos ? 'Aplicação salva. Falta pagar a taxa.' : 'Aplicação enviada.');
       onOk(data as string);
     } catch (err) {
