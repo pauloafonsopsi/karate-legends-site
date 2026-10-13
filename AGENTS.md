@@ -1,30 +1,21 @@
 # Karate Legends: architecture rules
 
-- Operational data (site texts, plans, events, settings, legal texts) lives in the database and is edited in the admin panel; why: the owner runs the site without code changes.
-- Site texts: bundled i18n JSON files are the defaults; rows in `conteudos` (chave, idioma) override them at runtime; why: the site never shows blank text if the database fails.
-- Charged prices come only from the payment provider via edge functions; the browser never sends an amount; why: prevents tampering.
-- Payment status is written only by the payments webhook; why: single source of truth.
-- Admin permission is checked with `has_role` in RLS and on the server, roles live in `user_roles`; why: prevents privilege escalation.
-- Every table has RLS; public reads only for data displayed on the public site; why: the repository and API are public.
-- Admin panel modules live in `src/components/admin/` and are mounted as tabs in `src/pages/Admin.tsx`; why: keeps the 800-line page from growing.
-- Never editable from the panel: webhook, access rules, role checks, keys and integrations.
-- The public site has two doors, PPV (viewers) and Atletas (fighters); Membro and Newsletter plans are kept inactive, never deleted; why: new direction keeps old data and subscriptions intact.
-- Events, categories, athletes, fights, belts and rankings live in `eventos`, `categorias`, `atletas`, `lutas`, `cinturoes`, `rankings`; the same `lutas` structure serves past editions and the upcoming card; why: one source for history, card and Home numbers.
-- Home numbers and the countdown are derived from registered events, never typed in code; why: they stay true as editions are added.
-- Status changes on events and fights are logged in `status_historico` by trigger; accounts and purchases must record their origin from day one; why: data not recorded when it happens cannot be recovered for reports.
-- Legends Registry numbers are reserved only by the `reservar_registros_legends` database function (champions first, then by edition order); why: numbering is a rule, not panel data.
-- Work proceeds in the five blocks of the current master plan; a block starts only after the owner writes "aprovado"; why: owner-controlled scope.
-- One account (`contas`, created only by `minha_conta_iniciar`) serves PPV buyers and athletes; courtesies are applied in that function on first login; why: one identity and origin recorded from the first sign-in.
-- Registry status is derived by `registro_ativo` (paid/courtesy `registros` or a current belt) and the Legend Path by `caminho_da_lenda`; registry rows are written only by the payments webhook or database functions; why: payment and rules stay server-side.
-- Barriers (age, styles) and the founder window are read from `config_registro` and re-checked in `create-checkout`; founder renewals charge the price stored on the account; why: the browser never decides who may pay or how much.
-- New accounts get a Registry number via `atribuir_numero` after the first active registry; why: numbering is a rule, not panel data.
-- Only staff (admin, consultor) can mark a goal as verified, enforced by trigger on `metas_atleta`; consultants never read `registros` or payments; why: least privilege.
-- Event applications live in `aplicacoes` (one per account and event), configured per event in `janelas_aplicacao`; athletes create them only via `aplicar_evento` (re-checks registry, verified goals, window, category, ID document) and confirm via `confirmar_presenca`; staff may only change the decision status, enforced by trigger; why: rules stay server-side.
-- The application fee is read from `janelas_aplicacao` by `create-checkout`, paid status set only by the webhook, refunds of a cancelled event only by `admin-aplicacoes-reembolso`; internal notes live in `aplicacoes_notas`, staff-only; why: the browser never sets amounts or payment state and athletes never see notes.
-- Every checkout requires a signed-in account; why: purchases belong to the account, not to a typed e-mail.
-- Promoter panel numbers and action lists are computed only by admin-checked `promotor_*` database functions (internal helpers `_promotor_*` are not executable by clients); WhatsApp texts live in `mensagens_whatsapp` and origin links in `links_origem`; why: the browser never aggregates payment data and every number opens the list behind it.
-- Legal texts live in `documentos_legais` (versioned by trigger on every text change) and company identity in `dados_empresa`, rendered by `DocumentoLegal` with `{variavel}` substitution; why: the owner and the lawyer edit them in the panel without code changes.
-- Recurring registry charges are one row per paid invoice in `cobrancas`, written only by the payments webhook (`invoice.paid`); promoter revenue reads monthly income from it; why: every month's charge counts once.
-- PPV purchases store the event chosen by `create-checkout` (next on-sale event with that plan) in `assinaturas.evento_id`, plus the last visit origin in `origem_ultima`; why: the browser never picks the event and both first and closing origin are reported.
-- Legal translations live in `documentos_legais_traducoes` (en, es; versioned by the same trigger); Portuguese stays in `documentos_legais`; pages fall back to Portuguese with a notice; why: each language has its own version history.
-- Accepted terms are recorded in `aceites` (document, version, language, context) only by `create-checkout` or `registrar_aceite`; why: proof of which version each person accepted.
+Subdirectories may have their own `AGENTS.md`; read it before changing files there.
+
+- Operational data (texts, plans, events, settings, legal texts) lives in the database, edited in the admin panel; why: owner runs the site without code.
+- Site texts: bundled i18n JSON are defaults; `conteudos` rows override at runtime; why: never blank if the database fails.
+- Charged amounts come only from edge functions/payment provider, never the browser; payment status is written only by the payments webhook; why: tamper-proof single source.
+- Admin permission uses `has_role` in RLS and on the server, roles in `user_roles`; every table has RLS, public reads only for public-site data; why: repo and API are public.
+- Never editable from the panel: webhook, access rules, role checks, keys, integrations.
+- Public site has two doors, PPV and Atletas; Membro and Newsletter plans stay inactive, never deleted; why: keeps old data intact.
+- History and card live in `eventos`, `categorias`, `atletas`, `lutas`, `cinturoes`, `rankings` (one `lutas` structure for past and upcoming); Home numbers and countdown derive from them; why: one source of truth.
+- Event/fight status changes logged in `status_historico` by trigger; accounts and purchases record origin from day one; why: unrecorded data cannot be recovered.
+- Registry numbers only via `reservar_registros_legends` and `atribuir_numero`; why: numbering is a rule.
+- Work proceeds in owner-approved blocks; a block starts only after the owner writes "aprovado".
+- One account (`contas`, created only by `minha_conta_iniciar`, which also applies courtesies and links e-mail-matched old purchases) serves PPV buyers and athletes; every checkout needs a signed-in account; why: one identity.
+- Registry status via `registro_ativo`, Legend Path via `caminho_da_lenda`; registry rows written only by webhook or DB functions; barriers and founder window read from `config_registro` and re-checked in `create-checkout`; why: rules stay server-side.
+- Only staff verify goals (trigger on `metas_atleta`); consultants never read payments; why: least privilege.
+- Applications: `aplicacoes` per account/event, configured in `janelas_aplicacao`, created only via `aplicar_evento`, confirmed via `confirmar_presenca`; fee read by `create-checkout`, refunds only via `admin-aplicacoes-reembolso`; staff notes in `aplicacoes_notas`; why: rules server-side.
+- Promoter numbers/lists only from admin-checked `promotor_*` functions (`_promotor_*` not client-executable); WhatsApp texts in `mensagens_whatsapp`, origin links in `links_origem`; why: browser never aggregates payments.
+- Monthly registry revenue: one `cobrancas` row per paid invoice, webhook only; PPV purchases store server-chosen `evento_id` and `origem_ultima` in `assinaturas`; why: real monthly revenue, correct event, first and closing origin.
+- Legal texts: PT in `documentos_legais`, EN/ES in `documentos_legais_traducoes`, both versioned by trigger, company identity in `dados_empresa`; accepted versions recorded in `aceites` only by `create-checkout` or `registrar_aceite`; why: lawyer edits in panel and acceptance is provable.
