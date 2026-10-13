@@ -11,11 +11,7 @@ import CheckoutRetorno from './pages/CheckoutRetorno';
 import Blog from './pages/Blog';
 import Atletas from './pages/Atletas';
 import PPV from './pages/PPV';
-import Privacy from './pages/Privacy';
-import Terms from './pages/Terms';
-import Refund from './pages/Refund';
-import TermosAtleta from './pages/TermosAtleta';
-import PoliticaDados from './pages/PoliticaDados';
+import DocumentoLegal from './pages/DocumentoLegal';
 import Admin from './pages/Admin';
 import AdminLogin from './pages/AdminLogin';
 import Entrar from './pages/Entrar';
@@ -39,11 +35,11 @@ const App = () => (
             <Route path="/checkout/retorno" element={<CheckoutRetorno />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/ppv" element={<PPV />} />
-            <Route path="/privacidade" element={<Privacy />} />
-            <Route path="/termos" element={<Terms />} />
-            <Route path="/reembolso" element={<Refund />} />
-            <Route path="/termos-atleta" element={<TermosAtleta />} />
-            <Route path="/politica-dados" element={<PoliticaDados />} />
+            <Route path="/privacidade" element={<DocumentoLegal slug="privacidade" />} />
+            <Route path="/termos" element={<DocumentoLegal slug="termos" />} />
+            <Route path="/reembolso" element={<DocumentoLegal slug="reembolso" />} />
+            <Route path="/termos-atleta" element={<DocumentoLegal slug="termos-atleta" />} />
+            <Route path="/politica-dados" element={<DocumentoLegal slug="privacidade" />} />
             <Route path="/entrar" element={<Entrar />} />
             <Route path="/redefinir-senha" element={<RedefinirSenha />} />
             <Route path="/atleta" element={<AreaAtleta />} />

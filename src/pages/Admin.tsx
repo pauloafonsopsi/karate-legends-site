@@ -13,6 +13,7 @@ import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 import AdminConteudos from '@/components/admin/AdminConteudos';
 import AdminPlanos from '@/components/admin/AdminPlanos';
 import AdminPromotor from '@/components/admin/AdminPromotor';
+import AdminLegal from '@/components/admin/AdminLegal';
 import AdminSenha from '@/components/admin/AdminSenha';
 import AdminLegends from '@/components/admin/AdminLegends';
 import AdminRegistro from '@/components/admin/AdminRegistro';
@@ -95,7 +96,7 @@ const PLANO_LABEL: Record<string, string> = {
   newsletter_mensal: 'Newsletter R$ 29,90/mês',
 };
 
-type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv' | 'conteudos' | 'planos' | 'dados' | 'legends' | 'registro' | 'aplicacoes';
+type TabKey = 'overview' | 'atletas' | 'membros' | 'pagamentos' | 'ppv' | 'conteudos' | 'planos' | 'dados' | 'legends' | 'registro' | 'aplicacoes' | 'legal';
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -267,6 +268,7 @@ const Admin = () => {
     { key: 'ppv', label: 'Lista PPV', icon: Bell, count: waitlist.length },
     { key: 'conteudos', label: 'Conteúdos', icon: FileText },
     { key: 'planos', label: 'Planos', icon: FileText },
+    { key: 'legal', label: 'Textos legais', icon: FileText },
   ];
 
   return (
@@ -536,6 +538,7 @@ const Admin = () => {
       {tab === 'conteudos' && <AdminConteudos />}
       {tab === 'planos' && <AdminPlanos />}
       {tab === 'dados' && <AdminPromotor />}
+      {tab === 'legal' && <AdminLegal />}
       {tab === 'legends' && <AdminLegends />}
       {tab === 'registro' && <AdminRegistro />}
       {tab === 'aplicacoes' && <AdminAplicacoes />}

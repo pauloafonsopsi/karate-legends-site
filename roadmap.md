@@ -22,4 +22,4 @@
 - [x] Bloco 2: conta e Registro Legends.
 - [x] Bloco 3: aplicação por evento (e riscos: PPV ligado à conta, envio público de arquivos fechado).
 - [x] Bloco 4: painel do promotor.
-- [ ] Bloco 5: publicação.
+- [ ] Bloco 5: textos legais no painel (feito); publicação aguarda dados da empresa, revisão do advogado, Stripe em produção e autorização do Paulo.
