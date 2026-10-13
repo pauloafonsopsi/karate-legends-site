@@ -115,7 +115,7 @@ Deno.serve(async (req) => {
       const nome = `Aplicação ${(ap as any).eventos?.nome ?? 'Karate Legends'}`;
       const customerId = await resolveOrCreateCustomer(stripe, { email: user.email, userId: user.id });
       const metadata: Record<string, string> = { price_id: priceId, tipo: 'aplicacao', aplicacaoId: ap.id, userId: user.id,
-        ...(user.email && { email: user.email }), ...(ap.origem && { origem: ap.origem }) };
+        ...(user.email && { email: user.email }), ...(ap.origem && { origem: ap.origem }), ...(ultima && { origem_ultima: ultima }) };
       const session = await stripe.checkout.sessions.create({
         // Valor lido do banco no servidor; o navegador só informa qual aplicação.
         line_items: [{ price_data: { currency: 'brl', product_data: { name: nome }, unit_amount: j.taxa_centavos }, quantity: 1 }],
@@ -137,8 +137,18 @@ Deno.serve(async (req) => {
     let productDescription: string | undefined;
     if (!isRecurring) productDescription = (await stripe.products.retrieve(productId)).name;
 
+    // PPV: o evento é escolhido aqui (próximo evento à venda com este plano), nunca pelo navegador.
+    let eventoId: string | null = null;
+    if (!isRegistro && !isRecurring) {
+      const { data: ev } = await admin.from('eventos').select('id').eq('ppv_plano_chave', priceId).eq('status', 'agendado').eq('publicado', true)
+        .order('data_evento', { ascending: true, nullsFirst: false }).limit(1).maybeSingle();
+      eventoId = ev?.id ?? null;
+    }
+
     const metadata: Record<string, string> = {
       price_id: priceId,
+      ...(eventoId && { evento_id: eventoId }),
+      ...(ultima && { origem_ultima: ultima }),
       ...(email && { email }),
       ...(user && { userId: user.id }),
       ...(contaOrigem && { origem: contaOrigem }),
