@@ -669,6 +669,44 @@ export type Database = {
           },
         ]
       }
+      links_origem: {
+        Row: {
+          atleta_id: string | null
+          campanha: string | null
+          canal: string | null
+          criado_em: string
+          destino: string
+          id: string
+          slug: string
+        }
+        Insert: {
+          atleta_id?: string | null
+          campanha?: string | null
+          canal?: string | null
+          criado_em?: string
+          destino?: string
+          id?: string
+          slug: string
+        }
+        Update: {
+          atleta_id?: string | null
+          campanha?: string | null
+          canal?: string | null
+          criado_em?: string
+          destino?: string
+          id?: string
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "links_origem_atleta_id_fkey"
+            columns: ["atleta_id"]
+            isOneToOne: false
+            referencedRelation: "atletas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lista_espera_ppv: {
         Row: {
           criado_em: string
@@ -825,6 +863,24 @@ export type Database = {
           plano?: string
           status?: string
           whatsapp?: string
+        }
+        Relationships: []
+      }
+      mensagens_whatsapp: {
+        Row: {
+          atualizado_em: string
+          chave: string
+          texto: string
+        }
+        Insert: {
+          atualizado_em?: string
+          chave: string
+          texto: string
+        }
+        Update: {
+          atualizado_em?: string
+          chave?: string
+          texto?: string
         }
         Relationships: []
       }
@@ -1111,6 +1167,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _promotor_contas: {
+        Args: never
+        Returns: {
+          aplicou: boolean
+          apto: boolean
+          cidade: string
+          completo: boolean
+          conta_id: string
+          convocado: boolean
+          criado_em: string
+          email: string
+          fundador: boolean
+          nome: string
+          numero: number
+          origem: string
+          pago: boolean
+          pendentes: number
+          whatsapp: string
+        }[]
+      }
+      _promotor_pagamentos: {
+        Args: { _env: string }
+        Returns: {
+          conta_id: string
+          data: string
+          email: string
+          id: string
+          origem: string
+          price_id: string
+          produto: string
+          user_id: string
+          valor: number
+        }[]
+      }
       aplicar_evento: {
         Args: {
           _aceite: boolean
@@ -1135,6 +1225,12 @@ export type Database = {
         Args: { _indicacao?: string; _origem?: string }
         Returns: string
       }
+      promotor_contagens: { Args: never; Returns: Json }
+      promotor_lista: {
+        Args: { _env?: string; _lista: string; _param?: string }
+        Returns: Json
+      }
+      promotor_resumo: { Args: { _env?: string }; Returns: Json }
       registro_ativo: { Args: { _conta_id: string }; Returns: boolean }
       reservar_registros_legends: { Args: never; Returns: number }
     }
