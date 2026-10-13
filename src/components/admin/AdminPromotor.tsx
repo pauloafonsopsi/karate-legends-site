@@ -11,7 +11,7 @@ type Resumo = {
   funil: Record<'conta' | 'cadastro' | 'pago' | 'apto' | 'aplicou' | 'convocado', number>;
   fundadores: number; fundador_ate: string | null;
   receita: { produto: string; mes: string; total: number; qtd: number }[];
-  origem: { origem: string; contas: number; compras: number }[];
+  origem: { origem: string; contas: number; compras: number; fechou: number }[];
   aplicacoes_categoria: { evento_id: string; evento: string; categoria_id: string | null; categoria: string; qtd: number }[];
   ppv_evento: { chave: string; evento: string; qtd: number; total: number; sem_conta: number }[];
   cidades: { cidade: string; atletas: number; compradores: number }[];
@@ -321,7 +321,7 @@ const Links = () => {
   type L = { id: string; slug: string; canal: string | null; campanha: string | null; atleta_id: string | null; destino: string; criado_em: string };
   const [links, setLinks] = useState<L[] | null>(null);
   const [atletas, setAtletas] = useState<{ id: string; nome: string }[]>([]);
-  const [contagem, setContagem] = useState<Record<string, { contas: number; compras: number }>>({});
+  const [contagem, setContagem] = useState<Record<string, { contas: number; compras: number; fechou: number }>>({});
   const [form, setForm] = useState({ canal: '', campanha: '', atleta_id: '', destino: '/' });
   const [busy, setBusy] = useState(false);
   const carregar = useCallback(async () => {
@@ -331,7 +331,7 @@ const Links = () => {
       supabase.rpc('promotor_resumo', { _env: getStripeEnvironment() }),
     ]);
     setLinks((l.data ?? []) as L[]); setAtletas(a.data ?? []);
-    setContagem(Object.fromEntries(((r.data as unknown as Resumo | null)?.origem ?? []).map(o => [o.origem, { contas: o.contas, compras: o.compras }])));
+    setContagem(Object.fromEntries(((r.data as unknown as Resumo | null)?.origem ?? []).map(o => [o.origem, { contas: o.contas, compras: o.compras, fechou: o.fechou ?? 0 }])));
   }, []);
   useEffect(() => { carregar(); }, [carregar]);
   const atletaNome = atletas.find(a => a.id === form.atleta_id)?.nome ?? '';
@@ -365,7 +365,7 @@ const Links = () => {
           {links.map(l => (
             <li key={l.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="flex-1 min-w-[200px]"><p className="font-medium">{l.slug}</p><p className="text-xs text-muted-foreground break-all">{url(l)}</p></div>
-              <span className="text-sm text-gold">{contagem[l.slug]?.contas ?? 0} conta(s), {contagem[l.slug]?.compras ?? 0} compra(s)</span>
+              <span className="text-sm text-gold">Trouxe: {contagem[l.slug]?.contas ?? 0} conta(s), {contagem[l.slug]?.compras ?? 0} compra(s). Fechou: {contagem[l.slug]?.fechou ?? 0} compra(s)</span>
               <button onClick={() => { navigator.clipboard.writeText(url(l)); toast.success('Link copiado.'); }} className="btn-outline-gold text-sm min-h-[44px] flex items-center gap-2"><Copy size={14} /> Copiar</button>
             </li>
           ))}

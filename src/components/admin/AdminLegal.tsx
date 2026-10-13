@@ -81,10 +81,10 @@ const AdminLegal = () => {
         {doc && edit && (
           <div className="surface-elevated p-5 space-y-4">
             <div className="flex flex-wrap justify-between gap-3 items-center">
-              <p className="text-sm text-muted-foreground">{doc.versao === 0 ? 'Sem tradução ainda; o site mostra o português com aviso.' : <>Versão {doc.versao}, atualizada em</>} {new Date(doc.atualizado_em).toLocaleDateString('pt-BR')}</p>
+              <p className="text-sm text-muted-foreground">{doc.versao === 0 ? 'Sem tradução ainda; o site mostra o português com aviso.' : <>Versão {doc.versao}, atualizada em {new Date(doc.atualizado_em).toLocaleDateString('pt-BR')}</>}</p>
               <div className="flex gap-2">
                 <button onClick={() => setPrevia(!previa)} className="btn-outline-gold text-sm min-h-[44px]">{previa ? 'Editar' : 'Prévia'}</button>
-                <a href={ROTA[doc.slug]} target="_blank" rel="noopener noreferrer" className="btn-outline-gold text-sm min-h-[44px] flex items-center gap-2">Ver no site <ExternalLink size={12} /></a>
+                <a href={`${ROTA[doc.slug]}${idioma !== 'pt' ? `?lng=${idioma}` : ''}`} target="_blank" rel="noopener noreferrer" className="btn-outline-gold text-sm min-h-[44px] flex items-center gap-2">Ver no site <ExternalLink size={12} /></a>
               </div>
             </div>
             {previa ? <Corpo texto={edit.corpo} empresa={empresa} /> : <>
