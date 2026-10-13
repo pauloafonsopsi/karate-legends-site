@@ -38,7 +38,7 @@ const ACOES: { chave: string; titulo: string; dica: string }[] = [
 const TITULO_LISTA: Record<string, string> = {
   ...Object.fromEntries(ACOES.map(a => [a.chave, a.titulo])),
   ...Object.fromEntries(FUNIL.map(([k, t]) => [`funil_${k}`, `Funil: ${t}`])),
-  fundadores: 'Classe Fundadora', origem: 'Contas pela origem', origem_compras: 'Compras pela origem', cidade: 'Contas da cidade',
+  fundadores: 'Classe Fundadora', origem: 'Contas pela origem', origem_compras: 'Compras pela origem', origem_fechou: 'Compras fechadas pela origem', cidade: 'Contas da cidade',
   receita: 'Pagamentos', ppv: 'Compras de PPV', aplicacoes: 'Aplicações da categoria',
 };
 const COLS: Coluna[] = [
@@ -170,6 +170,9 @@ const AdminPromotor = () => {
         <Bloco titulo="Origem das compras">
           <Linhas itens={resumo.origem.filter(o => o.compras).map(o => ({ k: o.origem, rotulo: o.origem, valor: String(o.compras), onClick: () => abrir('origem_compras', o.origem) }))} />
         </Bloco>
+        <Bloco titulo="Origem que fechou a compra">
+          <Linhas itens={resumo.origem.filter(o => o.fechou).map(o => ({ k: o.origem, rotulo: o.origem, valor: String(o.fechou), onClick: () => abrir('origem_fechou', o.origem) }))} />
+        </Bloco>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -202,6 +205,17 @@ const Lista = ({ lista, param, env, msg, onVoltar }: { lista: string; param: str
   const [erro, setErro] = useState(false);
   const [ficha, setFicha] = useState<Pessoa | null>(null);
   const [exp, setExp] = useState(false);
+  const [aceites, setAceites] = useState<{ slug: string; idioma: string; versao: number; contexto: string; aceito_em: string }[] | null>(null);
+  useEffect(() => {
+    setAceites(null);
+    if (!ficha?.email) return;
+    (async () => {
+      const { data: c } = await supabase.from('contas').select('id').ilike('email', ficha.email!).maybeSingle();
+      if (!c) { setAceites([]); return; }
+      const { data } = await supabase.from('aceites').select('slug,idioma,versao,contexto,aceito_em').eq('conta_id', c.id).order('aceito_em', { ascending: false }).limit(30);
+      setAceites(data ?? []);
+    })();
+  }, [ficha]);
 
   const carregar = useCallback(async () => {
     setErro(false); setLinhas(null);
@@ -280,6 +294,9 @@ const Lista = ({ lista, param, env, msg, onVoltar }: { lista: string; param: str
               <p className="form-label">Mensagem</p>
               <p className="text-sm surface-elevated p-3 whitespace-pre-wrap">{texto(ficha)}</p>
               {ficha.whatsapp && <a href={wa(ficha.whatsapp, texto(ficha))} target="_blank" rel="noopener noreferrer" className="btn-gold text-sm min-h-[44px] flex items-center justify-center gap-2"><MessageCircle size={14} /> Abrir WhatsApp</a>}
+              <div><p className="eyebrow mb-2">Termos aceitos</p>
+                {!aceites ? <div className="h-10 surface-elevated animate-pulse" aria-label="Carregando" /> : !aceites.length ? <p className="text-sm text-muted-foreground">Nenhum aceite registrado.</p> : (
+                  <ul className="text-sm space-y-1">{aceites.map((a, i) => <li key={i}>{a.slug}, versão {a.versao} ({a.idioma.toUpperCase()}), {dt(a.aceito_em)}</li>)}</ul>)}</div>
               {ficha.email && <button onClick={() => { navigator.clipboard.writeText(ficha.email!); toast.success('E-mail copiado.'); }} className="btn-outline-gold text-sm min-h-[44px] w-full flex items-center justify-center gap-2"><Copy size={14} /> Copiar e-mail</button>}
             </div>
           </>}
