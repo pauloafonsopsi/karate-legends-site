@@ -481,6 +481,63 @@ export type Database = {
           },
         ]
       }
+      dados_empresa: {
+        Row: {
+          atualizado_em: string
+          cnpj: string | null
+          email_contato: string | null
+          endereco: string | null
+          foro: string | null
+          id: boolean
+          razao_social: string | null
+        }
+        Insert: {
+          atualizado_em?: string
+          cnpj?: string | null
+          email_contato?: string | null
+          endereco?: string | null
+          foro?: string | null
+          id?: boolean
+          razao_social?: string | null
+        }
+        Update: {
+          atualizado_em?: string
+          cnpj?: string | null
+          email_contato?: string | null
+          endereco?: string | null
+          foro?: string | null
+          id?: boolean
+          razao_social?: string | null
+        }
+        Relationships: []
+      }
+      documentos_legais: {
+        Row: {
+          atualizado_em: string
+          atualizado_por: string | null
+          corpo: string
+          slug: string
+          titulo: string
+          versao: number
+        }
+        Insert: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          corpo?: string
+          slug: string
+          titulo: string
+          versao?: number
+        }
+        Update: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          corpo?: string
+          slug?: string
+          titulo?: string
+          versao?: number
+        }
+        Relationships: []
+      }
       eventos: {
         Row: {
           atualizado_em: string
