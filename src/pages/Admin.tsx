@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import prestigeLogo from '@/assets/karate-legends-prestige-lockup.png';
 import AdminConteudos from '@/components/admin/AdminConteudos';
 import AdminPlanos from '@/components/admin/AdminPlanos';
-import AdminDados from '@/components/admin/AdminDados';
+import AdminPromotor from '@/components/admin/AdminPromotor';
 import AdminSenha from '@/components/admin/AdminSenha';
 import AdminLegends from '@/components/admin/AdminLegends';
 import AdminRegistro from '@/components/admin/AdminRegistro';
@@ -260,7 +260,7 @@ const Admin = () => {
     { key: 'legends', label: 'História e card', icon: FileText },
     { key: 'registro', label: 'Registro Legends', icon: UserSquare2 },
     { key: 'aplicacoes', label: 'Aplicações', icon: UserSquare2 },
-    { key: 'dados', label: 'Central de Dados', icon: Inbox },
+    { key: 'dados', label: 'Promotor', icon: Inbox },
     { key: 'atletas', label: 'Atletas', icon: UserSquare2, count: atletas.length },
     { key: 'membros', label: 'Membros', icon: Users, count: membros.length },
     { key: 'pagamentos', label: 'Pagamentos', icon: DollarSign, count: assinaturas.length },
@@ -535,7 +535,7 @@ const Admin = () => {
 
       {tab === 'conteudos' && <AdminConteudos />}
       {tab === 'planos' && <AdminPlanos />}
-      {tab === 'dados' && <AdminDados />}
+      {tab === 'dados' && <AdminPromotor />}
       {tab === 'legends' && <AdminLegends />}
       {tab === 'registro' && <AdminRegistro />}
       {tab === 'aplicacoes' && <AdminAplicacoes />}
