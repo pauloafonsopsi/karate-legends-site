@@ -11,7 +11,7 @@ type Resumo = {
   funil: Record<'conta' | 'cadastro' | 'pago' | 'apto' | 'aplicou' | 'convocado', number>;
   fundadores: number; fundador_ate: string | null;
   receita: { produto: string; mes: string; total: number; qtd: number }[];
-  origem: { origem: string; contas: number; compras: number }[];
+  origem: { origem: string; contas: number; compras: number; fechou: number }[];
   aplicacoes_categoria: { evento_id: string; evento: string; categoria_id: string | null; categoria: string; qtd: number }[];
   ppv_evento: { chave: string; evento: string; qtd: number; total: number; sem_conta: number }[];
   cidades: { cidade: string; atletas: number; compradores: number }[];
@@ -38,7 +38,7 @@ const ACOES: { chave: string; titulo: string; dica: string }[] = [
 const TITULO_LISTA: Record<string, string> = {
   ...Object.fromEntries(ACOES.map(a => [a.chave, a.titulo])),
   ...Object.fromEntries(FUNIL.map(([k, t]) => [`funil_${k}`, `Funil: ${t}`])),
-  fundadores: 'Classe Fundadora', origem: 'Contas pela origem', origem_compras: 'Compras pela origem', cidade: 'Contas da cidade',
+  fundadores: 'Classe Fundadora', origem: 'Contas pela origem', origem_compras: 'Compras pela origem', origem_fechou: 'Compras fechadas pela origem', cidade: 'Contas da cidade',
   receita: 'Pagamentos', ppv: 'Compras de PPV', aplicacoes: 'Aplicações da categoria',
 };
 const COLS: Coluna[] = [
@@ -170,6 +170,9 @@ const AdminPromotor = () => {
         <Bloco titulo="Origem das compras">
           <Linhas itens={resumo.origem.filter(o => o.compras).map(o => ({ k: o.origem, rotulo: o.origem, valor: String(o.compras), onClick: () => abrir('origem_compras', o.origem) }))} />
         </Bloco>
+        <Bloco titulo="Origem que fechou a compra">
+          <Linhas itens={resumo.origem.filter(o => o.fechou).map(o => ({ k: o.origem, rotulo: o.origem, valor: String(o.fechou), onClick: () => abrir('origem_fechou', o.origem) }))} />
+        </Bloco>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -202,6 +205,17 @@ const Lista = ({ lista, param, env, msg, onVoltar }: { lista: string; param: str
   const [erro, setErro] = useState(false);
   const [ficha, setFicha] = useState<Pessoa | null>(null);
   const [exp, setExp] = useState(false);
+  const [aceites, setAceites] = useState<{ slug: string; idioma: string; versao: number; contexto: string; aceito_em: string }[] | null>(null);
+  useEffect(() => {
+    setAceites(null);
+    if (!ficha?.email) return;
+    (async () => {
+      const { data: c } = await supabase.from('contas').select('id').ilike('email', ficha.email!).maybeSingle();
+      if (!c) { setAceites([]); return; }
+      const { data } = await supabase.from('aceites').select('slug,idioma,versao,contexto,aceito_em').eq('conta_id', c.id).order('aceito_em', { ascending: false }).limit(30);
+      setAceites(data ?? []);
+    })();
+  }, [ficha]);
 
   const carregar = useCallback(async () => {
     setErro(false); setLinhas(null);
@@ -280,6 +294,9 @@ const Lista = ({ lista, param, env, msg, onVoltar }: { lista: string; param: str
               <p className="form-label">Mensagem</p>
               <p className="text-sm surface-elevated p-3 whitespace-pre-wrap">{texto(ficha)}</p>
               {ficha.whatsapp && <a href={wa(ficha.whatsapp, texto(ficha))} target="_blank" rel="noopener noreferrer" className="btn-gold text-sm min-h-[44px] flex items-center justify-center gap-2"><MessageCircle size={14} /> Abrir WhatsApp</a>}
+              <div><p className="eyebrow mb-2">Termos aceitos</p>
+                {!aceites ? <div className="h-10 surface-elevated animate-pulse" aria-label="Carregando" /> : !aceites.length ? <p className="text-sm text-muted-foreground">Nenhum aceite registrado.</p> : (
+                  <ul className="text-sm space-y-1">{aceites.map((a, i) => <li key={i}>{a.slug}, versão {a.versao} ({a.idioma.toUpperCase()}), {dt(a.aceito_em)}</li>)}</ul>)}</div>
               {ficha.email && <button onClick={() => { navigator.clipboard.writeText(ficha.email!); toast.success('E-mail copiado.'); }} className="btn-outline-gold text-sm min-h-[44px] w-full flex items-center justify-center gap-2"><Copy size={14} /> Copiar e-mail</button>}
             </div>
           </>}
@@ -321,7 +338,7 @@ const Links = () => {
   type L = { id: string; slug: string; canal: string | null; campanha: string | null; atleta_id: string | null; destino: string; criado_em: string };
   const [links, setLinks] = useState<L[] | null>(null);
   const [atletas, setAtletas] = useState<{ id: string; nome: string }[]>([]);
-  const [contagem, setContagem] = useState<Record<string, { contas: number; compras: number }>>({});
+  const [contagem, setContagem] = useState<Record<string, { contas: number; compras: number; fechou: number }>>({});
   const [form, setForm] = useState({ canal: '', campanha: '', atleta_id: '', destino: '/' });
   const [busy, setBusy] = useState(false);
   const carregar = useCallback(async () => {
@@ -331,7 +348,7 @@ const Links = () => {
       supabase.rpc('promotor_resumo', { _env: getStripeEnvironment() }),
     ]);
     setLinks((l.data ?? []) as L[]); setAtletas(a.data ?? []);
-    setContagem(Object.fromEntries(((r.data as unknown as Resumo | null)?.origem ?? []).map(o => [o.origem, { contas: o.contas, compras: o.compras }])));
+    setContagem(Object.fromEntries(((r.data as unknown as Resumo | null)?.origem ?? []).map(o => [o.origem, { contas: o.contas, compras: o.compras, fechou: o.fechou ?? 0 }])));
   }, []);
   useEffect(() => { carregar(); }, [carregar]);
   const atletaNome = atletas.find(a => a.id === form.atleta_id)?.nome ?? '';
@@ -365,7 +382,7 @@ const Links = () => {
           {links.map(l => (
             <li key={l.id} className="flex flex-wrap items-center gap-3 px-4 py-3">
               <div className="flex-1 min-w-[200px]"><p className="font-medium">{l.slug}</p><p className="text-xs text-muted-foreground break-all">{url(l)}</p></div>
-              <span className="text-sm text-gold">{contagem[l.slug]?.contas ?? 0} conta(s), {contagem[l.slug]?.compras ?? 0} compra(s)</span>
+              <span className="text-sm text-gold">Trouxe: {contagem[l.slug]?.contas ?? 0} conta(s), {contagem[l.slug]?.compras ?? 0} compra(s). Fechou: {contagem[l.slug]?.fechou ?? 0} compra(s)</span>
               <button onClick={() => { navigator.clipboard.writeText(url(l)); toast.success('Link copiado.'); }} className="btn-outline-gold text-sm min-h-[44px] flex items-center gap-2"><Copy size={14} /> Copiar</button>
             </li>
           ))}

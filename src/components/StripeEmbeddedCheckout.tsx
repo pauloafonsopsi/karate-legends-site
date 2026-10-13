@@ -2,6 +2,7 @@ import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { supabase } from "@/integrations/supabase/client";
 import { lerOrigem } from "@/lib/origem";
+import i18n from "@/lib/i18n";
 
 interface StripeEmbeddedCheckoutProps {
   priceId: string;
@@ -19,6 +20,8 @@ export function StripeEmbeddedCheckout({ priceId, returnUrl, aplicacaoId }: Stri
         returnUrl: returnUrl ?? `${window.location.origin}/checkout/retorno?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
         origem: lerOrigem().origem,
+        origemUltima: lerOrigem().ultima,
+        idioma: (i18n.language || 'pt').slice(0, 2),
       },
     });
     if (error || !data?.clientSecret) {
