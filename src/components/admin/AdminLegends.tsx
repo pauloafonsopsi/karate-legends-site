@@ -155,6 +155,7 @@ const AdminLegends = () => {
               <div className="flex-1 min-w-[200px]">
                 <p className="font-display text-xl uppercase">{e.nome}</p>
                 <p className="text-xs text-muted-foreground">{FORMATO[e.formato]}  |  {STATUS_EVENTO[e.status]}  |  {dataBR(e.data_evento)}  |  {d.lutas.filter(l => l.evento_id === e.id).length} lutas{e.publicado ? '' : '  |  oculto'}</p>
+                {e.status === 'agendado' && !e.ppv_plano_chave && <p role="note" className="text-xs text-gold mt-1">Sem plano de PPV: as compras não ficam ligadas a este evento. Edite e preencha o plano.</p>}
               </div>
               <button onClick={() => setEvSel(e.id)} className="btn-outline-gold min-h-[44px]">Card</button>
               <button onClick={() => novo('eventos', e)} className="btn-outline-gold min-h-[44px]">Editar</button>
