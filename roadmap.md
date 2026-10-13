@@ -21,5 +21,5 @@
 - [ ] Bloco 1: carga das 5 edições (aguarda dados do Paulo).
 - [x] Bloco 2: conta e Registro Legends.
 - [x] Bloco 3: aplicação por evento (e riscos: PPV ligado à conta, envio público de arquivos fechado).
-- [ ] Bloco 4: painel do promotor.
+- [x] Bloco 4: painel do promotor.
 - [ ] Bloco 5: publicação.
