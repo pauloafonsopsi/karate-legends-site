@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      aceites: {
+        Row: {
+          aceito_em: string
+          conta_id: string
+          contexto: string
+          id: string
+          idioma: string
+          slug: string
+          versao: number
+        }
+        Insert: {
+          aceito_em?: string
+          conta_id: string
+          contexto: string
+          id?: string
+          idioma: string
+          slug: string
+          versao: number
+        }
+        Update: {
+          aceito_em?: string
+          conta_id?: string
+          contexto?: string
+          id?: string
+          idioma?: string
+          slug?: string
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aceites_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       aplicacoes: {
         Row: {
           aceite_termos: boolean
@@ -129,9 +167,11 @@ export type Database = {
           criado_em: string
           email: string
           environment: string
+          evento_id: string | null
           id: string
           moeda: string | null
           origem: string | null
+          origem_ultima: string | null
           periodo_fim: string | null
           periodo_inicio: string | null
           price_id: string | null
@@ -149,9 +189,11 @@ export type Database = {
           criado_em?: string
           email: string
           environment?: string
+          evento_id?: string | null
           id?: string
           moeda?: string | null
           origem?: string | null
+          origem_ultima?: string | null
           periodo_fim?: string | null
           periodo_inicio?: string | null
           price_id?: string | null
@@ -169,9 +211,11 @@ export type Database = {
           criado_em?: string
           email?: string
           environment?: string
+          evento_id?: string | null
           id?: string
           moeda?: string | null
           origem?: string | null
+          origem_ultima?: string | null
           periodo_fim?: string | null
           periodo_inicio?: string | null
           price_id?: string | null
@@ -183,7 +227,15 @@ export type Database = {
           user_id?: string | null
           valor_centavos?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "assinaturas_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       atletas: {
         Row: {
@@ -314,6 +366,56 @@ export type Database = {
             columns: ["luta_id"]
             isOneToOne: false
             referencedRelation: "lutas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cobrancas: {
+        Row: {
+          assinatura_ref: string | null
+          conta_id: string | null
+          criado_em: string
+          environment: string
+          id: string
+          origem: string | null
+          origem_ultima: string | null
+          pago_em: string
+          stripe_ref: string
+          tipo: string
+          valor_centavos: number | null
+        }
+        Insert: {
+          assinatura_ref?: string | null
+          conta_id?: string | null
+          criado_em?: string
+          environment: string
+          id?: string
+          origem?: string | null
+          origem_ultima?: string | null
+          pago_em?: string
+          stripe_ref: string
+          tipo: string
+          valor_centavos?: number | null
+        }
+        Update: {
+          assinatura_ref?: string | null
+          conta_id?: string | null
+          criado_em?: string
+          environment?: string
+          id?: string
+          origem?: string | null
+          origem_ultima?: string | null
+          pago_em?: string
+          stripe_ref?: string
+          tipo?: string
+          valor_centavos?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cobrancas_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas"
             referencedColumns: ["id"]
           },
         ]
@@ -537,6 +639,44 @@ export type Database = {
           versao?: number
         }
         Relationships: []
+      }
+      documentos_legais_traducoes: {
+        Row: {
+          atualizado_em: string
+          atualizado_por: string | null
+          corpo: string
+          idioma: string
+          slug: string
+          titulo: string
+          versao: number
+        }
+        Insert: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          corpo: string
+          idioma: string
+          slug: string
+          titulo: string
+          versao?: number
+        }
+        Update: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          corpo?: string
+          idioma?: string
+          slug?: string
+          titulo?: string
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documentos_legais_traducoes_slug_fkey"
+            columns: ["slug"]
+            isOneToOne: false
+            referencedRelation: "documentos_legais"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       eventos: {
         Row: {
@@ -1250,8 +1390,10 @@ export type Database = {
           conta_id: string
           data: string
           email: string
+          evento_id: string
           id: string
           origem: string
+          origem_ultima: string
           price_id: string
           produto: string
           user_id: string
@@ -1288,6 +1430,10 @@ export type Database = {
         Returns: Json
       }
       promotor_resumo: { Args: { _env?: string }; Returns: Json }
+      registrar_aceite: {
+        Args: { _contexto: string; _idioma: string; _slugs: string[] }
+        Returns: number
+      }
       registro_ativo: { Args: { _conta_id: string }; Returns: boolean }
       reservar_registros_legends: { Args: never; Returns: number }
     }
