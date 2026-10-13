@@ -11,9 +11,12 @@ export const Corpo = ({ texto, empresa }: { texto: string; empresa: Empresa }) =
     .map(k => [k, (empresa[k as keyof Empresa] as string | null) || '[a preencher]']));
   return (
     <div className="space-y-5 text-foreground/80 leading-relaxed">
-      {preencher(texto, vars).split(/\n\s*\n/).map((b, i) => b.startsWith('## ')
-        ? <h2 key={i} className="text-2xl text-gold pt-4">{b.slice(3).trim()}</h2>
-        : <p key={i} className="whitespace-pre-line">{b.trim()}</p>)}
+      {preencher(texto, vars).split(/\n\s*\n/).flatMap((b, i) => {
+        const [primeira, ...resto] = b.trim().split('\n');
+        if (!primeira.startsWith('## ')) return [<p key={i} className="whitespace-pre-line">{b.trim()}</p>];
+        return [<h2 key={`${i}h`} className="text-2xl text-gold pt-4">{primeira.slice(3).trim()}</h2>,
+          ...(resto.length ? [<p key={i} className="whitespace-pre-line">{resto.join('\n').trim()}</p>] : [])];
+      })}
     </div>
   );
 };
